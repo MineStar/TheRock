@@ -1,0 +1,4 @@
+name: TheRock
+main: de.minestar.TheRock.Core
+version: ${pom.version}
+depend: [MineStarLibrary, MinestarCore]
