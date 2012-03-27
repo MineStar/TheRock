@@ -33,28 +33,19 @@ public class BlockQueue {
         BlockChange change = queue[pointer++];
         change.update(destroyedBlock, player);
         if (pointer == BUFFER)
-            fullFlush();
+            flush();
     }
 
     public void replacedBlock(Block replacedBlock, Block newBlock, Player player) {
         BlockChange change = queue[pointer++];
         change.update(replacedBlock, newBlock, player);
         if (pointer == BUFFER)
-            fullFlush();
+            flush();
     }
 
-    // use it when buffer is full
-    private void fullFlush() {
-        // create copy
-        BlockChange[] copy = Arrays.copyOfRange(queue, 0, BUFFER);
-        pointer = 0;
-        dbHandler.flushFullQueue(copy);
-    }
-
-    // use it when server is restarting or shutting down
     public void flush() {
-        BlockChange[] copy = Arrays.copyOfRange(queue, 0, pointer + 1);
+        BlockChange[] copy = Arrays.copyOfRange(queue, 0, pointer);
+        dbHandler.flushBlockQueue(copy, pointer == BUFFER);
         pointer = 0;
-        dbHandler.flushQueue(copy);
     }
 }

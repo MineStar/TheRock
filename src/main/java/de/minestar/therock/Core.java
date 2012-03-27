@@ -23,32 +23,42 @@ import org.bukkit.plugin.PluginManager;
 
 import de.minestar.minestarlibrary.AbstractCore;
 import de.minestar.therock.data.BlockQueue;
+import de.minestar.therock.data.ChatQueue;
 import de.minestar.therock.database.DatabaseHandler;
 import de.minestar.therock.listener.BlockListener;
+import de.minestar.therock.listener.PlayerListener;
 
 public class Core extends AbstractCore {
 
     public static final String NAME = "TheRock";
 
     /** LISTENER */
-    private Listener blockListener;
+    private Listener blockListener, playerListener;
 
     /** MANAGER */
     private DatabaseHandler dbHandler;
-    private BlockQueue queue;
+
+    /** QUEUES */
+    private BlockQueue blockQueue;
+    private ChatQueue chatQueue;
 
     @Override
     protected boolean createManager() {
         dbHandler = new DatabaseHandler(NAME, getDataFolder());
         if (!dbHandler.hasConnection())
             return false;
-        queue = new BlockQueue(dbHandler);
+
+        // Queues
+        blockQueue = new BlockQueue(dbHandler);
+        chatQueue = new ChatQueue(dbHandler);
+
         return true;
     }
 
     @Override
     protected boolean createListener() {
-        blockListener = new BlockListener(queue);
+        blockListener = new BlockListener(blockQueue);
+        playerListener = new PlayerListener(chatQueue);
 
         return true;
     }
@@ -56,6 +66,7 @@ public class Core extends AbstractCore {
     @Override
     protected boolean registerEvents(PluginManager pm) {
         pm.registerEvents(blockListener, this);
+        pm.registerEvents(playerListener, this);
 
         return true;
     }
