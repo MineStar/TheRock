@@ -17,8 +17,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.bukkit</groupId>
-			<artifactId>craftbukkit</artifactId>
-			<version>1.2.4-R0.1-20120326.220450-22</version>
+			<artifactId>bukkit</artifactId>
+			<version>1.2.4-R0.1-20120323.055539-8</version>
 		</dependency>
 	</dependencies>
 	<build>
