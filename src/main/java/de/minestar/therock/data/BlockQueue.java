@@ -3,6 +3,7 @@ package de.minestar.therock.data;
 import java.util.Arrays;
 
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 
 import de.minestar.therock.database.DatabaseHandler;
 
@@ -28,16 +29,16 @@ public class BlockQueue {
             queue[i] = new BlockChange();
     }
 
-    public void destroyedBlock(Block destroyedBlock) {
+    public void destroyedBlock(Block destroyedBlock, Player player) {
         BlockChange change = queue[pointer++];
-        change.update(destroyedBlock);
+        change.update(destroyedBlock, player);
         if (pointer == BUFFER)
             fullFlush();
     }
 
-    public void replacedBlock(Block replacedBlock, Block newBlock) {
+    public void replacedBlock(Block replacedBlock, Block newBlock, Player player) {
         BlockChange change = queue[pointer++];
-        change.update(replacedBlock, newBlock);
+        change.update(replacedBlock, newBlock, player);
         if (pointer == BUFFER)
             fullFlush();
     }

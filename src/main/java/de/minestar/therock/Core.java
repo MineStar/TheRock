@@ -18,14 +18,45 @@
 
 package de.minestar.therock;
 
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.PluginManager;
+
 import de.minestar.minestarlibrary.AbstractCore;
+import de.minestar.therock.data.BlockQueue;
+import de.minestar.therock.database.DatabaseHandler;
+import de.minestar.therock.listener.BlockListener;
 
 public class Core extends AbstractCore {
 
     public static final String NAME = "TheRock";
 
     /** LISTENER */
+    private Listener blockListener;
 
     /** MANAGER */
+    private DatabaseHandler dbHandler;
+    private BlockQueue queue;
 
+    @Override
+    protected boolean createManager() {
+        dbHandler = new DatabaseHandler(NAME, getDataFolder());
+        if (!dbHandler.hasConnection())
+            return false;
+        queue = new BlockQueue(dbHandler);
+        return true;
+    }
+
+    @Override
+    protected boolean createListener() {
+        blockListener = new BlockListener(queue);
+
+        return true;
+    }
+
+    @Override
+    protected boolean registerEvents(PluginManager pm) {
+        pm.registerEvents(blockListener, this);
+
+        return true;
+    }
 }

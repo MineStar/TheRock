@@ -20,12 +20,15 @@ package de.minestar.therock.data;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 
 public class BlockChange implements Cloneable {
 
     // position
     private int x, y, z;
     private String worldName;
+
+    private String playerName;
 
     // block information
     private int oldID, newID;
@@ -37,18 +40,8 @@ public class BlockChange implements Cloneable {
 
     }
 
-    // Destroy block
-    public BlockChange(Block destroyedBlock) {
-        update(destroyedBlock);
-    }
-
-    // Set block on existing block
-    public BlockChange(Block replacedBlock, Block newBlock) {
-        update(replacedBlock, newBlock);
-    }
-
     // For clone
-    private BlockChange(int x, int y, int z, String worldName, int oldID, int newID, byte oldSubID, byte newSubID, long timeStamp) {
+    private BlockChange(int x, int y, int z, String worldName, int oldID, int newID, byte oldSubID, byte newSubID, long timeStamp, String playerName) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -58,10 +51,11 @@ public class BlockChange implements Cloneable {
         this.oldSubID = oldSubID;
         this.newSubID = newSubID;
         this.timeStamp = timeStamp;
+        this.playerName = playerName;
     }
 
     // Destroy block
-    public void update(Block destroyedBlock) {
+    public void update(Block destroyedBlock, Player player) {
         this.x = destroyedBlock.getX();
         this.y = destroyedBlock.getY();
         this.z = destroyedBlock.getZ();
@@ -72,13 +66,16 @@ public class BlockChange implements Cloneable {
 
         this.timeStamp = System.currentTimeMillis();
 
+        this.playerName = player.getName();
+
         this.newID = Material.AIR.getId();
         this.newSubID = 0;
+
     }
 
     // Set block on existing block
-    public void update(Block replacedBlock, Block newBlock) {
-        update(replacedBlock);
+    public void update(Block replacedBlock, Block newBlock, Player player) {
+        update(replacedBlock, player);
         this.newID = newBlock.getTypeId();
         this.newSubID = newBlock.getData();
     }
@@ -119,8 +116,12 @@ public class BlockChange implements Cloneable {
         return timeStamp;
     }
 
+    public String getPlayerName() {
+        return playerName;
+    }
+
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        return new BlockChange(x, y, z, worldName, oldID, newID, oldSubID, newSubID, timeStamp);
+        return new BlockChange(x, y, z, worldName, oldID, newID, oldSubID, newSubID, timeStamp, playerName);
     }
 }
