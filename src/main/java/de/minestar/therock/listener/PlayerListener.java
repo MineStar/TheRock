@@ -33,7 +33,7 @@ public class PlayerListener implements Listener {
         this.chatQueue = chatQueue;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerChat(PlayerChatEvent event) {
         chatQueue.queueMessage(event.getMessage(), event.isCancelled(), event.getPlayer());
 

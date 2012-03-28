@@ -34,7 +34,7 @@ public class BlockListener implements Listener {
         this.queue = queue;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockPlace(BlockPlaceEvent event) {
         if (event.isCancelled())
             return;
@@ -42,7 +42,7 @@ public class BlockListener implements Listener {
         queue.replacedBlock(event.getBlockReplacedState().getBlock(), event.getBlockPlaced(), event.getPlayer());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockBreak(BlockBreakEvent event) {
         if (event.isCancelled())
             return;
