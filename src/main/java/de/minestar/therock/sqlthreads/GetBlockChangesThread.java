@@ -44,7 +44,7 @@ public class GetBlockChangesThread extends Thread {
     @Override
     public void run() {
         try {
-            PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM tbl_block WHERE worldName='" + block.getWorld().getName() + "' AND blockX=" + block.getX() + " AND blockY=" + block.getY() + " AND blockZ=" + block.getZ() + " ORDER BY ID DESC");
+            PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM tbl_block WHERE worldName='" + block.getWorld().getName() + "' AND blockX=" + block.getX() + " AND blockY=" + block.getY() + " AND blockZ=" + block.getZ() + " ORDER BY ID DESC LIMIT 9");
             ResultSet results = statement.executeQuery();
             if (results != null) {
                 GetBlockChangesEvent event = new GetBlockChangesEvent(playerName, block, results);

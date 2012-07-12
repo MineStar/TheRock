@@ -42,6 +42,7 @@ public class MainManager {
 
     // tool settings
     private int toolLookupID = Material.WATCH.getId();
+    private int toolSelectionID = Material.STICK.getId();
 
     public MainManager() {
         this.loadWorlds();
@@ -90,6 +91,7 @@ public class MainManager {
             logChat = ymlFile.getBoolean("log.general.chat", true);
             logCommands = ymlFile.getBoolean("log.general.commands", true);
             toolLookupID = ymlFile.getInt("config.tool.lookup", toolLookupID);
+            toolSelectionID = ymlFile.getInt("config.tool.selection", toolSelectionID);
 
             ConsoleUtils.printInfo(Core.NAME, "Amount of logged worlds: " + this.worlds.size());
         } catch (Exception e) {
@@ -112,7 +114,8 @@ public class MainManager {
             ymlFile.set("log.worlds", worldList);
             ymlFile.set("log.general.chat", logChat);
             ymlFile.set("log.general.commands", logCommands);
-            ymlFile.set("config.tool.lookup", this.toolLookupID);
+            ymlFile.set("config.tool.lookup", toolLookupID);
+            ymlFile.set("config.tool.selection", toolSelectionID);
             ymlFile.save(file);
         } catch (IOException e) {
             e.printStackTrace();
@@ -129,5 +132,9 @@ public class MainManager {
 
     public int getToolLookupID() {
         return toolLookupID;
+    }
+
+    public int getToolSelectionID() {
+        return toolSelectionID;
     }
 }
