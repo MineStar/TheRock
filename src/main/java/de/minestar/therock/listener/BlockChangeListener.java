@@ -36,8 +36,8 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 
 import de.minestar.therock.data.BlockEventTypes;
-import de.minestar.therock.manager.QueueManager;
 import de.minestar.therock.manager.MainManager;
+import de.minestar.therock.manager.QueueManager;
 
 public class BlockChangeListener implements Listener {
 
