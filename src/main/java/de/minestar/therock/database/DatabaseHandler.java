@@ -28,7 +28,7 @@ import de.minestar.minestarlibrary.database.DatabaseType;
 import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.therock.Core;
-import de.minestar.therock.data.SQLThread;
+import de.minestar.therock.data.SQLInsertThread;
 
 public class DatabaseHandler extends AbstractDatabaseHandler {
 
@@ -54,7 +54,7 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
     public boolean executeStatement(String query) {
         try {
-            new SQLThread(this, query).start();
+            new SQLInsertThread(this, query).start();
             return true;
         } catch (Exception e) {
             e.printStackTrace();

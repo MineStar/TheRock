@@ -23,12 +23,12 @@ import java.sql.SQLException;
 
 import de.minestar.therock.database.DatabaseHandler;
 
-public class SQLThread extends Thread {
+public class SQLInsertThread extends Thread {
 
     private final String query;
     private final DatabaseHandler databaseHandler;
 
-    public SQLThread(DatabaseHandler databaseHandler, String query) {
+    public SQLInsertThread(DatabaseHandler databaseHandler, String query) {
         this.databaseHandler = databaseHandler;
         this.query = query;
     }
