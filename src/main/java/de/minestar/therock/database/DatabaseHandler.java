@@ -21,10 +21,7 @@ package de.minestar.therock.database;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -35,7 +32,7 @@ import de.minestar.minestarlibrary.database.DatabaseType;
 import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.therock.Core;
-import de.minestar.therock.events.GetBlockChangesEvent;
+import de.minestar.therock.sqlthreads.GetBlockChangesThread;
 import de.minestar.therock.sqlthreads.InsertThread;
 
 public class DatabaseHandler extends AbstractDatabaseHandler {
@@ -60,15 +57,14 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
         DatabaseUtils.createStructure(getClass().getResourceAsStream("/structure.sql"), con, pluginName);
     }
 
+    public boolean getBlockChanges(Player player, Block block) {
+        new GetBlockChangesThread(this, player.getName(), block).start();
+        return true;
+    }
+
     public boolean executeStatement(String query) {
-        try {
-            new InsertThread(this, query).start();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            ConsoleUtils.printException(e, Core.NAME, "Can't execute query: " + query);
-            return false;
-        }
+        new InsertThread(this, query).start();
+        return true;
     }
 
     public boolean executeStatementWithoutThread(String query) {
@@ -82,20 +78,6 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
         }
     }
 
-    public boolean getBlockChanges(Player player, Block block) {
-        try {
-            PreparedStatement statement = this.getConnection().prepareStatement("SELECT * FROM tbl_block WHERE worldName='" + block.getWorld().getName() + "' AND blockX=" + block.getX() + " AND blockY=" + block.getY() + " AND blockZ=" + block.getZ() + " ORDER BY ID DESC");
-            ResultSet results = statement.executeQuery();
-            if (results != null) {
-                GetBlockChangesEvent event = new GetBlockChangesEvent(player.getName(), block, results);
-                Bukkit.getPluginManager().callEvent(event);
-            }
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
     public Connection getConnection() {
         return this.dbConnection.getConnection();
     }
