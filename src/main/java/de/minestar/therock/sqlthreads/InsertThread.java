@@ -16,19 +16,19 @@
  * along with TheRock.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.therock.data;
+package de.minestar.therock.sqlthreads;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import de.minestar.therock.database.DatabaseHandler;
 
-public class SQLInsertThread extends Thread {
+public class InsertThread extends Thread {
 
     private final String query;
     private final DatabaseHandler databaseHandler;
 
-    public SQLInsertThread(DatabaseHandler databaseHandler, String query) {
+    public InsertThread(DatabaseHandler databaseHandler, String query) {
         this.databaseHandler = databaseHandler;
         this.query = query;
     }

@@ -18,11 +18,15 @@
 
 package de.minestar.therock.listener;
 
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
+import de.minestar.therock.Core;
 import de.minestar.therock.manager.QueueManager;
 import de.minestar.therock.manager.WorldManager;
 
@@ -60,5 +64,25 @@ public class PlayerListener implements Listener {
 
         // reset data
         this.queueBuilder.setLength(0);
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        // event cancelled => return
+        if (event.isCancelled())
+            return;
+
+        // clicked on a block?
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (event.getPlayer().isOp() && event.getPlayer().getItemInHand().getTypeId() == Material.WATCH.getId()) {
+                event.setCancelled(true);
+                Core.getInstance().getDatabaseHandler().getBlockChanges(event.getPlayer(), event.getClickedBlock().getRelative(event.getBlockFace()));
+            }
+        } else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+            if (event.getPlayer().isOp() && event.getPlayer().getItemInHand().getTypeId() == Material.WATCH.getId()) {
+                event.setCancelled(true);
+                Core.getInstance().getDatabaseHandler().getBlockChanges(event.getPlayer(), event.getClickedBlock());
+            }
+        }
     }
 }

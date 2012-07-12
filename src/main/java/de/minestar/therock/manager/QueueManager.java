@@ -38,8 +38,8 @@ public class QueueManager {
     }
 
     public void flushAll() {
-        this.chatQueue.flush();
-        this.blockQueue.flush();
+        this.chatQueue.flushWithoutThread();
+        this.blockQueue.flushWithoutThread();
     }
 
 }

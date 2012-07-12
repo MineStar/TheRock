@@ -75,4 +75,16 @@ public class SQLQueue {
         // reset data
         this.resetStringBuilder();
     }
+
+    public void flushWithoutThread() {
+        // At least one object must be queued
+        if (currentPointer < 1)
+            return;
+
+        // update sql
+        this.databaseHandler.executeStatementWithoutThread(stringBuilder.substring(0, stringBuilder.length() - 2));
+
+        // reset data
+        this.resetStringBuilder();
+    }
 }

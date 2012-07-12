@@ -19,17 +19,33 @@
 package de.minestar.therock.data;
 
 public enum BlockEventTypes {
-    PLAYER_PLACE(0), PLAYER_BREAK(1), PLAYER_INTERACT(2),
+    PLAYER_PLACE(0, " placed "), PLAYER_BREAK(1, " destroyed "), PLAYER_INTERACT(2, " interacted "),
 
-    PHYSICS_CREATE(3), PHYSICS_DESTROY(4);
+    PHYSICS_CREATE(3, " created "), PHYSICS_DESTROY(4, " destroyed "),
+
+    UNKNOWN(-1, " UNKNOWN ");
 
     private final int eventID;
+    private final String text;
 
-    private BlockEventTypes(int ID) {
+    private BlockEventTypes(int ID, String text) {
         this.eventID = ID;
+        this.text = text;
     }
 
     public int getID() {
         return this.eventID;
+    }
+
+    public String getText() {
+        return this.text;
+    }
+
+    public static BlockEventTypes byID(int ID) {
+        for (BlockEventTypes type : BlockEventTypes.values()) {
+            if (type.getID() == ID)
+                return type;
+        }
+        return UNKNOWN;
     }
 }
