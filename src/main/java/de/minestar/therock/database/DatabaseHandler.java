@@ -93,7 +93,7 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
             PreparedStatement statement = this.getConnection().prepareStatement("SELECT * FROM tbl_block WHERE worldName='" + block.getWorld().getName() + "' AND blockX=" + block.getX() + " AND blockY=" + block.getY() + " AND blockZ=" + block.getZ() + " ORDER BY ID DESC");
             ResultSet results = statement.executeQuery();
             String message = "";
-            PlayerUtils.sendMessage(player, ChatColor.RED, "Changes on: " + block.getWorld().getName() + " : [ " + block.getX() + " / " + block.getY() + " / " + block.getZ() + " ]");
+            PlayerUtils.sendMessage(player, ChatColor.RED, "Changes for: " + block.getWorld().getName() + " - [ " + block.getX() + " / " + block.getY() + " / " + block.getZ() + " ]");
             if (results != null) {
                 while (results.next()) {
                     message = dateFormat.format(results.getLong("timestamp"));
