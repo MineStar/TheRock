@@ -36,6 +36,8 @@ import de.minestar.therock.data.WorldSettings;
 public class WorldManager {
     private HashMap<String, WorldSettings> worlds;
 
+    private boolean logChat = true, logCommands = true;
+
     public WorldManager() {
         this.loadWorlds();
     }
@@ -64,7 +66,7 @@ public class WorldManager {
     private void loadWorlds() {
         worlds = new HashMap<String, WorldSettings>();
 
-        File file = new File(Core.getInstance().getDataFolder(), "cfg_worlds.yml");
+        File file = new File(Core.getInstance().getDataFolder(), "settings.yml");
         if (!file.exists()) {
             this.writeDefaultConfig();
         }
@@ -79,6 +81,10 @@ public class WorldManager {
                     this.worlds.put(worldName.toLowerCase(), settings);
                 }
             }
+
+            logChat = ymlFile.getBoolean("log.general.chat");
+            logCommands = ymlFile.getBoolean("log.general.commands");
+
             ConsoleUtils.printInfo(Core.NAME, "Amount of logged worlds: " + this.worlds.size());
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,7 +92,7 @@ public class WorldManager {
     }
 
     private void writeDefaultConfig() {
-        File file = new File(Core.getInstance().getDataFolder(), "cfg_worlds.yml");
+        File file = new File(Core.getInstance().getDataFolder(), "settings.yml");
         if (file.exists()) {
             file.delete();
         }
@@ -98,9 +104,19 @@ public class WorldManager {
             worldList.add("world_nether");
             worldList.add("world_the_end");
             ymlFile.set("log.worlds", worldList);
+            ymlFile.set("log.general.chat", logChat);
+            ymlFile.set("log.general.commands", logCommands);
             ymlFile.save(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean logChat() {
+        return logChat;
+    }
+
+    public boolean logCommands() {
+        return logCommands;
     }
 }

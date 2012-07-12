@@ -45,7 +45,7 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerChat(PlayerChatEvent event) {
         // event cancelled => return
-        if (event.isCancelled() || !this.worldManager.getWorld(event.getPlayer()).logPlayerChat())
+        if (event.isCancelled() || !this.worldManager.logChat())
             return;
 
         // create data
