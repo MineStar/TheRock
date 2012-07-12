@@ -22,10 +22,11 @@ import org.bukkit.plugin.PluginManager;
 
 import de.minestar.minestarlibrary.AbstractCore;
 import de.minestar.therock.database.DatabaseHandler;
-import de.minestar.therock.listener.BlockListener;
-import de.minestar.therock.listener.PlayerListener;
-import de.minestar.therock.manager.QueueManager;
+import de.minestar.therock.listener.BlockChangeListener;
+import de.minestar.therock.listener.ChatAndCommandListener;
+import de.minestar.therock.listener.ToolListener;
 import de.minestar.therock.manager.MainManager;
+import de.minestar.therock.manager.QueueManager;
 
 public class Core extends AbstractCore {
 
@@ -34,8 +35,9 @@ public class Core extends AbstractCore {
     public static final String NAME = "TheRock";
 
     /** LISTENER */
-    private BlockListener blockListener;
-    private PlayerListener playerListener;
+    private BlockChangeListener blockListener;
+    private ChatAndCommandListener playerListener;
+    private ToolListener toolListener;
 
     /** MANAGER */
     private DatabaseHandler databaseHandler;
@@ -63,8 +65,9 @@ public class Core extends AbstractCore {
 
     @Override
     protected boolean createListener() {
-        blockListener = new BlockListener(queueManager, mainManager);
-        playerListener = new PlayerListener(queueManager, mainManager);
+        blockListener = new BlockChangeListener(queueManager, mainManager);
+        playerListener = new ChatAndCommandListener(queueManager, mainManager);
+        toolListener = new ToolListener(mainManager);
         return true;
     }
 
@@ -81,7 +84,7 @@ public class Core extends AbstractCore {
     protected boolean registerEvents(PluginManager pm) {
         pm.registerEvents(blockListener, this);
         pm.registerEvents(playerListener, this);
-
+        pm.registerEvents(toolListener, this);
         return true;
     }
 

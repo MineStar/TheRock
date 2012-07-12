@@ -21,22 +21,19 @@ package de.minestar.therock.listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 
-import de.minestar.therock.Core;
 import de.minestar.therock.manager.MainManager;
 import de.minestar.therock.manager.QueueManager;
 
-public class PlayerListener implements Listener {
+public class ChatAndCommandListener implements Listener {
 
     private MainManager mainManager;
     private QueueManager queueManager;
     private StringBuilder queueBuilder;
 
-    public PlayerListener(QueueManager queueManager, MainManager mainManager) {
+    public ChatAndCommandListener(QueueManager queueManager, MainManager mainManager) {
         this.mainManager = mainManager;
         this.queueManager = queueManager;
         this.queueBuilder = new StringBuilder();
@@ -90,25 +87,4 @@ public class PlayerListener implements Listener {
         this.queueBuilder.setLength(0);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        // event cancelled => return
-        if (event.isCancelled())
-            return;
-
-        // do we have the Lookup-Tool?
-        if (event.getPlayer().getItemInHand().getTypeId() == this.mainManager.getToolLookupID()) {
-            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                if (event.getPlayer().isOp()) {
-                    event.setCancelled(true);
-                    Core.getInstance().getDatabaseHandler().getBlockChanges(event.getPlayer(), event.getClickedBlock().getRelative(event.getBlockFace()));
-                }
-            } else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-                if (event.getPlayer().isOp()) {
-                    event.setCancelled(true);
-                    Core.getInstance().getDatabaseHandler().getBlockChanges(event.getPlayer(), event.getClickedBlock());
-                }
-            }
-        }
-    }
 }

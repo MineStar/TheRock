@@ -39,7 +39,7 @@ import de.minestar.therock.data.BlockEventTypes;
 import de.minestar.therock.manager.QueueManager;
 import de.minestar.therock.manager.MainManager;
 
-public class BlockListener implements Listener {
+public class BlockChangeListener implements Listener {
 
     private MainManager mainManager;
     private QueueManager queueManager;
@@ -49,7 +49,7 @@ public class BlockListener implements Listener {
 
     private final BlockFace[] faces = new BlockFace[]{BlockFace.DOWN, BlockFace.NORTH, BlockFace.WEST, BlockFace.EAST, BlockFace.SOUTH};
 
-    public BlockListener(QueueManager queueManager, MainManager mainManager) {
+    public BlockChangeListener(QueueManager queueManager, MainManager mainManager) {
         this.mainManager = mainManager;
         this.queueManager = queueManager;
         this.queueBuilder = new StringBuilder();
