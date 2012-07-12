@@ -22,15 +22,20 @@ import de.minestar.therock.data.SQLQueue;
 import de.minestar.therock.database.DatabaseHandler;
 
 public class QueueManager {
-    private SQLQueue chatQueue, blockQueue;
+    private SQLQueue chatQueue, commandQueue, blockQueue;
 
     public QueueManager(DatabaseHandler databaseHandler) {
         this.chatQueue = new SQLQueue(databaseHandler, "tbl_chat (timestamp, playername, message)", 2);
+        this.commandQueue = new SQLQueue(databaseHandler, "tbl_commands (timestamp, playername, command)", 2);
         this.blockQueue = new SQLQueue(databaseHandler, "tbl_block (timestamp, reason, eventType, worldName, blockX, blockY, blockZ, fromID, fromData, toID, toData)", 10);
     }
 
     public void appendChatEvent(StringBuilder stringBuilder) {
         this.chatQueue.addToQueue(stringBuilder);
+    }
+
+    public void appendCommandEvent(StringBuilder stringBuilder) {
+        this.commandQueue.addToQueue(stringBuilder);
     }
 
     public void appendBlockEvent(StringBuilder stringBuilder) {
@@ -39,7 +44,7 @@ public class QueueManager {
 
     public void flushAll() {
         this.chatQueue.flushWithoutThread();
+        this.commandQueue.flushWithoutThread();
         this.blockQueue.flushWithoutThread();
     }
-
 }

@@ -23,6 +23,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import de.minestar.therock.Core;
@@ -60,6 +61,29 @@ public class PlayerListener implements Listener {
 
         // add to queue
         this.queueManager.appendChatEvent(this.queueBuilder);
+
+        // reset data
+        this.queueBuilder.setLength(0);
+    }
+
+    public void onPlayerCommandPreProcess(PlayerCommandPreprocessEvent event) {
+        // event cancelled => return
+        if (event.isCancelled() || !this.mainManager.logCommands())
+            return;
+
+        // create data
+        this.queueBuilder.append("(");
+        this.queueBuilder.append(System.currentTimeMillis());
+        this.queueBuilder.append(", ");
+        this.queueBuilder.append("'" + event.getPlayer().getName() + "'");
+        this.queueBuilder.append(", ");
+        String message = event.getMessage();
+        message = message.replace("\\", "\\\\").replace("'", "\\'");
+        this.queueBuilder.append("'" + message + "'");
+        this.queueBuilder.append(")");
+
+        // add to queue
+        this.queueManager.appendCommandEvent(this.queueBuilder);
 
         // reset data
         this.queueBuilder.setLength(0);
