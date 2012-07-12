@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -33,12 +34,16 @@ import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.therock.Core;
 import de.minestar.therock.data.WorldSettings;
 
-public class WorldManager {
+public class MainManager {
     private HashMap<String, WorldSettings> worlds;
 
+    // general settings
     private boolean logChat = true, logCommands = true;
 
-    public WorldManager() {
+    // tool settings
+    private int toolLookupID = Material.WATCH.getId();
+
+    public MainManager() {
         this.loadWorlds();
     }
 
@@ -82,8 +87,9 @@ public class WorldManager {
                 }
             }
 
-            logChat = ymlFile.getBoolean("log.general.chat");
-            logCommands = ymlFile.getBoolean("log.general.commands");
+            logChat = ymlFile.getBoolean("log.general.chat", true);
+            logCommands = ymlFile.getBoolean("log.general.commands", true);
+            toolLookupID = ymlFile.getInt("config.tool.lookup", toolLookupID);
 
             ConsoleUtils.printInfo(Core.NAME, "Amount of logged worlds: " + this.worlds.size());
         } catch (Exception e) {
@@ -106,6 +112,7 @@ public class WorldManager {
             ymlFile.set("log.worlds", worldList);
             ymlFile.set("log.general.chat", logChat);
             ymlFile.set("log.general.commands", logCommands);
+            ymlFile.set("config.tool.lookup", this.toolLookupID);
             ymlFile.save(file);
         } catch (IOException e) {
             e.printStackTrace();
@@ -118,5 +125,9 @@ public class WorldManager {
 
     public boolean logCommands() {
         return logCommands;
+    }
+
+    public int getToolLookupID() {
+        return toolLookupID;
     }
 }

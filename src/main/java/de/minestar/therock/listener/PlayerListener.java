@@ -18,7 +18,6 @@
 
 package de.minestar.therock.listener;
 
-import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -27,17 +26,17 @@ import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import de.minestar.therock.Core;
+import de.minestar.therock.manager.MainManager;
 import de.minestar.therock.manager.QueueManager;
-import de.minestar.therock.manager.WorldManager;
 
 public class PlayerListener implements Listener {
 
-    private WorldManager worldManager;
+    private MainManager mainManager;
     private QueueManager queueManager;
     private StringBuilder queueBuilder;
 
-    public PlayerListener(QueueManager queueManager, WorldManager worldManager) {
-        this.worldManager = worldManager;
+    public PlayerListener(QueueManager queueManager, MainManager mainManager) {
+        this.mainManager = mainManager;
         this.queueManager = queueManager;
         this.queueBuilder = new StringBuilder();
     }
@@ -45,7 +44,7 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerChat(PlayerChatEvent event) {
         // event cancelled => return
-        if (event.isCancelled() || !this.worldManager.logChat())
+        if (event.isCancelled() || !this.mainManager.logChat())
             return;
 
         // create data
@@ -72,16 +71,18 @@ public class PlayerListener implements Listener {
         if (event.isCancelled())
             return;
 
-        // clicked on a block?
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (event.getPlayer().isOp() && event.getPlayer().getItemInHand().getTypeId() == Material.WATCH.getId()) {
-                event.setCancelled(true);
-                Core.getInstance().getDatabaseHandler().getBlockChanges(event.getPlayer(), event.getClickedBlock().getRelative(event.getBlockFace()));
-            }
-        } else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            if (event.getPlayer().isOp() && event.getPlayer().getItemInHand().getTypeId() == Material.WATCH.getId()) {
-                event.setCancelled(true);
-                Core.getInstance().getDatabaseHandler().getBlockChanges(event.getPlayer(), event.getClickedBlock());
+        // do we have the Lookup-Tool?
+        if (event.getPlayer().getItemInHand().getTypeId() == this.mainManager.getToolLookupID()) {
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                if (event.getPlayer().isOp()) {
+                    event.setCancelled(true);
+                    Core.getInstance().getDatabaseHandler().getBlockChanges(event.getPlayer(), event.getClickedBlock().getRelative(event.getBlockFace()));
+                }
+            } else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+                if (event.getPlayer().isOp()) {
+                    event.setCancelled(true);
+                    Core.getInstance().getDatabaseHandler().getBlockChanges(event.getPlayer(), event.getClickedBlock());
+                }
             }
         }
     }

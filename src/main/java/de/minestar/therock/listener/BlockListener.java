@@ -37,11 +37,11 @@ import org.bukkit.event.player.PlayerBucketFillEvent;
 
 import de.minestar.therock.data.BlockEventTypes;
 import de.minestar.therock.manager.QueueManager;
-import de.minestar.therock.manager.WorldManager;
+import de.minestar.therock.manager.MainManager;
 
 public class BlockListener implements Listener {
 
-    private WorldManager worldManager;
+    private MainManager mainManager;
     private QueueManager queueManager;
     private StringBuilder queueBuilder;
 
@@ -49,8 +49,8 @@ public class BlockListener implements Listener {
 
     private final BlockFace[] faces = new BlockFace[]{BlockFace.DOWN, BlockFace.NORTH, BlockFace.WEST, BlockFace.EAST, BlockFace.SOUTH};
 
-    public BlockListener(QueueManager queueManager, WorldManager worldManager) {
-        this.worldManager = worldManager;
+    public BlockListener(QueueManager queueManager, MainManager mainManager) {
+        this.mainManager = mainManager;
         this.queueManager = queueManager;
         this.queueBuilder = new StringBuilder();
     }
@@ -60,7 +60,7 @@ public class BlockListener implements Listener {
         // /////////////////////////////////
         // event cancelled => return
         // /////////////////////////////////
-        if (event.isCancelled() || !this.worldManager.getWorld(event.getPlayer()).logBlockBreak())
+        if (event.isCancelled() || !this.mainManager.getWorld(event.getPlayer()).logBlockBreak())
             return;
 
         // /////////////////////////////////
@@ -74,7 +74,7 @@ public class BlockListener implements Listener {
         // /////////////////////////////////
         // event cancelled => return
         // /////////////////////////////////
-        if (event.isCancelled() || !this.worldManager.getWorld(event.getPlayer()).logBlockPlace())
+        if (event.isCancelled() || !this.mainManager.getWorld(event.getPlayer()).logBlockPlace())
             return;
 
         // /////////////////////////////////
@@ -105,7 +105,7 @@ public class BlockListener implements Listener {
             return;
         }
 
-        if (this.worldManager.getWorld(event.getBlock()).logLavaFlow() && (typeFrom == 10 || typeFrom == 11)) {
+        if (this.mainManager.getWorld(event.getBlock()).logLavaFlow() && (typeFrom == 10 || typeFrom == 11)) {
             // /////////////////////////////////
             // create data : lavaflow & blockcreation
             // /////////////////////////////////
@@ -128,7 +128,7 @@ public class BlockListener implements Listener {
                     }
                 }
             }
-        } else if (this.worldManager.getWorld(event.getBlock()).logWaterFlow() && (typeFrom == 8 || typeFrom == 9)) {
+        } else if (this.mainManager.getWorld(event.getBlock()).logWaterFlow() && (typeFrom == 8 || typeFrom == 9)) {
             // /////////////////////////////////
             // create data : waterflow & blockcreation
             // /////////////////////////////////
@@ -158,7 +158,7 @@ public class BlockListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
         // event cancelled => return
-        if (event.isCancelled() || !this.worldManager.getWorld(event.getPlayer()).logBucketEmpty())
+        if (event.isCancelled() || !this.mainManager.getWorld(event.getPlayer()).logBucketEmpty())
             return;
 
         // /////////////////////////////////
@@ -171,7 +171,7 @@ public class BlockListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerBucketFill(PlayerBucketFillEvent event) {
         // event cancelled => return
-        if (event.isCancelled() || !this.worldManager.getWorld(event.getPlayer()).logBucketFill())
+        if (event.isCancelled() || !this.mainManager.getWorld(event.getPlayer()).logBucketFill())
             return;
 
         // /////////////////////////////////

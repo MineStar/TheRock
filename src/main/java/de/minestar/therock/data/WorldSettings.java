@@ -53,12 +53,12 @@ public class WorldSettings {
         try {
             YamlConfiguration ymlFile = new YamlConfiguration();
             ymlFile.load(file);
-            logBucketEmpty = ymlFile.getBoolean("log.bucket.empty");
-            logBucketFill = ymlFile.getBoolean("log.bucket.fill");
-            logBlockPlace = ymlFile.getBoolean("log.block.place");
-            logBlockBreak = ymlFile.getBoolean("log.block.break");
-            logWaterFlow = ymlFile.getBoolean("log.flow.water");
-            logLavaFlow = ymlFile.getBoolean("log.flow.lava");
+            logBucketEmpty = ymlFile.getBoolean("log.bucket.empty", logBucketEmpty);
+            logBucketFill = ymlFile.getBoolean("log.bucket.fill", logBucketFill);
+            logBlockPlace = ymlFile.getBoolean("log.block.place", logBlockPlace);
+            logBlockBreak = ymlFile.getBoolean("log.block.break", logBlockBreak);
+            logWaterFlow = ymlFile.getBoolean("log.flow.water", logWaterFlow);
+            logLavaFlow = ymlFile.getBoolean("log.flow.lava", logLavaFlow);
         } catch (Exception e) {
             e.printStackTrace();
         }

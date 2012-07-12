@@ -25,7 +25,7 @@ import de.minestar.therock.database.DatabaseHandler;
 import de.minestar.therock.listener.BlockListener;
 import de.minestar.therock.listener.PlayerListener;
 import de.minestar.therock.manager.QueueManager;
-import de.minestar.therock.manager.WorldManager;
+import de.minestar.therock.manager.MainManager;
 
 public class Core extends AbstractCore {
 
@@ -39,7 +39,7 @@ public class Core extends AbstractCore {
 
     /** MANAGER */
     private DatabaseHandler databaseHandler;
-    private WorldManager worldManager;
+    private MainManager mainManager;
 
     /** QUEUES */
     private QueueManager queueManager;
@@ -53,7 +53,7 @@ public class Core extends AbstractCore {
             return false;
 
         // WorldManager
-        worldManager = new WorldManager();
+        mainManager = new MainManager();
 
         // Queues
         queueManager = new QueueManager(databaseHandler);
@@ -63,8 +63,8 @@ public class Core extends AbstractCore {
 
     @Override
     protected boolean createListener() {
-        blockListener = new BlockListener(queueManager, worldManager);
-        playerListener = new PlayerListener(queueManager, worldManager);
+        blockListener = new BlockListener(queueManager, mainManager);
+        playerListener = new PlayerListener(queueManager, mainManager);
         return true;
     }
 
