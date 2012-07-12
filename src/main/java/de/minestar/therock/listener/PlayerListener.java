@@ -23,20 +23,38 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 
-import de.minestar.therock.data.ChatQueue;
+import de.minestar.therock.manager.QueueManager;
+import de.minestar.therock.manager.WorldManager;
 
 public class PlayerListener implements Listener {
 
-    private ChatQueue chatQueue;
+    private WorldManager worldManager;
+    private QueueManager queueManager;
+    private StringBuilder queueBuilder;
 
-    public PlayerListener(ChatQueue chatQueue) {
-        this.chatQueue = chatQueue;
+    public PlayerListener(QueueManager queueManager, WorldManager worldManager) {
+        this.worldManager = worldManager;
+        this.queueManager = queueManager;
+        this.queueBuilder = new StringBuilder();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerChat(PlayerChatEvent event) {
-        chatQueue.queueMessage(event.getMessage(), event.isCancelled(), event.getPlayer());
+        // event cancelled => return
+        if (event.isCancelled() || !this.worldManager.getWorld(event.getPlayer()).logPlayerChat())
+            return;
 
+        // create data
+        this.queueBuilder.append("(");
+        this.queueBuilder.append("'" + event.getPlayer().getName() + "'");
+        this.queueBuilder.append(", ");
+        this.queueBuilder.append("'" + event.getMessage() + "'");
+        this.queueBuilder.append(")");
+
+        // add to queue
+        this.queueManager.appendChatEvent(this.queueBuilder);
+
+        // reset data
+        this.queueBuilder.setLength(0);
     }
-
 }

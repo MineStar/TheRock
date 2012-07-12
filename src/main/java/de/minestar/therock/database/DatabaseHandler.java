@@ -26,8 +26,6 @@ import de.minestar.minestarlibrary.database.AbstractDatabaseHandler;
 import de.minestar.minestarlibrary.database.DatabaseConnection;
 import de.minestar.minestarlibrary.database.DatabaseType;
 import de.minestar.minestarlibrary.database.DatabaseUtils;
-import de.minestar.therock.data.BlockChange;
-import de.minestar.therock.data.ChatMessage;
 
 public class DatabaseHandler extends AbstractDatabaseHandler {
 
@@ -56,23 +54,4 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
         // TODO Auto-generated method stub
 
     }
-
-    public void flushBlockQueue(BlockChange[] queue, boolean isFull) {
-        if (isFull)
-            ;
-        // TODO: Use preparedstatement and fill it with data
-        else
-            ;
-        // TODO: Create a new statement and send it to database
-    }
-
-    public void flushChatQueue(ChatMessage[] queue, boolean isFull) {
-        if (isFull)
-            ;
-        // TODO: Use preparedstatement and fill it with data
-        else
-            ;
-        // TODO: Create a new statement and send it to database
-    }
-
 }

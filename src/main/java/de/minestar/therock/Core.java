@@ -18,47 +18,53 @@
 
 package de.minestar.therock;
 
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 
 import de.minestar.minestarlibrary.AbstractCore;
-import de.minestar.therock.data.BlockQueue;
-import de.minestar.therock.data.ChatQueue;
 import de.minestar.therock.database.DatabaseHandler;
 import de.minestar.therock.listener.BlockListener;
 import de.minestar.therock.listener.PlayerListener;
+import de.minestar.therock.manager.QueueManager;
+import de.minestar.therock.manager.WorldManager;
 
 public class Core extends AbstractCore {
+
+    private static Core INSTANCE;
 
     public static final String NAME = "TheRock";
 
     /** LISTENER */
-    private Listener blockListener, playerListener;
+    private BlockListener blockListener;
+    private PlayerListener playerListener;
 
     /** MANAGER */
     private DatabaseHandler dbHandler;
+    private WorldManager worldManager;
 
     /** QUEUES */
-    private BlockQueue blockQueue;
-    private ChatQueue chatQueue;
+    private QueueManager queueManager;
 
     @Override
     protected boolean createManager() {
-        dbHandler = new DatabaseHandler(NAME, getDataFolder());
-        if (!dbHandler.hasConnection())
-            return false;
+        INSTANCE = this;
+
+        // dbHandler = new DatabaseHandler(NAME, getDataFolder());
+        // if (!dbHandler.hasConnection())
+        // return false;
+
+        // WorldManager
+        worldManager = new WorldManager();
 
         // Queues
-        blockQueue = new BlockQueue(dbHandler);
-        chatQueue = new ChatQueue(dbHandler);
+        queueManager = new QueueManager(dbHandler);
 
         return true;
     }
 
     @Override
     protected boolean createListener() {
-        blockListener = new BlockListener(blockQueue);
-        playerListener = new PlayerListener(chatQueue);
+        blockListener = new BlockListener(queueManager, worldManager);
+        playerListener = new PlayerListener(queueManager, worldManager);
 
         return true;
     }
@@ -69,5 +75,9 @@ public class Core extends AbstractCore {
         pm.registerEvents(playerListener, this);
 
         return true;
+    }
+
+    public static Core getInstance() {
+        return INSTANCE;
     }
 }
