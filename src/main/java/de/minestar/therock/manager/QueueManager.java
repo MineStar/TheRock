@@ -25,8 +25,8 @@ public class QueueManager {
     private SQLQueue chatQueue, blockQueue;
 
     public QueueManager(DatabaseHandler databaseHandler) {
-        this.chatQueue = new SQLQueue(databaseHandler, "tbl_chat", 2);
-        this.blockQueue = new SQLQueue(databaseHandler, "tbl_block", 2);
+        this.chatQueue = new SQLQueue(databaseHandler, "tbl_chat (timestamp, playername, message)", 2);
+        this.blockQueue = new SQLQueue(databaseHandler, "tbl_block (timestamp, reason, eventType, worldName, blockX, blockY, blockZ, fromID, fromData, toID, toData)", 10);
     }
 
     public void appendChatEvent(StringBuilder stringBuilder) {
@@ -35,6 +35,11 @@ public class QueueManager {
 
     public void appendBlockEvent(StringBuilder stringBuilder) {
         this.blockQueue.addToQueue(stringBuilder);
+    }
+
+    public void flushAll() {
+        this.chatQueue.flush();
+        this.blockQueue.flush();
     }
 
 }

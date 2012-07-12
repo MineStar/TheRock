@@ -39,10 +39,10 @@ public class SQLQueue {
         this.tableName = tableName;
         this.BUFFER_SIZE = buffer_size;
         this.stringBuilder = new StringBuilder();
-        this.init();
+        this.resetStringBuilder();
     }
 
-    private void init() {
+    private void resetStringBuilder() {
         this.stringBuilder.setLength(0);
         this.stringBuilder.append("INSERT INTO ");
         this.stringBuilder.append(tableName);
@@ -53,7 +53,7 @@ public class SQLQueue {
     public void addToQueue(StringBuilder otherBuilder) {
         // append text
         this.stringBuilder.append(otherBuilder);
-        this.stringBuilder.append(",");
+        this.stringBuilder.append(", ");
 
         // increment pointer
         ++currentPointer;
@@ -70,9 +70,9 @@ public class SQLQueue {
             return;
 
         // update sql
-        System.out.println("STRING => " + stringBuilder.substring(0, stringBuilder.length() - 1));
+        this.databaseHandler.executeStatement(stringBuilder.substring(0, stringBuilder.length() - 2));
 
         // reset data
-        this.init();
+        this.resetStringBuilder();
     }
 }

@@ -38,7 +38,7 @@ public class Core extends AbstractCore {
     private PlayerListener playerListener;
 
     /** MANAGER */
-    private DatabaseHandler dbHandler;
+    private DatabaseHandler databaseHandler;
     private WorldManager worldManager;
 
     /** QUEUES */
@@ -48,15 +48,15 @@ public class Core extends AbstractCore {
     protected boolean createManager() {
         INSTANCE = this;
 
-        // dbHandler = new DatabaseHandler(NAME, getDataFolder());
-        // if (!dbHandler.hasConnection())
-        // return false;
+        databaseHandler = new DatabaseHandler(NAME, getDataFolder());
+        if (!databaseHandler.hasConnection())
+            return false;
 
         // WorldManager
         worldManager = new WorldManager();
 
         // Queues
-        queueManager = new QueueManager(dbHandler);
+        queueManager = new QueueManager(databaseHandler);
 
         return true;
     }
@@ -65,7 +65,15 @@ public class Core extends AbstractCore {
     protected boolean createListener() {
         blockListener = new BlockListener(queueManager, worldManager);
         playerListener = new PlayerListener(queueManager, worldManager);
+        return true;
+    }
 
+    @Override
+    protected boolean commonDisable() {
+        if (this.databaseHandler.hasConnection()) {
+            this.queueManager.flushAll();
+            this.databaseHandler.closeConnection();
+        }
         return true;
     }
 
@@ -79,5 +87,9 @@ public class Core extends AbstractCore {
 
     public static Core getInstance() {
         return INSTANCE;
+    }
+
+    public DatabaseHandler getDatabaseHandler() {
+        return this.databaseHandler;
     }
 }

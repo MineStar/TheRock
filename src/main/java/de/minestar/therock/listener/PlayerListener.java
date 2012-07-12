@@ -46,9 +46,13 @@ public class PlayerListener implements Listener {
 
         // create data
         this.queueBuilder.append("(");
+        this.queueBuilder.append(System.currentTimeMillis());
+        this.queueBuilder.append(", ");
         this.queueBuilder.append("'" + event.getPlayer().getName() + "'");
         this.queueBuilder.append(", ");
-        this.queueBuilder.append("'" + event.getMessage() + "'");
+        String message = event.getMessage();
+        message = message.replace("\\", "\\\\").replace("'", "\\'");
+        this.queueBuilder.append("'" + message + "'");
         this.queueBuilder.append(")");
 
         // add to queue

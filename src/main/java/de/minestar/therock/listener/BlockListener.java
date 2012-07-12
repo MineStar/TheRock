@@ -184,7 +184,10 @@ public class BlockListener implements Listener {
     public void addBlockChange(String reason, int eventType, String worldName, int blockX, int blockY, int blockZ, int fromID, byte fromData, int toID, byte toData) {
         // "("
         this.queueBuilder.append("(");
-        // "PLAYERNAME"
+        // "TIMESTAMP"
+        this.queueBuilder.append(System.currentTimeMillis());
+        // "REASON"
+        this.queueBuilder.append(", ");
         this.queueBuilder.append("'" + reason + "'");
         // "EVENTTYPE"
         this.queueBuilder.append(", ");
