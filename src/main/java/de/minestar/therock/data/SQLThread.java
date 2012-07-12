@@ -33,6 +33,7 @@ public class SQLThread extends Thread {
         this.query = query;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void run() {
         try {
