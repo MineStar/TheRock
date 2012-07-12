@@ -66,6 +66,7 @@ public class PlayerListener implements Listener {
         this.queueBuilder.setLength(0);
     }
 
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerCommandPreProcess(PlayerCommandPreprocessEvent event) {
         // event cancelled => return
         if (event.isCancelled() || !this.mainManager.logCommands())
