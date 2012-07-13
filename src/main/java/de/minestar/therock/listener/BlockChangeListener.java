@@ -32,6 +32,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 
@@ -80,6 +82,36 @@ public class BlockChangeListener implements Listener {
         // create data
         // /////////////////////////////////
         this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_PLACE.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlockReplacedState().getTypeId(), event.getBlockReplacedState().getRawData(), event.getBlockPlaced().getTypeId(), event.getBlockPlaced().getData());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onBlockExplode(EntityExplodeEvent event) {
+        // /////////////////////////////////
+        // event cancelled => return
+        // /////////////////////////////////
+        if (event.isCancelled() || !this.mainManager.isWorldWatched(event.getEntity().getWorld().getName()) || !this.mainManager.getWorld(event.getEntity().getWorld()).logEntityBlockExplode())
+            return;
+
+        for (Block block : event.blockList()) {
+            // /////////////////////////////////
+            // create data
+            // /////////////////////////////////
+            this.addBlockChange(event.getEntityType().getName(), BlockEventTypes.PHYSICS_DESTROY.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getTypeId(), block.getData(), Material.AIR.getId(), (byte) Material.AIR.getId());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onEntityChangeBlock(EntityChangeBlockEvent event) {
+        // /////////////////////////////////
+        // event cancelled => return
+        // /////////////////////////////////
+        if (event.isCancelled() || !this.mainManager.isWorldWatched(event.getEntity().getWorld().getName()) || !this.mainManager.getWorld(event.getEntity().getWorld()).logEntityBlockChange())
+            return;
+
+        // /////////////////////////////////
+        // create data
+        // /////////////////////////////////
+        this.addBlockChange(event.getEntityType().getName(), BlockEventTypes.PHYSICS_DESTROY.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlock().getTypeId(), event.getBlock().getData(), event.getTo().getId(), (byte) 0);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
