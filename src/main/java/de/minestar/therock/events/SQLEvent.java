@@ -51,7 +51,7 @@ public class SQLEvent extends Event {
                 }
                 totalChanges++;
             }
-            this.results.last();
+            results.beforeFirst();
             blocks.clear();
             blocks = null;
         } catch (SQLException e) {

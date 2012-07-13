@@ -22,6 +22,7 @@ import org.bukkit.plugin.PluginManager;
 
 import de.minestar.minestarlibrary.AbstractCore;
 import de.minestar.minestarlibrary.commands.CommandList;
+import de.minestar.therock.commands.RollbackCommand;
 import de.minestar.therock.commands.SelectionCommand;
 import de.minestar.therock.commands.TheRockCommand;
 import de.minestar.therock.data.CacheHolder;
@@ -110,7 +111,8 @@ public class Core extends AbstractCore {
         //@formatter:off;
         this.cmdList = new CommandList(
                 new TheRockCommand    ("/tr", "", "",
-                            new SelectionCommand ("selection",    "[ Player ] [ since ]",    "therock.tools.selection",      this.mainManager)
+                            new SelectionCommand ("selection",    "[ Player ] [ since ]",    "therock.tools.selection",      this.mainManager),
+                            new RollbackCommand ("rollback",      "",                        "therock.tools.rollback")
                           )
          );
         // @formatter: on;

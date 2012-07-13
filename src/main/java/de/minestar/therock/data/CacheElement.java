@@ -20,17 +20,25 @@ package de.minestar.therock.data;
 
 import java.sql.ResultSet;
 
+import org.bukkit.World;
+
 public class CacheElement {
     private final String playerName;
+    private final World world;
     private final ResultSet results;
 
-    public CacheElement(String playerName, ResultSet results) {
+    public CacheElement(String playerName, World world, ResultSet results) {
         this.playerName = playerName;
+        this.world = world;
         this.results = results;
     }
 
     public String getPlayerName() {
         return playerName;
+    }
+
+    public World getWorld() {
+        return world;
     }
 
     public ResultSet getResults() {

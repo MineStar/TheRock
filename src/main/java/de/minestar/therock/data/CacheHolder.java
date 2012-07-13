@@ -34,4 +34,8 @@ public class CacheHolder {
     public boolean hasCacheElement(String playerName) {
         return (this.getCacheElement(playerName) != null);
     }
+
+    public void clearCacheElement(String playerName) {
+        this.cacheList.remove(playerName);
+    }
 }
