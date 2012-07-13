@@ -24,18 +24,18 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+import de.minestar.therock.manager.MainConsumer;
 import de.minestar.therock.manager.MainManager;
-import de.minestar.therock.manager.QueueManager;
 
 public class ChatAndCommandListener implements Listener {
 
     private MainManager mainManager;
-    private QueueManager queueManager;
+    private MainConsumer mainConsumer;
     private StringBuilder queueBuilder;
 
-    public ChatAndCommandListener(QueueManager queueManager, MainManager mainManager) {
+    public ChatAndCommandListener(MainConsumer mainConsumer, MainManager mainManager) {
         this.mainManager = mainManager;
-        this.queueManager = queueManager;
+        this.mainConsumer = mainConsumer;
         this.queueBuilder = new StringBuilder();
     }
 
@@ -57,7 +57,7 @@ public class ChatAndCommandListener implements Listener {
         this.queueBuilder.append(")");
 
         // add to queue
-        this.queueManager.appendChatEvent(this.queueBuilder);
+        this.mainConsumer.appendChatEvent(this.queueBuilder);
 
         // reset data
         this.queueBuilder.setLength(0);
@@ -81,7 +81,7 @@ public class ChatAndCommandListener implements Listener {
         this.queueBuilder.append(")");
 
         // add to queue
-        this.queueManager.appendCommandEvent(this.queueBuilder);
+        this.mainConsumer.appendCommandEvent(this.queueBuilder);
 
         // reset data
         this.queueBuilder.setLength(0);

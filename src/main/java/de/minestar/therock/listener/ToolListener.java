@@ -110,6 +110,7 @@ public class ToolListener implements Listener {
             }
         }
     }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onGetBlockChangeInfo(GetBlockChangesEvent event) {
         ResultSet results = event.getResults();

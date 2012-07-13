@@ -28,25 +28,41 @@ public class SQLQueue {
 
     private int currentPointer = 0;
     private String tableName = "";
+    private String worldName = "";
+    private ValueList values = null;
     private StringBuilder stringBuilder;
 
-    public SQLQueue(DatabaseHandler databaseHandler, String tableName) {
-        this(databaseHandler, tableName, 5);
+    public SQLQueue(DatabaseHandler databaseHandler, String worldName, String tableName, ValueList values) {
+        this(databaseHandler, worldName, tableName, values, 5);
     }
 
-    public SQLQueue(DatabaseHandler databaseHandler, String tableName, int buffer_size) {
+    public SQLQueue(DatabaseHandler databaseHandler, String worldName, String tableName, ValueList values, int buffer_size) {
         this.databaseHandler = databaseHandler;
         this.tableName = tableName;
+        this.worldName = worldName;
+        this.values = values;
         this.BUFFER_SIZE = buffer_size;
         this.stringBuilder = new StringBuilder();
         this.resetStringBuilder();
+        this.databaseHandler.createTable(worldName, tableName, values);
     }
 
     private void resetStringBuilder() {
         this.stringBuilder.setLength(0);
         this.stringBuilder.append("INSERT INTO ");
+        this.stringBuilder.append(worldName);
+        this.stringBuilder.append("_");
         this.stringBuilder.append(tableName);
-        this.stringBuilder.append(" VALUES ");
+        this.stringBuilder.append(" (");
+        int i = 0;
+        for (Value value : this.values.getValues()) {
+            this.stringBuilder.append(value.getName());
+            ++i;
+            if (i != this.values.getSize()) {
+                this.stringBuilder.append(", ");
+            }
+        }
+        this.stringBuilder.append(") VALUES ");
         this.currentPointer = 0;
     }
 

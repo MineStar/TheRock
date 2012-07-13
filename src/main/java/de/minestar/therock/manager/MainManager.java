@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -36,6 +37,7 @@ import de.minestar.therock.data.WorldSettings;
 
 public class MainManager {
     private HashMap<String, WorldSettings> worlds;
+    private MainConsumer mainConsumer;
 
     // general settings
     private boolean logChat = true, logCommands = true;
@@ -44,7 +46,8 @@ public class MainManager {
     private int toolLookupID = Material.WATCH.getId();
     private int toolSelectionID = Material.STICK.getId();
 
-    public MainManager() {
+    public MainManager(MainConsumer mainConsumer) {
+        this.mainConsumer = mainConsumer;
         this.loadWorlds();
     }
 
@@ -80,11 +83,16 @@ public class MainManager {
         try {
             YamlConfiguration ymlFile = new YamlConfiguration();
             ymlFile.load(file);
+            World world = null;
             List<String> worldList = ymlFile.getStringList("log.worlds");
             if (worldList != null) {
                 for (String worldName : worldList) {
-                    WorldSettings settings = new WorldSettings(worldName);
-                    this.worlds.put(worldName.toLowerCase(), settings);
+                    world = this.getBukkitWorld(worldName);
+                    if (world != null) {
+                        WorldSettings settings = new WorldSettings(worldName);
+                        this.worlds.put(worldName.toLowerCase(), settings);
+                        this.mainConsumer.addWorldConsumer(world.getName());
+                    }
                 }
             }
 
@@ -97,6 +105,18 @@ public class MainManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isWorldWatched(String worldName) {
+        return this.worlds.containsKey(worldName);
+    }
+
+    private World getBukkitWorld(String worldName) {
+        for (World world : Bukkit.getWorlds()) {
+            if (world.getName().equalsIgnoreCase(worldName))
+                return world;
+        }
+        return null;
     }
 
     private void writeDefaultConfig() {

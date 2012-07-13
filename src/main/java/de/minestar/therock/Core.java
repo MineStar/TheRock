@@ -25,8 +25,8 @@ import de.minestar.therock.database.DatabaseHandler;
 import de.minestar.therock.listener.BlockChangeListener;
 import de.minestar.therock.listener.ChatAndCommandListener;
 import de.minestar.therock.listener.ToolListener;
+import de.minestar.therock.manager.MainConsumer;
 import de.minestar.therock.manager.MainManager;
-import de.minestar.therock.manager.QueueManager;
 
 public class Core extends AbstractCore {
 
@@ -43,8 +43,8 @@ public class Core extends AbstractCore {
     private DatabaseHandler databaseHandler;
     private MainManager mainManager;
 
-    /** QUEUES */
-    private QueueManager queueManager;
+    /** CONSUMER */
+    private MainConsumer mainConsumer;
 
     @Override
     protected boolean createManager() {
@@ -54,19 +54,19 @@ public class Core extends AbstractCore {
         if (!databaseHandler.hasConnection())
             return false;
 
-        // WorldManager
-        mainManager = new MainManager();
-
         // Queues
-        queueManager = new QueueManager(databaseHandler);
+        mainConsumer = new MainConsumer(databaseHandler);
+
+        // WorldManager
+        mainManager = new MainManager(mainConsumer);
 
         return true;
     }
 
     @Override
     protected boolean createListener() {
-        blockListener = new BlockChangeListener(queueManager, mainManager);
-        playerListener = new ChatAndCommandListener(queueManager, mainManager);
+        blockListener = new BlockChangeListener(mainConsumer, mainManager);
+        playerListener = new ChatAndCommandListener(mainConsumer, mainManager);
         toolListener = new ToolListener(mainManager);
         return true;
     }
@@ -74,7 +74,7 @@ public class Core extends AbstractCore {
     @Override
     protected boolean commonDisable() {
         if (this.databaseHandler.hasConnection()) {
-            this.queueManager.flushAll();
+            this.mainConsumer.flushWithoutThread();
             this.databaseHandler.closeConnection();
         }
         return true;

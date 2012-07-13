@@ -19,32 +19,34 @@
 package de.minestar.therock.manager;
 
 import de.minestar.therock.data.SQLQueue;
+import de.minestar.therock.data.Value;
+import de.minestar.therock.data.ValueList;
 import de.minestar.therock.database.DatabaseHandler;
 
-public class QueueManager {
-    private SQLQueue chatQueue, commandQueue, blockQueue;
+public class WorldConsumer {
+    private SQLQueue blockQueue;
 
-    public QueueManager(DatabaseHandler databaseHandler) {
-        this.chatQueue = new SQLQueue(databaseHandler, "tbl_chat (timestamp, playername, message)", 2);
-        this.commandQueue = new SQLQueue(databaseHandler, "tbl_commands (timestamp, playername, command)", 2);
-        this.blockQueue = new SQLQueue(databaseHandler, "tbl_block (timestamp, reason, eventType, worldName, blockX, blockY, blockZ, fromID, fromData, toID, toData)", 10);
-    }
-
-    public void appendChatEvent(StringBuilder stringBuilder) {
-        this.chatQueue.addToQueue(stringBuilder);
-    }
-
-    public void appendCommandEvent(StringBuilder stringBuilder) {
-        this.commandQueue.addToQueue(stringBuilder);
+    public WorldConsumer(String worldName, DatabaseHandler databaseHandler) {
+        // BlockQueue
+        ValueList values = new ValueList();
+        values.addValue(new Value("timestamp", "BIGINT"));
+        values.addValue(new Value("reason", "TEXT"));
+        values.addValue(new Value("eventType", "INTEGER"));
+        values.addValue(new Value("blockX", "INTEGER"));
+        values.addValue(new Value("blockY", "INTEGER"));
+        values.addValue(new Value("blockZ", "INTEGER"));
+        values.addValue(new Value("fromID", "INTEGER"));
+        values.addValue(new Value("fromData", "INTEGER"));
+        values.addValue(new Value("toID", "INTEGER"));
+        values.addValue(new Value("toData", "INTEGER"));
+        this.blockQueue = new SQLQueue(databaseHandler, worldName, "block", values, 10);
     }
 
     public void appendBlockEvent(StringBuilder stringBuilder) {
         this.blockQueue.addToQueue(stringBuilder);
     }
 
-    public void flushAll() {
-        this.chatQueue.flushWithoutThread();
-        this.commandQueue.flushWithoutThread();
+    public void flushWithoutThread() {
         this.blockQueue.flushWithoutThread();
     }
 }

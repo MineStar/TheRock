@@ -36,22 +36,21 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 
 import de.minestar.therock.data.BlockEventTypes;
+import de.minestar.therock.manager.MainConsumer;
 import de.minestar.therock.manager.MainManager;
-import de.minestar.therock.manager.QueueManager;
 
 public class BlockChangeListener implements Listener {
 
     private MainManager mainManager;
-    private QueueManager queueManager;
+    private MainConsumer mainConsumer;
     private StringBuilder queueBuilder;
 
     private static final Set<Integer> nonFluidProofBlocks = new HashSet<Integer>(Arrays.asList(6, 27, 28, 31, 32, 37, 38, 39, 40, 50, 51, 55, 59, 66, 69, 70, 72, 75, 76, 78, 83, 93, 94, 104, 105, 106, 115, 127, 131, 132));
-
     private final BlockFace[] faces = new BlockFace[]{BlockFace.DOWN, BlockFace.NORTH, BlockFace.WEST, BlockFace.EAST, BlockFace.SOUTH};
 
-    public BlockChangeListener(QueueManager queueManager, MainManager mainManager) {
+    public BlockChangeListener(MainConsumer mainConsumer, MainManager mainManager) {
         this.mainManager = mainManager;
-        this.queueManager = queueManager;
+        this.mainConsumer = mainConsumer;
         this.queueBuilder = new StringBuilder();
     }
 
@@ -60,7 +59,7 @@ public class BlockChangeListener implements Listener {
         // /////////////////////////////////
         // event cancelled => return
         // /////////////////////////////////
-        if (event.isCancelled() || !this.mainManager.getWorld(event.getPlayer()).logBlockBreak())
+        if (event.isCancelled() || !this.mainManager.isWorldWatched(event.getBlock().getWorld().getName()) || !this.mainManager.getWorld(event.getPlayer()).logBlockBreak())
             return;
 
         // /////////////////////////////////
@@ -74,7 +73,7 @@ public class BlockChangeListener implements Listener {
         // /////////////////////////////////
         // event cancelled => return
         // /////////////////////////////////
-        if (event.isCancelled() || !this.mainManager.getWorld(event.getPlayer()).logBlockPlace())
+        if (event.isCancelled() || !this.mainManager.isWorldWatched(event.getBlock().getWorld().getName()) || !this.mainManager.getWorld(event.getPlayer()).logBlockPlace())
             return;
 
         // /////////////////////////////////
@@ -88,11 +87,10 @@ public class BlockChangeListener implements Listener {
         // /////////////////////////////////
         // event cancelled => return
         // /////////////////////////////////
-        if (event.isCancelled())
+        if (event.isCancelled() || !this.mainManager.isWorldWatched(event.getBlock().getWorld().getName()))
             return;
 
         final int typeFrom = event.getBlock().getTypeId();
-
         final Block toBlock = event.getToBlock();
         final int replacedID = toBlock.getState().getTypeId();
         final byte replacedData = toBlock.getState().getRawData();
@@ -155,10 +153,11 @@ public class BlockChangeListener implements Listener {
             }
         }
     }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
         // event cancelled => return
-        if (event.isCancelled() || !this.mainManager.getWorld(event.getPlayer()).logBucketEmpty())
+        if (event.isCancelled() || !this.mainManager.isWorldWatched(event.getBlockClicked().getWorld().getName()) || !this.mainManager.getWorld(event.getPlayer()).logBucketEmpty())
             return;
 
         // /////////////////////////////////
@@ -171,7 +170,7 @@ public class BlockChangeListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerBucketFill(PlayerBucketFillEvent event) {
         // event cancelled => return
-        if (event.isCancelled() || !this.mainManager.getWorld(event.getPlayer()).logBucketFill())
+        if (event.isCancelled() || !this.mainManager.isWorldWatched(event.getBlockClicked().getWorld().getName()) || !this.mainManager.getWorld(event.getPlayer()).logBucketFill())
             return;
 
         // /////////////////////////////////
@@ -181,7 +180,7 @@ public class BlockChangeListener implements Listener {
         this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_BREAK.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getState().getTypeId(), block.getState().getRawData(), Material.AIR.getId(), (byte) 0);
     }
 
-    public void addBlockChange(String reason, int eventType, String worldName, int blockX, int blockY, int blockZ, int fromID, byte fromData, int toID, byte toData) {
+    private void addBlockChange(String reason, int eventType, String worldName, int blockX, int blockY, int blockZ, int fromID, byte fromData, int toID, byte toData) {
         // "("
         this.queueBuilder.append("(");
         // "TIMESTAMP"
@@ -192,9 +191,6 @@ public class BlockChangeListener implements Listener {
         // "EVENTTYPE"
         this.queueBuilder.append(", ");
         this.queueBuilder.append(eventType);
-        // "WORLDNAME"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append("'" + worldName + "'");
         // "POSITION: X"
         this.queueBuilder.append(", ");
         this.queueBuilder.append(blockX);
@@ -222,7 +218,7 @@ public class BlockChangeListener implements Listener {
         // /////////////////////////////////
         // add to queue
         // /////////////////////////////////
-        this.queueManager.appendBlockEvent(this.queueBuilder);
+        this.mainConsumer.appendBlockEvent(worldName, this.queueBuilder);
 
         // /////////////////////////////////
         // reset data

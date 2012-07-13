@@ -32,6 +32,8 @@ import de.minestar.minestarlibrary.database.DatabaseType;
 import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.therock.Core;
+import de.minestar.therock.data.Value;
+import de.minestar.therock.data.ValueList;
 import de.minestar.therock.sqlthreads.GetBlockChangesThread;
 import de.minestar.therock.sqlthreads.InsertThread;
 
@@ -54,7 +56,8 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
     @Override
     protected void createStructure(String pluginName, Connection con) throws Exception {
-        DatabaseUtils.createStructure(getClass().getResourceAsStream("/structure.sql"), con, pluginName);
+        // DatabaseUtils.createStructure(getClass().getResourceAsStream("/structure.sql"),
+        // con, pluginName);
     }
 
     public boolean getBlockChanges(Player player, Block block) {
@@ -84,5 +87,37 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
     @Override
     protected void createStatements(String pluginName, Connection con) throws Exception {
+    }
+
+    public boolean createTable(String worldName, String tableName, ValueList values) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("CREATE TABLE IF NOT EXISTS `");
+        builder.append(worldName);
+        builder.append("_");
+        builder.append(tableName);
+        builder.append("` (`ID` INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,");
+        int i = 0;
+        for (Value value : values.getValues()) {
+            builder.append("`");
+            builder.append(value.getName());
+            builder.append("` ");
+            builder.append(value.getSqlDefinition());
+            builder.append(" NOT NULL");
+            ++i;
+            if (i != values.getSize()) {
+                builder.append(", ");
+            }
+        }
+        builder.append(");");
+
+        try {
+            PreparedStatement statement = this.getConnection().prepareStatement(builder.toString());
+            return (statement.executeUpdate() > 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ConsoleUtils.printException(e, Core.NAME, "Can't execute query: " + builder.toString());
+            return false;
+        }
     }
 }
