@@ -29,7 +29,7 @@ public class MainConsumer {
     private DatabaseHandler databaseHandler;
     private HashMap<String, WorldConsumer> worldList;
 
-    private SQLQueue chatQueue, commandQueue;
+    private SQLQueue chatQueue, commandQueue, playerDeathQueue;
 
     public MainConsumer(DatabaseHandler databaseHandler) {
         this.worldList = new HashMap<String, WorldConsumer>();
@@ -48,6 +48,13 @@ public class MainConsumer {
         values.addValue(new Value("playerName", "TEXT"));
         values.addValue(new Value("command", "TEXT"));
         this.commandQueue = new SQLQueue(databaseHandler, "general", "commands", values, 2);
+
+        // PlayerDeathQueue
+        values = new ValueList();
+        values.addValue(new Value("timestamp", "BIGINT"));
+        values.addValue(new Value("playerName", "TEXT"));
+        values.addValue(new Value("reason", "TEXT"));
+        this.playerDeathQueue = new SQLQueue(databaseHandler, "general", "playerDeath", values, 2);
     }
 
     public WorldConsumer addWorldConsumer(String worldName) {
@@ -76,9 +83,14 @@ public class MainConsumer {
         this.commandQueue.addToQueue(stringBuilder);
     }
 
+    public void appendPlayerDeathEvent(StringBuilder stringBuilder) {
+        this.playerDeathQueue.addToQueue(stringBuilder);
+    }
+
     public void flushWithoutThread() {
         this.chatQueue.flushWithoutThread();
         this.commandQueue.flushWithoutThread();
+        this.playerDeathQueue.flushWithoutThread();
 
         for (WorldConsumer consumer : this.worldList.values()) {
             consumer.flushWithoutThread();

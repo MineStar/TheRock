@@ -21,6 +21,7 @@ package de.minestar.therock;
 import org.bukkit.plugin.PluginManager;
 
 import de.minestar.minestarlibrary.AbstractCore;
+import de.minestar.therock.data.CacheHolder;
 import de.minestar.therock.database.DatabaseHandler;
 import de.minestar.therock.listener.BlockChangeListener;
 import de.minestar.therock.listener.ChatAndCommandListener;
@@ -46,6 +47,9 @@ public class Core extends AbstractCore {
     /** CONSUMER */
     private MainConsumer mainConsumer;
 
+    /** CACHE */
+    private CacheHolder cacheHolder;
+
     @Override
     protected boolean createManager() {
         INSTANCE = this;
@@ -63,6 +67,9 @@ public class Core extends AbstractCore {
 
         // WorldManager
         mainManager = new MainManager(mainConsumer, toolListener);
+
+        // CacheHolder
+        cacheHolder = new CacheHolder();
 
         return true;
     }
@@ -97,5 +104,9 @@ public class Core extends AbstractCore {
 
     public DatabaseHandler getDatabaseHandler() {
         return this.databaseHandler;
+    }
+
+    public CacheHolder getCacheHolder() {
+        return this.cacheHolder;
     }
 }

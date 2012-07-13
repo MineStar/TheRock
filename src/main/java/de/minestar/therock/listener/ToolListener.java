@@ -40,6 +40,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 import de.minestar.therock.Core;
 import de.minestar.therock.data.BlockEventTypes;
+import de.minestar.therock.data.CacheElement;
 import de.minestar.therock.events.GetBlockChangesEvent;
 import de.minestar.therock.tools.Tool;
 
@@ -133,6 +134,7 @@ public class ToolListener implements Listener {
         // send info
         PlayerUtils.sendMessage(player, ChatColor.RED, "Changes for: " + event.getBlock().getWorld().getName() + " - [ " + event.getBlock().getX() + " / " + event.getBlock().getY() + " / " + event.getBlock().getZ() + " ]");
         try {
+            // iterate over blockchanges
             while (results.next()) {
                 message = dateFormat.format(results.getLong("timestamp"));
                 switch (BlockEventTypes.byID(results.getInt("eventType"))) {
@@ -159,6 +161,8 @@ public class ToolListener implements Listener {
                 }
                 PlayerUtils.sendMessage(player, ChatColor.GOLD, message);
             }
+            // add cache-element for possible later use
+            Core.getInstance().getCacheHolder().addCacheElement(new CacheElement(event.getPlayerName(), event.getResults()));
         } catch (SQLException e) {
             e.printStackTrace();
             PlayerUtils.sendError(player, Core.NAME, "Oooops.. something went wrong!");

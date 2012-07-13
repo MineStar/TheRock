@@ -56,8 +56,6 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
     @Override
     protected void createStructure(String pluginName, Connection con) throws Exception {
-        // DatabaseUtils.createStructure(getClass().getResourceAsStream("/structure.sql"),
-        // con, pluginName);
     }
 
     public boolean getBlockChanges(Player player, Block block) {

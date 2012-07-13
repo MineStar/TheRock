@@ -123,6 +123,7 @@ public class MainManager {
             e.printStackTrace();
         }
     }
+
     public boolean isWorldWatched(String worldName) {
         return this.worlds.containsKey(worldName);
     }
