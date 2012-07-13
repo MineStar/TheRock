@@ -23,31 +23,32 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
+import org.bukkit.Location;
 
 import de.minestar.therock.database.DatabaseHandler;
-import de.minestar.therock.events.GetBlockChangesEvent;
+import de.minestar.therock.events.GetSelectionBlockChangesEvent;
 
-public class GetBlockChangesThread extends Thread {
+public class GetSelectionBlockChangesThread extends Thread {
 
     private final String playerName;
-    private final Block block;
+    private final Location min, max;
     private final DatabaseHandler databaseHandler;
 
-    public GetBlockChangesThread(DatabaseHandler databaseHandler, String playerName, Block block) {
+    public GetSelectionBlockChangesThread(DatabaseHandler databaseHandler, String playerName, Location min, Location max) {
         this.databaseHandler = databaseHandler;
         this.playerName = playerName;
-        this.block = block;
+        this.min = min;
+        this.max = max;
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public void run() {
         try {
-            PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM " + block.getWorld().getName() + "_block WHERE blockX=" + block.getX() + " AND blockY=" + block.getY() + " AND blockZ=" + block.getZ() + " ORDER BY ID DESC LIMIT 9");
+            PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM " + min.getWorld().getName() + "_block WHERE blockX>=" + min.getBlockX() + " AND blockX<=" + max.getBlockX() + " AND blockY>=" + min.getBlockY() + " AND blockY<=" + max.getBlockY() + " AND blockZ>=" + min.getBlockZ() + " AND blockZ<=" + max.getBlockZ() + " ORDER BY TIMESTAMP DESC");
             ResultSet results = statement.executeQuery();
             if (results != null) {
-                GetBlockChangesEvent event = new GetBlockChangesEvent(playerName, block, results);
+                GetSelectionBlockChangesEvent event = new GetSelectionBlockChangesEvent(playerName, this.min.getWorld(), results);
                 Bukkit.getPluginManager().callEvent(event);
             }
         } catch (SQLException e) {

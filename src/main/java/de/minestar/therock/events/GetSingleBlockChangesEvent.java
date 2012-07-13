@@ -20,9 +20,8 @@ package de.minestar.therock.events;
 
 import java.sql.ResultSet;
 
+import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
 /**
  * Thrown when the SQL-Query is completed
@@ -30,37 +29,16 @@ import org.bukkit.event.HandlerList;
  * @author GeMoschen
  * 
  */
-public class GetBlockChangesEvent extends Event {
+public class GetSingleBlockChangesEvent extends SQLEvent {
 
-    private static final HandlerList handlers = new HandlerList();
-    private final String playerName;
     private final Block block;
-    private final ResultSet results;
 
-    public GetBlockChangesEvent(String playerName, Block block, ResultSet results) {
-        this.playerName = playerName;
+    public GetSingleBlockChangesEvent(String playerName, World world, ResultSet results, Block block) {
+        super(playerName, world, results);
         this.block = block;
-        this.results = results;
-    }
-
-    public String getPlayerName() {
-        return playerName;
     }
 
     public Block getBlock() {
         return block;
-    }
-
-    public ResultSet getResults() {
-        return results;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 }

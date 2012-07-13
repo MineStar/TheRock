@@ -21,10 +21,14 @@ package de.minestar.therock;
 import org.bukkit.plugin.PluginManager;
 
 import de.minestar.minestarlibrary.AbstractCore;
+import de.minestar.minestarlibrary.commands.CommandList;
+import de.minestar.therock.commands.SelectionCommand;
+import de.minestar.therock.commands.TheRockCommand;
 import de.minestar.therock.data.CacheHolder;
 import de.minestar.therock.database.DatabaseHandler;
 import de.minestar.therock.listener.BlockChangeListener;
 import de.minestar.therock.listener.ChatAndCommandListener;
+import de.minestar.therock.listener.SQLListener;
 import de.minestar.therock.listener.ToolListener;
 import de.minestar.therock.manager.MainConsumer;
 import de.minestar.therock.manager.MainManager;
@@ -39,6 +43,7 @@ public class Core extends AbstractCore {
     private BlockChangeListener blockListener;
     private ChatAndCommandListener playerListener;
     private ToolListener toolListener;
+    private SQLListener sqlListener;
 
     /** MANAGER */
     private DatabaseHandler databaseHandler;
@@ -78,6 +83,7 @@ public class Core extends AbstractCore {
     protected boolean createListener() {
         blockListener = new BlockChangeListener(mainConsumer, mainManager);
         playerListener = new ChatAndCommandListener(mainConsumer, mainManager);
+        sqlListener = new SQLListener();
         return true;
     }
 
@@ -95,9 +101,22 @@ public class Core extends AbstractCore {
         pm.registerEvents(blockListener, this);
         pm.registerEvents(playerListener, this);
         pm.registerEvents(toolListener, this);
+        pm.registerEvents(sqlListener, this);
         return true;
     }
 
+    @Override
+    protected boolean createCommands() {
+        //@formatter:off;
+        this.cmdList = new CommandList(
+                new TheRockCommand    ("/tr", "", "",
+                            new SelectionCommand ("selection",    "[ Player ] [ since ]",    "therock.tools.selection",      this.mainManager)
+                          )
+         );
+        // @formatter: on;
+        return true;
+    }
+    
     public static Core getInstance() {
         return INSTANCE;
     }
@@ -108,5 +127,9 @@ public class Core extends AbstractCore {
 
     public CacheHolder getCacheHolder() {
         return this.cacheHolder;
+    }
+
+    public ToolListener getToolListener() {
+        return this.toolListener;
     }
 }

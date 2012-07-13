@@ -2,3 +2,7 @@ name: TheRock
 main: de.minestar.therock.Core
 version: ${pom.version}
 depend: [MineStarLibrary, MinestarCore]
+commands:
+  tr:
+    description: TheRock-related commands
+    usage: /tr <command>

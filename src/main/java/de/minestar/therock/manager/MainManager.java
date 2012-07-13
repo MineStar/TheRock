@@ -166,4 +166,12 @@ public class MainManager {
     public boolean logCommands() {
         return logCommands;
     }
+
+    public int getToolLookupID() {
+        return toolLookupID;
+    }
+
+    public int getToolSelectionID() {
+        return toolSelectionID;
+    }
 }

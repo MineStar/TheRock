@@ -32,9 +32,11 @@ import de.minestar.minestarlibrary.database.DatabaseType;
 import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.therock.Core;
+import de.minestar.therock.data.Selection;
 import de.minestar.therock.data.Value;
 import de.minestar.therock.data.ValueList;
-import de.minestar.therock.sqlthreads.GetBlockChangesThread;
+import de.minestar.therock.sqlthreads.GetSingleBlockChangesThread;
+import de.minestar.therock.sqlthreads.GetSelectionBlockChangesThread;
 import de.minestar.therock.sqlthreads.InsertThread;
 
 public class DatabaseHandler extends AbstractDatabaseHandler {
@@ -59,7 +61,12 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
     }
 
     public boolean getBlockChanges(Player player, Block block) {
-        new GetBlockChangesThread(this, player.getName(), block).start();
+        new GetSingleBlockChangesThread(this, player.getName(), block).start();
+        return true;
+    }
+
+    public boolean getSelectionBlockChanges(Player player, Selection selection) {
+        new GetSelectionBlockChangesThread(this, player.getName(), selection.getMinCorner(), selection.getMaxCorner()).start();
         return true;
     }
 

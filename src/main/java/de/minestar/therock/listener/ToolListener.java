@@ -18,14 +18,8 @@
 
 package de.minestar.therock.listener;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -39,14 +33,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 import de.minestar.therock.Core;
-import de.minestar.therock.data.BlockEventTypes;
-import de.minestar.therock.data.CacheElement;
-import de.minestar.therock.events.GetBlockChangesEvent;
 import de.minestar.therock.tools.Tool;
 
 public class ToolListener implements Listener {
 
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss | ");
     private HashMap<Integer, Tool> toolList = new HashMap<Integer, Tool>();
 
     public void addTool(Tool tool) {
@@ -112,7 +102,6 @@ public class ToolListener implements Listener {
         for (Tool tool : this.toolList.values()) {
             if (tool.hasPermission(event.getEntity())) {
                 for (int i = event.getDrops().size() - 1; i >= 0; i--) {
-
                     if (event.getDrops().get(i).getTypeId() == tool.getToolID()) {
                         event.getDrops().remove(i);
                     }
@@ -120,53 +109,4 @@ public class ToolListener implements Listener {
             }
         }
     }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onGetBlockChangeInfo(GetBlockChangesEvent event) {
-        ResultSet results = event.getResults();
-        Player player = Bukkit.getPlayerExact(event.getPlayerName());
-        String message = "";
-
-        // we need to find the player
-        if (player == null)
-            return;
-
-        // send info
-        PlayerUtils.sendMessage(player, ChatColor.RED, "Changes for: " + event.getBlock().getWorld().getName() + " - [ " + event.getBlock().getX() + " / " + event.getBlock().getY() + " / " + event.getBlock().getZ() + " ]");
-        try {
-            // iterate over blockchanges
-            while (results.next()) {
-                message = dateFormat.format(results.getLong("timestamp"));
-                switch (BlockEventTypes.byID(results.getInt("eventType"))) {
-                    case PLAYER_PLACE : {
-                        message += ChatColor.GRAY + results.getString("reason") + " placed " + Material.getMaterial(results.getInt("toID")) + ":" + results.getInt("toData");
-                        break;
-                    }
-                    case PLAYER_BREAK : {
-                        message += ChatColor.GRAY + results.getString("reason") + " destroyed " + Material.getMaterial(results.getInt("fromID")) + ":" + results.getInt("fromData");
-                        break;
-                    }
-                    case PHYSICS_CREATE : {
-                        message += ChatColor.GRAY + results.getString("reason") + " created " + Material.getMaterial(results.getInt("toID")) + ":" + results.getInt("toData");
-                        break;
-                    }
-                    case PHYSICS_DESTROY : {
-                        message += ChatColor.GRAY + results.getString("reason") + " destroyed " + Material.getMaterial(results.getInt("fromID")) + ":" + results.getInt("fromData");
-                        break;
-                    }
-                    default : {
-                        message += "UNKNOWN ACTION by " + results.getString("reason");
-                        break;
-                    }
-                }
-                PlayerUtils.sendMessage(player, ChatColor.GOLD, message);
-            }
-            // add cache-element for possible later use
-            Core.getInstance().getCacheHolder().addCacheElement(new CacheElement(event.getPlayerName(), event.getResults()));
-        } catch (SQLException e) {
-            e.printStackTrace();
-            PlayerUtils.sendError(player, Core.NAME, "Oooops.. something went wrong!");
-        }
-    }
-
 }
