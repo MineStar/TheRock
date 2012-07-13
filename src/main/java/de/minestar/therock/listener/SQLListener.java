@@ -35,6 +35,7 @@ import de.minestar.therock.Core;
 import de.minestar.therock.data.BlockEventTypes;
 import de.minestar.therock.data.CacheElement;
 import de.minestar.therock.events.GetSelectionBlockChangesEvent;
+import de.minestar.therock.events.GetSelectionPlayerBlockChangesEvent;
 import de.minestar.therock.events.GetSingleBlockChangesEvent;
 
 public class SQLListener implements Listener {
@@ -42,7 +43,7 @@ public class SQLListener implements Listener {
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss | ");
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onGetSelectionBlockChangeInfo(GetSelectionBlockChangesEvent event) {
+    public void onSelectionBlockChangeInfo(GetSelectionBlockChangesEvent event) {
         Player player = Bukkit.getPlayerExact(event.getPlayerName());
 
         // we need to find the player
@@ -52,6 +53,26 @@ public class SQLListener implements Listener {
         // send info
         PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
         PlayerUtils.sendMessage(player, ChatColor.RED, "RESULTS");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
+        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Total changes: " + event.getTotalChanges());
+        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Blocks changed: " + event.getBlockChanges());
+
+        // add cache-element for possible later use
+        Core.getInstance().getCacheHolder().addCacheElement(new CacheElement(event.getPlayerName(), event.getResults()));
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onSelectionPlayerBlockChangeInfo(GetSelectionPlayerBlockChangesEvent event) {
+        Player player = Bukkit.getPlayerExact(event.getPlayerName());
+
+        // we need to find the player
+        if (player == null)
+            return;
+
+        // send info
+        PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "RESULTS");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "Player: '" + event.getTargetPlayer() + "'");
         PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
         PlayerUtils.sendMessage(player, ChatColor.GRAY, "Total changes: " + event.getTotalChanges());
         PlayerUtils.sendMessage(player, ChatColor.GRAY, "Blocks changed: " + event.getBlockChanges());
