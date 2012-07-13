@@ -70,8 +70,18 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
         return true;
     }
 
+    public boolean getSelectionTimeBlockChanges(Player player, Selection selection, long timestamp) {
+        new GetSelectionBlockChangesThread(this, player.getName(), selection.getMinCorner(), selection.getMaxCorner(), timestamp).start();
+        return true;
+    }
+
     public boolean getSelectionPlayerBlockChanges(Player player, Selection selection, String targetPlayer) {
         new GetSelectionBlockChangesThread(this, player.getName(), targetPlayer, selection.getMinCorner(), selection.getMaxCorner()).start();
+        return true;
+    }
+
+    public boolean getSelectionPlayerTimeBlockChanges(Player player, Selection selection, String targetPlayer, long timestamp) {
+        new GetSelectionBlockChangesThread(this, player.getName(), targetPlayer, selection.getMinCorner(), selection.getMaxCorner(), timestamp).start();
         return true;
     }
 

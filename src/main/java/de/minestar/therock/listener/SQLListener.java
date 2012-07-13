@@ -36,6 +36,8 @@ import de.minestar.therock.data.BlockEventTypes;
 import de.minestar.therock.data.CacheElement;
 import de.minestar.therock.events.GetSelectionBlockChangesEvent;
 import de.minestar.therock.events.GetSelectionPlayerBlockChangesEvent;
+import de.minestar.therock.events.GetSelectionPlayerTimeBlockChangesEvent;
+import de.minestar.therock.events.GetSelectionTimeBlockChangesEvent;
 import de.minestar.therock.events.GetSingleBlockChangesEvent;
 
 public class SQLListener implements Listener {
@@ -62,6 +64,26 @@ public class SQLListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
+    public void onSelectionTimeBlockChangeInfo(GetSelectionTimeBlockChangesEvent event) {
+        Player player = Bukkit.getPlayerExact(event.getPlayerName());
+
+        // we need to find the player
+        if (player == null)
+            return;
+
+        // send info
+        PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "RESULTS");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "After: '" + dateFormat.format(event.getTimestamp()) + "'");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
+        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Total changes: " + event.getTotalChanges());
+        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Blocks changed: " + event.getBlockChanges());
+
+        // add cache-element for possible later use
+        Core.getInstance().getCacheHolder().addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onSelectionPlayerBlockChangeInfo(GetSelectionPlayerBlockChangesEvent event) {
         Player player = Bukkit.getPlayerExact(event.getPlayerName());
 
@@ -73,6 +95,27 @@ public class SQLListener implements Listener {
         PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
         PlayerUtils.sendMessage(player, ChatColor.RED, "RESULTS");
         PlayerUtils.sendMessage(player, ChatColor.RED, "Player: '" + event.getTargetPlayer() + "'");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
+        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Total changes: " + event.getTotalChanges());
+        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Blocks changed: " + event.getBlockChanges());
+
+        // add cache-element for possible later use
+        Core.getInstance().getCacheHolder().addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onSelectionPlayerTimeBlockChangeInfo(GetSelectionPlayerTimeBlockChangesEvent event) {
+        Player player = Bukkit.getPlayerExact(event.getPlayerName());
+
+        // we need to find the player
+        if (player == null)
+            return;
+
+        // send info
+        PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "RESULTS");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "Player: '" + event.getTargetPlayer() + "'");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "After: '" + dateFormat.format(event.getTimestamp()) + "'");
         PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
         PlayerUtils.sendMessage(player, ChatColor.GRAY, "Total changes: " + event.getTotalChanges());
         PlayerUtils.sendMessage(player, ChatColor.GRAY, "Blocks changed: " + event.getBlockChanges());
