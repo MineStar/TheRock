@@ -51,14 +51,18 @@ public class Core extends AbstractCore {
         INSTANCE = this;
 
         databaseHandler = new DatabaseHandler(NAME, getDataFolder());
-        if (!databaseHandler.hasConnection())
+        if (!databaseHandler.hasConnection()) {
             return false;
+        }
+
+        // ToolManager
+        toolListener = new ToolListener();
 
         // Queues
         mainConsumer = new MainConsumer(databaseHandler);
 
         // WorldManager
-        mainManager = new MainManager(mainConsumer);
+        mainManager = new MainManager(mainConsumer, toolListener);
 
         return true;
     }
@@ -67,7 +71,6 @@ public class Core extends AbstractCore {
     protected boolean createListener() {
         blockListener = new BlockChangeListener(mainConsumer, mainManager);
         playerListener = new ChatAndCommandListener(mainConsumer, mainManager);
-        toolListener = new ToolListener(mainManager);
         return true;
     }
 
