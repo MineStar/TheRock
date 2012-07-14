@@ -1,7 +1,10 @@
 package de.minestar.therock.commands;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.bukkit.entity.Player;
 
@@ -13,11 +16,15 @@ import de.minestar.therock.data.CacheElement;
 
 public class RollbackCommand extends AbstractCommand {
 
+    private static final Set<Integer> queue_single = new HashSet<Integer>(Arrays.asList(6, 8, 9, 10, 11, 26, 27, 28, 30, 31, 32, 34, 37, 38, 39, 40, 50, 51, 55, 59, 63, 64, 66, 68, 69, 70, 71, 72, 75, 76, 77, 78, 83, 90, 93, 94, 96, 104, 105, 106, 115, 117, 118, 119, 127, 131, 132));
+    private static final Set<Integer> queue_double = new HashSet<Integer>(Arrays.asList(111));
+
     public RollbackCommand(String syntax, String arguments, String node) {
         super(Core.NAME, syntax, arguments, node);
         this.description = "Rollback the selected action.";
     }
 
+    @SuppressWarnings("unchecked")
     public void execute(String[] args, Player player) {
         // Validate cache
         CacheElement cache = Core.cacheHolder.getCacheElement(player.getName());
@@ -29,25 +36,68 @@ public class RollbackCommand extends AbstractCommand {
 
         try {
             ResultSet results = cache.getResults();
-            HashSet<BlockVector> blockList = new HashSet<BlockVector>(512);
             BlockVector newVector;
 
-            // create blocklist
+            // create blocklist to sort from 0 to 256
+            int MAX = 256;
+            ArrayList<BlockVector>[] blockLists = new ArrayList[MAX];
+            for (int i = 0; i < MAX; i++) {
+                blockLists[i] = new ArrayList<BlockVector>();
+            }
+
+            // sort the blocks into the blocklist
+            int blockCount = 0;
             while (results.next()) {
                 newVector = new BlockVector(cache.getWorld().getName(), results.getInt("blockX"), results.getInt("blockY"), results.getInt("blockZ"));
                 newVector.setTypeID(results.getInt("fromID"));
                 newVector.setSubData((byte) results.getInt("fromData"));
-                blockList.add(newVector);
+                blockLists[newVector.getY()].add(newVector);
             }
 
-            // rollback blocks
-            for (BlockVector vector : blockList) {
-                vector.getLocation().getBlock().setTypeIdAndData(vector.getTypeID(), vector.getSubData(), false);
+            // setup queues
+            ArrayList<BlockVector> run_one = new ArrayList<BlockVector>(1024);
+            ArrayList<BlockVector> run_two = new ArrayList<BlockVector>(1024);
+            ArrayList<BlockVector> run_three = new ArrayList<BlockVector>(1024);
+            for (ArrayList<BlockVector> curList : blockLists) {
+                for (BlockVector vector : curList) {
+                    if (queue_single.contains(vector.getTypeID())) {
+                        run_two.add(vector);
+                    } else if (queue_double.contains(vector.getTypeID())) {
+                        run_three.add(vector);
+                    } else {
+                        run_one.add(vector);
+                    }
+                }
             }
 
-            PlayerUtils.sendSuccess(player, Core.NAME, "Rollback finished. ( " + blockList.size() + " Blocks)");
-            blockList.clear();
-            blockList = null;
+            // clear the list
+            for (int i = 0; i < MAX; i++) {
+                blockLists[i].clear();
+            }
+
+            // rollback blocks : Run ONE
+            for (BlockVector vector : run_one) {
+                vector.getLocation().getBlock().setTypeIdAndData(vector.getTypeID(), vector.getSubData(), true);
+                ++blockCount;
+            }
+            run_one.clear();
+
+            // rollback blocks : Run TWO
+            for (BlockVector vector : run_two) {
+                vector.getLocation().getBlock().setTypeIdAndData(vector.getTypeID(), vector.getSubData(), true);
+                ++blockCount;
+            }
+            run_two.clear();
+
+            // rollback blocks : Run THREE
+            for (BlockVector vector : run_three) {
+                vector.getLocation().getBlock().setTypeIdAndData(vector.getTypeID(), vector.getSubData(), true);
+                ++blockCount;
+            }
+            run_three.clear();
+
+            // send info
+            PlayerUtils.sendSuccess(player, Core.NAME, "Rollback finished. ( " + blockCount + " Blocks)");
             Core.cacheHolder.clearCacheElement(player.getName());
         } catch (Exception e) {
             PlayerUtils.sendError(player, Core.NAME, "Oooops.. something went wrong!");
@@ -55,5 +105,4 @@ public class RollbackCommand extends AbstractCommand {
             e.printStackTrace();
         }
     }
-
 }
