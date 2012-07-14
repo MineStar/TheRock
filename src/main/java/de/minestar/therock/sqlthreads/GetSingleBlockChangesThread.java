@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 
+import de.minestar.therock.Core;
 import de.minestar.therock.database.DatabaseHandler;
 import de.minestar.therock.events.GetSingleBlockChangesEvent;
 
@@ -34,8 +35,8 @@ public class GetSingleBlockChangesThread extends Thread {
     private final Block block;
     private final DatabaseHandler databaseHandler;
 
-    public GetSingleBlockChangesThread(DatabaseHandler databaseHandler, String playerName, Block block) {
-        this.databaseHandler = databaseHandler;
+    public GetSingleBlockChangesThread(String playerName, Block block) {
+        this.databaseHandler = Core.databaseHandler;
         this.playerName = playerName;
         this.block = block;
     }
@@ -44,7 +45,7 @@ public class GetSingleBlockChangesThread extends Thread {
     @Override
     public void run() {
         try {
-            PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM " + block.getWorld().getName() + "_block WHERE blockX=" + block.getX() + " AND blockY=" + block.getY() + " AND blockZ=" + block.getZ() + " ORDER BY ID DESC LIMIT 9");
+            PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM " + block.getWorld().getName() + "_block WHERE blockX=" + block.getX() + " AND blockY=" + block.getY() + " AND blockZ=" + block.getZ() + " ORDER BY timestamp DESC LIMIT 9");
             ResultSet results = statement.executeQuery();
             if (results != null) {
                 GetSingleBlockChangesEvent event = new GetSingleBlockChangesEvent(playerName, block.getWorld(), results, block);

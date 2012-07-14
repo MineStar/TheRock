@@ -36,25 +36,25 @@ import de.minestar.therock.manager.MainManager;
 
 public class Core extends AbstractCore {
 
-    private static Core INSTANCE;
+    public static Core INSTANCE;
 
     public static final String NAME = "TheRock";
 
     /** LISTENER */
-    private BlockChangeListener blockListener;
-    private ChatAndCommandListener playerListener;
-    private ToolListener toolListener;
-    private SQLListener sqlListener;
+    public static BlockChangeListener blockListener;
+    public static ChatAndCommandListener playerListener;
+    public static ToolListener toolListener;
+    public static SQLListener sqlListener;
 
     /** MANAGER */
-    private DatabaseHandler databaseHandler;
-    private MainManager mainManager;
+    public static DatabaseHandler databaseHandler;
+    public static MainManager mainManager;
 
     /** CONSUMER */
-    private MainConsumer mainConsumer;
+    public static MainConsumer mainConsumer;
 
     /** CACHE */
-    private CacheHolder cacheHolder;
+    public static CacheHolder cacheHolder;
 
     @Override
     protected boolean createManager() {
@@ -69,10 +69,10 @@ public class Core extends AbstractCore {
         toolListener = new ToolListener();
 
         // Queues
-        mainConsumer = new MainConsumer(databaseHandler);
+        mainConsumer = new MainConsumer();
 
         // WorldManager
-        mainManager = new MainManager(mainConsumer, toolListener);
+        mainManager = new MainManager();
 
         // CacheHolder
         cacheHolder = new CacheHolder();
@@ -82,17 +82,17 @@ public class Core extends AbstractCore {
 
     @Override
     protected boolean createListener() {
-        blockListener = new BlockChangeListener(mainConsumer, mainManager);
-        playerListener = new ChatAndCommandListener(mainConsumer, mainManager);
+        blockListener = new BlockChangeListener();
+        playerListener = new ChatAndCommandListener();
         sqlListener = new SQLListener();
         return true;
     }
 
     @Override
     protected boolean commonDisable() {
-        if (this.databaseHandler.hasConnection()) {
-            this.mainConsumer.flushWithoutThread();
-            this.databaseHandler.closeConnection();
+        if (databaseHandler.hasConnection()) {
+            mainConsumer.flushWithoutThread();
+            databaseHandler.closeConnection();
         }
         return true;
     }
@@ -111,27 +111,11 @@ public class Core extends AbstractCore {
         //@formatter:off;
         this.cmdList = new CommandList(
                 new TheRockCommand    ("/tr", "", "",
-                            new SelectionCommand ("selection",    "[ Player ] [ since ]",    "therock.tools.selection",      this.mainManager),
+                            new SelectionCommand ("selection",    "[ Player ] [ since ]",    "therock.tools.selection"),
                             new RollbackCommand ("rollback",      "",                        "therock.tools.rollback")
                           )
          );
         // @formatter: on;
         return true;
-    }
-    
-    public static Core getInstance() {
-        return INSTANCE;
-    }
-
-    public DatabaseHandler getDatabaseHandler() {
-        return this.databaseHandler;
-    }
-
-    public CacheHolder getCacheHolder() {
-        return this.cacheHolder;
-    }
-
-    public ToolListener getToolListener() {
-        return this.toolListener;
     }
 }

@@ -47,7 +47,7 @@ public class WorldSettings {
     }
 
     private void loadSettings(String worldName) {
-        File file = new File(Core.getInstance().getDataFolder(), "config_" + worldName + ".yml");
+        File file = new File(Core.INSTANCE.getDataFolder(), "config_" + worldName + ".yml");
         if (!file.exists()) {
             this.saveSettings(worldName);
             return;
@@ -70,7 +70,7 @@ public class WorldSettings {
     }
 
     private void saveSettings(String worldName) {
-        File file = new File(Core.getInstance().getDataFolder(), "config_" + worldName + ".yml");
+        File file = new File(Core.INSTANCE.getDataFolder(), "config_" + worldName + ".yml");
         if (file.exists()) {
             file.delete();
         }

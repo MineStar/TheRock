@@ -15,15 +15,15 @@ public class SelectionCommand extends AbstractExtendedCommand {
 
     private MainManager mainManager;
 
-    public SelectionCommand(String syntax, String arguments, String node, MainManager mainManager) {
+    public SelectionCommand(String syntax, String arguments, String node) {
         super(Core.NAME, syntax, arguments, node);
         this.description = "Count the changes in the selected zone.";
-        this.mainManager = mainManager;
+        this.mainManager = Core.mainManager;
     }
 
     public void execute(String[] args, Player player) {
         // Validate selection
-        Selection selection = ((SelectionTool) Core.getInstance().getToolListener().getTool(this.mainManager.getToolSelectionID())).getSelection(player);
+        Selection selection = ((SelectionTool) Core.toolListener.getTool(this.mainManager.getToolSelectionID())).getSelection(player);
         if (!selection.isValid()) {
             PlayerUtils.sendError(player, Core.NAME, "Your selection is not valid.");
             PlayerUtils.sendInfo(player, "NOTE: You must select two points in the same world.");
@@ -41,7 +41,7 @@ public class SelectionCommand extends AbstractExtendedCommand {
         // Command: /tr selection
         if (args.length == 0) {
             PlayerUtils.sendInfo(player, Core.NAME, "Getting results...");
-            Core.getInstance().getDatabaseHandler().getSelectionBlockChanges(player, selection);
+            Core.databaseHandler.getSelectionBlockChanges(player, selection);
         } else {
             // Command: /tr selection player <Player> [1d2h3m4s]
             if (args[0].equalsIgnoreCase("player")) {
@@ -56,7 +56,7 @@ public class SelectionCommand extends AbstractExtendedCommand {
                 // Command: /tr selection player 'Player'
                 if (args.length == 2) {
                     PlayerUtils.sendInfo(player, Core.NAME, "Getting results for player '" + targetName + "'...");
-                    Core.getInstance().getDatabaseHandler().getSelectionPlayerBlockChanges(player, selection, targetName);
+                    Core.databaseHandler.getSelectionPlayerBlockChanges(player, selection, targetName);
                 } else {
                     int[] times = this.parseString(args[2], player);
                     if (times == null) {
@@ -70,7 +70,7 @@ public class SelectionCommand extends AbstractExtendedCommand {
                     long timestamp = System.currentTimeMillis() - seconds * 1000;
 
                     PlayerUtils.sendInfo(player, Core.NAME, "Getting results for player '" + targetName + "', time " + args[2] + " ...");
-                    Core.getInstance().getDatabaseHandler().getSelectionPlayerTimeBlockChanges(player, selection, targetName, timestamp);
+                    Core.databaseHandler.getSelectionPlayerTimeBlockChanges(player, selection, targetName, timestamp);
                 }
             }
             // Command: /tr selection time <1d2h3m4s>
@@ -87,7 +87,7 @@ public class SelectionCommand extends AbstractExtendedCommand {
                 long timestamp = System.currentTimeMillis() - seconds * 1000;
 
                 PlayerUtils.sendInfo(player, Core.NAME, "Getting results for time " + args[1] + " ...");
-                Core.getInstance().getDatabaseHandler().getSelectionTimeBlockChanges(player, selection, timestamp);
+                Core.databaseHandler.getSelectionTimeBlockChanges(player, selection, timestamp);
             } else {
                 // wrong syntax
                 PlayerUtils.sendError(player, Core.NAME, "Wrong syntax! Too many arguments.");

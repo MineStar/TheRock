@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
+import de.minestar.therock.Core;
 import de.minestar.therock.database.DatabaseHandler;
 import de.minestar.therock.events.GetSelectionBlockChangesEvent;
 import de.minestar.therock.events.GetSelectionPlayerBlockChangesEvent;
@@ -40,35 +41,20 @@ public class GetSelectionBlockChangesThread extends Thread {
     private final String targetPlayer;
     private final long timestamp;
 
-    public GetSelectionBlockChangesThread(DatabaseHandler databaseHandler, String playerName, Location min, Location max) {
-        this.databaseHandler = databaseHandler;
-        this.playerName = playerName;
-        this.min = min;
-        this.max = max;
-        this.targetPlayer = null;
-        this.timestamp = -1;
+    public GetSelectionBlockChangesThread(String playerName, Location min, Location max) {
+        this(playerName, null, min, max, -1);
     }
 
-    public GetSelectionBlockChangesThread(DatabaseHandler databaseHandler, String playerName, String targetPlayer, Location min, Location max) {
-        this.databaseHandler = databaseHandler;
-        this.playerName = playerName;
-        this.min = min;
-        this.max = max;
-        this.targetPlayer = targetPlayer;
-        this.timestamp = -1;
+    public GetSelectionBlockChangesThread(String playerName, String targetPlayer, Location min, Location max) {
+        this(playerName, targetPlayer, min, max, -1);
     }
 
-    public GetSelectionBlockChangesThread(DatabaseHandler databaseHandler, String playerName, Location min, Location max, long timestamp) {
-        this.databaseHandler = databaseHandler;
-        this.playerName = playerName;
-        this.min = min;
-        this.max = max;
-        this.targetPlayer = null;
-        this.timestamp = timestamp;
+    public GetSelectionBlockChangesThread(String playerName, Location min, Location max, long timestamp) {
+        this(playerName, null, min, max, timestamp);
     }
 
-    public GetSelectionBlockChangesThread(DatabaseHandler databaseHandler, String playerName, String targetPlayer, Location min, Location max, long timestamp) {
-        this.databaseHandler = databaseHandler;
+    public GetSelectionBlockChangesThread(String playerName, String targetPlayer, Location min, Location max, long timestamp) {
+        this.databaseHandler = Core.databaseHandler;
         this.playerName = playerName;
         this.min = min;
         this.max = max;
@@ -82,14 +68,14 @@ public class GetSelectionBlockChangesThread extends Thread {
         try {
             if (targetPlayer == null) {
                 if (timestamp < 0) {
-                    PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM " + min.getWorld().getName() + "_block WHERE blockX>=" + min.getBlockX() + " AND blockX<=" + max.getBlockX() + " AND blockY>=" + min.getBlockY() + " AND blockY<=" + max.getBlockY() + " AND blockZ>=" + min.getBlockZ() + " AND blockZ<=" + max.getBlockZ() + " ORDER BY TIMESTAMP DESC");
+                    PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM " + min.getWorld().getName() + "_block WHERE blockX>=" + min.getBlockX() + " AND blockX<=" + max.getBlockX() + " AND blockY>=" + min.getBlockY() + " AND blockY<=" + max.getBlockY() + " AND blockZ>=" + min.getBlockZ() + " AND blockZ<=" + max.getBlockZ() + " ORDER BY timestamp DESC");
                     ResultSet results = statement.executeQuery();
                     if (results != null) {
                         GetSelectionBlockChangesEvent event = new GetSelectionBlockChangesEvent(playerName, this.min.getWorld(), results);
                         Bukkit.getPluginManager().callEvent(event);
                     }
                 } else {
-                    PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM " + min.getWorld().getName() + "_block WHERE timestamp>=" + timestamp + " AND blockX>=" + min.getBlockX() + " AND blockX<=" + max.getBlockX() + " AND blockY>=" + min.getBlockY() + " AND blockY<=" + max.getBlockY() + " AND blockZ>=" + min.getBlockZ() + " AND blockZ<=" + max.getBlockZ() + " ORDER BY TIMESTAMP DESC");
+                    PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM " + min.getWorld().getName() + "_block WHERE timestamp>=" + timestamp + " AND blockX>=" + min.getBlockX() + " AND blockX<=" + max.getBlockX() + " AND blockY>=" + min.getBlockY() + " AND blockY<=" + max.getBlockY() + " AND blockZ>=" + min.getBlockZ() + " AND blockZ<=" + max.getBlockZ() + " ORDER BY timestamp DESC");
                     ResultSet results = statement.executeQuery();
                     if (results != null) {
                         GetSelectionTimeBlockChangesEvent event = new GetSelectionTimeBlockChangesEvent(playerName, this.min.getWorld(), results, timestamp);
@@ -98,14 +84,14 @@ public class GetSelectionBlockChangesThread extends Thread {
                 }
             } else {
                 if (timestamp < 0) {
-                    PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM " + min.getWorld().getName() + "_block WHERE reason='" + targetPlayer + "' AND blockX>=" + min.getBlockX() + " AND blockX<=" + max.getBlockX() + " AND blockY>=" + min.getBlockY() + " AND blockY<=" + max.getBlockY() + " AND blockZ>=" + min.getBlockZ() + " AND blockZ<=" + max.getBlockZ() + " ORDER BY TIMESTAMP DESC");
+                    PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM " + min.getWorld().getName() + "_block WHERE reason='" + targetPlayer + "' AND blockX>=" + min.getBlockX() + " AND blockX<=" + max.getBlockX() + " AND blockY>=" + min.getBlockY() + " AND blockY<=" + max.getBlockY() + " AND blockZ>=" + min.getBlockZ() + " AND blockZ<=" + max.getBlockZ() + " ORDER BY timestamp DESC");
                     ResultSet results = statement.executeQuery();
                     if (results != null) {
                         GetSelectionPlayerBlockChangesEvent event = new GetSelectionPlayerBlockChangesEvent(playerName, this.min.getWorld(), results, targetPlayer);
                         Bukkit.getPluginManager().callEvent(event);
                     }
                 } else {
-                    PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM " + min.getWorld().getName() + "_block WHERE reason='" + targetPlayer + "' AND timestamp>=" + timestamp + " AND blockX>=" + min.getBlockX() + " AND blockX<=" + max.getBlockX() + " AND blockY>=" + min.getBlockY() + " AND blockY<=" + max.getBlockY() + " AND blockZ>=" + min.getBlockZ() + " AND blockZ<=" + max.getBlockZ() + " ORDER BY TIMESTAMP DESC");
+                    PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM " + min.getWorld().getName() + "_block WHERE reason='" + targetPlayer + "' AND timestamp>=" + timestamp + " AND blockX>=" + min.getBlockX() + " AND blockX<=" + max.getBlockX() + " AND blockY>=" + min.getBlockY() + " AND blockY<=" + max.getBlockY() + " AND blockZ>=" + min.getBlockZ() + " AND blockZ<=" + max.getBlockZ() + " ORDER BY timestamp DESC");
                     ResultSet results = statement.executeQuery();
                     if (results != null) {
                         GetSelectionPlayerTimeBlockChangesEvent event = new GetSelectionPlayerTimeBlockChangesEvent(playerName, this.min.getWorld(), results, targetPlayer, timestamp);

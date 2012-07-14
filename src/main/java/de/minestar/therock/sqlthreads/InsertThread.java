@@ -21,6 +21,7 @@ package de.minestar.therock.sqlthreads;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import de.minestar.therock.Core;
 import de.minestar.therock.database.DatabaseHandler;
 
 public class InsertThread extends Thread {
@@ -28,8 +29,8 @@ public class InsertThread extends Thread {
     private final String query;
     private final DatabaseHandler databaseHandler;
 
-    public InsertThread(DatabaseHandler databaseHandler, String query) {
-        this.databaseHandler = databaseHandler;
+    public InsertThread(String query) {
+        this.databaseHandler = Core.databaseHandler;
         this.query = query;
     }
 

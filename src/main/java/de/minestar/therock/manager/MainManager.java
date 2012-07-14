@@ -50,9 +50,9 @@ public class MainManager {
     private int toolLookupID = Material.WATCH.getId();
     private int toolSelectionID = Material.STICK.getId();
 
-    public MainManager(MainConsumer mainConsumer, ToolListener toolListener) {
-        this.mainConsumer = mainConsumer;
-        this.toolListener = toolListener;
+    public MainManager() {
+        this.mainConsumer = Core.mainConsumer;
+        this.toolListener = Core.toolListener;
         this.loadConfig();
     }
 
@@ -80,7 +80,7 @@ public class MainManager {
     private void loadConfig() {
         worlds = new HashMap<String, WorldSettings>();
 
-        File file = new File(Core.getInstance().getDataFolder(), "settings.yml");
+        File file = new File(Core.INSTANCE.getDataFolder(), "settings.yml");
         if (!file.exists()) {
             this.writeDefaultConfig();
         }
@@ -137,7 +137,7 @@ public class MainManager {
     }
 
     private void writeDefaultConfig() {
-        File file = new File(Core.getInstance().getDataFolder(), "settings.yml");
+        File file = new File(Core.INSTANCE.getDataFolder(), "settings.yml");
         if (file.exists()) {
             file.delete();
         }

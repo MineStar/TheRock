@@ -37,6 +37,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 
+import de.minestar.therock.Core;
 import de.minestar.therock.data.BlockEventTypes;
 import de.minestar.therock.manager.MainConsumer;
 import de.minestar.therock.manager.MainManager;
@@ -50,9 +51,9 @@ public class BlockChangeListener implements Listener {
     private static final Set<Integer> nonFluidProofBlocks = new HashSet<Integer>(Arrays.asList(6, 27, 28, 31, 32, 37, 38, 39, 40, 50, 51, 55, 59, 66, 69, 70, 72, 75, 76, 78, 83, 93, 94, 104, 105, 106, 115, 127, 131, 132));
     private final BlockFace[] faces = new BlockFace[]{BlockFace.DOWN, BlockFace.NORTH, BlockFace.WEST, BlockFace.EAST, BlockFace.SOUTH};
 
-    public BlockChangeListener(MainConsumer mainConsumer, MainManager mainManager) {
-        this.mainManager = mainManager;
-        this.mainConsumer = mainConsumer;
+    public BlockChangeListener() {
+        this.mainManager = Core.mainManager;
+        this.mainConsumer = Core.mainConsumer;
         this.queueBuilder = new StringBuilder();
     }
 

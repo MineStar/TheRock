@@ -20,7 +20,7 @@ public class RollbackCommand extends AbstractCommand {
 
     public void execute(String[] args, Player player) {
         // Validate cache
-        CacheElement cache = Core.getInstance().getCacheHolder().getCacheElement(player.getName());
+        CacheElement cache = Core.cacheHolder.getCacheElement(player.getName());
         if (cache == null) {
             PlayerUtils.sendError(player, Core.NAME, "You must specify the rollback first.");
             PlayerUtils.sendInfo(player, "NOTE: Use /tr selection [Player] [time]");
@@ -48,10 +48,12 @@ public class RollbackCommand extends AbstractCommand {
             PlayerUtils.sendSuccess(player, Core.NAME, "Rollback finished. ( " + blockList.size() + " Blocks)");
             blockList.clear();
             blockList = null;
-            Core.getInstance().getCacheHolder().clearCacheElement(player.getName());
+            Core.cacheHolder.clearCacheElement(player.getName());
         } catch (Exception e) {
             PlayerUtils.sendError(player, Core.NAME, "Oooops.. something went wrong!");
+            Core.cacheHolder.clearCacheElement(player.getName());
             e.printStackTrace();
         }
     }
+
 }

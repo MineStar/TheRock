@@ -24,6 +24,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+import de.minestar.therock.Core;
 import de.minestar.therock.manager.MainConsumer;
 import de.minestar.therock.manager.MainManager;
 
@@ -33,9 +34,9 @@ public class ChatAndCommandListener implements Listener {
     private MainConsumer mainConsumer;
     private StringBuilder queueBuilder;
 
-    public ChatAndCommandListener(MainConsumer mainConsumer, MainManager mainManager) {
-        this.mainManager = mainManager;
-        this.mainConsumer = mainConsumer;
+    public ChatAndCommandListener() {
+        this.mainManager = Core.mainManager;
+        this.mainConsumer = Core.mainConsumer;
         this.queueBuilder = new StringBuilder();
     }
 

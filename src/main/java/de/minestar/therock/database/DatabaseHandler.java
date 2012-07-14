@@ -61,32 +61,32 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
     }
 
     public boolean getBlockChanges(Player player, Block block) {
-        new GetSingleBlockChangesThread(this, player.getName(), block).start();
+        new GetSingleBlockChangesThread(player.getName(), block).start();
         return true;
     }
 
     public boolean getSelectionBlockChanges(Player player, Selection selection) {
-        new GetSelectionBlockChangesThread(this, player.getName(), selection.getMinCorner(), selection.getMaxCorner()).start();
+        new GetSelectionBlockChangesThread(player.getName(), selection.getMinCorner(), selection.getMaxCorner()).start();
         return true;
     }
 
     public boolean getSelectionTimeBlockChanges(Player player, Selection selection, long timestamp) {
-        new GetSelectionBlockChangesThread(this, player.getName(), selection.getMinCorner(), selection.getMaxCorner(), timestamp).start();
+        new GetSelectionBlockChangesThread(player.getName(), selection.getMinCorner(), selection.getMaxCorner(), timestamp).start();
         return true;
     }
 
     public boolean getSelectionPlayerBlockChanges(Player player, Selection selection, String targetPlayer) {
-        new GetSelectionBlockChangesThread(this, player.getName(), targetPlayer, selection.getMinCorner(), selection.getMaxCorner()).start();
+        new GetSelectionBlockChangesThread(player.getName(), targetPlayer, selection.getMinCorner(), selection.getMaxCorner()).start();
         return true;
     }
 
     public boolean getSelectionPlayerTimeBlockChanges(Player player, Selection selection, String targetPlayer, long timestamp) {
-        new GetSelectionBlockChangesThread(this, player.getName(), targetPlayer, selection.getMinCorner(), selection.getMaxCorner(), timestamp).start();
+        new GetSelectionBlockChangesThread(player.getName(), targetPlayer, selection.getMinCorner(), selection.getMaxCorner(), timestamp).start();
         return true;
     }
 
     public boolean executeStatement(String query) {
-        new InsertThread(this, query).start();
+        new InsertThread(query).start();
         return true;
     }
 

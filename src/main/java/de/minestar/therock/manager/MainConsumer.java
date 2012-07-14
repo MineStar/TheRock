@@ -23,35 +23,31 @@ import java.util.HashMap;
 import de.minestar.therock.data.SQLQueue;
 import de.minestar.therock.data.Value;
 import de.minestar.therock.data.ValueList;
-import de.minestar.therock.database.DatabaseHandler;
 
 public class MainConsumer {
-    private DatabaseHandler databaseHandler;
     private HashMap<String, WorldConsumer> worldList;
-
     private SQLQueue chatQueue, commandQueue;
 
-    public MainConsumer(DatabaseHandler databaseHandler) {
+    public MainConsumer() {
         this.worldList = new HashMap<String, WorldConsumer>();
 
-        this.databaseHandler = databaseHandler;
         // ChatQueue
         ValueList values = new ValueList();
         values.addValue(new Value("timestamp", "BIGINT"));
         values.addValue(new Value("playerName", "TEXT"));
         values.addValue(new Value("message", "TEXT"));
-        this.chatQueue = new SQLQueue(databaseHandler, "general", "chat", values, 2);
+        this.chatQueue = new SQLQueue("general", "chat", values, 2);
 
         // CommandQueue
         values = new ValueList();
         values.addValue(new Value("timestamp", "BIGINT"));
         values.addValue(new Value("playerName", "TEXT"));
         values.addValue(new Value("command", "TEXT"));
-        this.commandQueue = new SQLQueue(databaseHandler, "general", "commands", values, 2);
+        this.commandQueue = new SQLQueue("general", "commands", values, 2);
     }
 
     public WorldConsumer addWorldConsumer(String worldName) {
-        WorldConsumer consumer = new WorldConsumer(worldName, this.databaseHandler);
+        WorldConsumer consumer = new WorldConsumer(worldName);
         this.worldList.put(worldName, consumer);
         return consumer;
     }

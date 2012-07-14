@@ -60,7 +60,7 @@ public class SQLListener implements Listener {
         PlayerUtils.sendMessage(player, ChatColor.GRAY, "Blocks changed: " + event.getBlockChanges());
 
         // add cache-element for possible later use
-        Core.getInstance().getCacheHolder().addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
+        Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -80,7 +80,7 @@ public class SQLListener implements Listener {
         PlayerUtils.sendMessage(player, ChatColor.GRAY, "Blocks changed: " + event.getBlockChanges());
 
         // add cache-element for possible later use
-        Core.getInstance().getCacheHolder().addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
+        Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -100,7 +100,7 @@ public class SQLListener implements Listener {
         PlayerUtils.sendMessage(player, ChatColor.GRAY, "Blocks changed: " + event.getBlockChanges());
 
         // add cache-element for possible later use
-        Core.getInstance().getCacheHolder().addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
+        Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -121,7 +121,7 @@ public class SQLListener implements Listener {
         PlayerUtils.sendMessage(player, ChatColor.GRAY, "Blocks changed: " + event.getBlockChanges());
 
         // add cache-element for possible later use
-        Core.getInstance().getCacheHolder().addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
+        Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -165,7 +165,7 @@ public class SQLListener implements Listener {
                 PlayerUtils.sendMessage(player, ChatColor.GOLD, message);
             }
             // add cache-element for possible later use
-            Core.getInstance().getCacheHolder().addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
+            Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
         } catch (SQLException e) {
             e.printStackTrace();
             PlayerUtils.sendError(player, Core.NAME, "Oooops.. something went wrong!");

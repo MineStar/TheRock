@@ -21,12 +21,11 @@ package de.minestar.therock.manager;
 import de.minestar.therock.data.SQLQueue;
 import de.minestar.therock.data.Value;
 import de.minestar.therock.data.ValueList;
-import de.minestar.therock.database.DatabaseHandler;
 
 public class WorldConsumer {
     private SQLQueue blockQueue;
 
-    public WorldConsumer(String worldName, DatabaseHandler databaseHandler) {
+    public WorldConsumer(String worldName) {
         // BlockQueue
         ValueList values = new ValueList();
         values.addValue(new Value("timestamp", "BIGINT"));
@@ -39,7 +38,7 @@ public class WorldConsumer {
         values.addValue(new Value("fromData", "INTEGER"));
         values.addValue(new Value("toID", "INTEGER"));
         values.addValue(new Value("toData", "INTEGER"));
-        this.blockQueue = new SQLQueue(databaseHandler, worldName, "block", values, 10);
+        this.blockQueue = new SQLQueue(worldName, "block", values, 10);
     }
 
     public void appendBlockEvent(StringBuilder stringBuilder) {

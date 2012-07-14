@@ -34,9 +34,9 @@ public class BlockChangeInfoTool extends Tool {
     public void onBlockInteract(Player player, Block block, BlockFace blockFace, boolean isLeftClick) {
         if (this.hasPermission(player)) {
             if (isLeftClick) {
-                Core.getInstance().getDatabaseHandler().getBlockChanges(player, block);
+                Core.databaseHandler.getBlockChanges(player, block);
             } else {
-                Core.getInstance().getDatabaseHandler().getBlockChanges(player, block.getRelative(blockFace));
+                Core.databaseHandler.getBlockChanges(player, block.getRelative(blockFace));
             }
         }
     }
