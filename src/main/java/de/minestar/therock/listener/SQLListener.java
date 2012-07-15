@@ -56,8 +56,7 @@ public class SQLListener implements Listener {
         PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
         PlayerUtils.sendMessage(player, ChatColor.RED, "RESULTS");
         PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
-        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Total changes: " + event.getTotalChanges());
-        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Blocks changed: " + event.getBlockChanges());
+        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Changes: " + event.getTotalChanges());
 
         // add cache-element for possible later use
         Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
@@ -76,8 +75,7 @@ public class SQLListener implements Listener {
         PlayerUtils.sendMessage(player, ChatColor.RED, "RESULTS");
         PlayerUtils.sendMessage(player, ChatColor.RED, "After: '" + dateFormat.format(event.getTimestamp()) + "'");
         PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
-        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Total changes: " + event.getTotalChanges());
-        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Blocks changed: " + event.getBlockChanges());
+        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Changes: " + event.getTotalChanges());
 
         // add cache-element for possible later use
         Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
@@ -96,8 +94,7 @@ public class SQLListener implements Listener {
         PlayerUtils.sendMessage(player, ChatColor.RED, "RESULTS");
         PlayerUtils.sendMessage(player, ChatColor.RED, "Player: '" + event.getTargetPlayer() + "'");
         PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
-        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Total changes: " + event.getTotalChanges());
-        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Blocks changed: " + event.getBlockChanges());
+        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Changes: " + event.getTotalChanges());
 
         // add cache-element for possible later use
         Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
@@ -117,8 +114,7 @@ public class SQLListener implements Listener {
         PlayerUtils.sendMessage(player, ChatColor.RED, "Player: '" + event.getTargetPlayer() + "'");
         PlayerUtils.sendMessage(player, ChatColor.RED, "After: '" + dateFormat.format(event.getTimestamp()) + "'");
         PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
-        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Total changes: " + event.getTotalChanges());
-        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Blocks changed: " + event.getBlockChanges());
+        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Changes: " + event.getTotalChanges());
 
         // add cache-element for possible later use
         Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
