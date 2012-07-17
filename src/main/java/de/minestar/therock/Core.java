@@ -56,6 +56,11 @@ public class Core extends AbstractCore {
     /** CACHE */
     public static CacheHolder cacheHolder;
 
+    /** CONSTRUCTOR */
+    public Core() {
+        super(NAME);
+    }
+
     @Override
     protected boolean createManager() {
         INSTANCE = this;
