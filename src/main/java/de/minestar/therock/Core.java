@@ -73,11 +73,15 @@ public class Core extends AbstractCore {
         // ToolManager
         toolListener = new ToolListener();
 
+        // WorldManager
+        mainManager = new MainManager();
+
         // Queues
         mainConsumer = new MainConsumer();
 
-        // WorldManager
-        mainManager = new MainManager();
+        // init manager
+        mainManager.loadConfig();
+        mainConsumer.init();
 
         // CacheHolder
         cacheHolder = new CacheHolder();

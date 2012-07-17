@@ -18,6 +18,8 @@
 
 package de.minestar.therock.data;
 
+import java.sql.PreparedStatement;
+
 import de.minestar.therock.Core;
 import de.minestar.therock.database.DatabaseHandler;
 
@@ -33,6 +35,8 @@ public class SQLQueue {
     private ValueList values = null;
     private StringBuilder stringBuilder;
 
+    private PreparedStatement statement;
+
     public SQLQueue(String worldName, String tableName, ValueList values) {
         this(worldName, tableName, values, 5);
     }
@@ -45,7 +49,46 @@ public class SQLQueue {
         this.BUFFER_SIZE = buffer_size;
         this.stringBuilder = new StringBuilder();
         this.resetStringBuilder();
+        this.createStatement();
         this.databaseHandler.createTable(worldName, tableName, values);
+    }
+
+    private void createStatement() {
+        try {
+            StringBuilder tempBuilder = new StringBuilder();
+            tempBuilder.setLength(0);
+            tempBuilder.append("INSERT INTO ");
+            tempBuilder.append(worldName);
+            tempBuilder.append("_");
+            tempBuilder.append(tableName);
+            tempBuilder.append(" (");
+            int i = 0;
+            for (Value value : this.values.getValues()) {
+                tempBuilder.append(value.getName());
+                ++i;
+                if (i != this.values.getSize()) {
+                    tempBuilder.append(", ");
+                }
+            }
+            tempBuilder.append(") VALUES ");
+
+            for (int bufferCounter = 0; bufferCounter < this.BUFFER_SIZE; bufferCounter++) {
+                tempBuilder.append("(");
+                for (i = 0; i < this.values.getSize(); i++) {
+                    tempBuilder.append("?");
+                    if (i != this.values.getSize() - 1) {
+                        tempBuilder.append(", ");
+                    }
+                }
+                tempBuilder.append(")");
+                if (bufferCounter != this.BUFFER_SIZE - 1) {
+                    tempBuilder.append(", ");
+                }
+            }
+            this.statement = this.databaseHandler.getConnection().prepareStatement(tempBuilder.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void resetStringBuilder() {

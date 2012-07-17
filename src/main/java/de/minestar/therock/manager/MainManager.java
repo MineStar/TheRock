@@ -34,14 +34,11 @@ import org.bukkit.entity.Player;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.therock.Core;
 import de.minestar.therock.data.WorldSettings;
-import de.minestar.therock.listener.ToolListener;
 import de.minestar.therock.tools.BlockChangeInfoTool;
 import de.minestar.therock.tools.SelectionTool;
 
 public class MainManager {
     private HashMap<String, WorldSettings> worlds;
-    private MainConsumer mainConsumer;
-    private ToolListener toolListener;
 
     // general settings
     private boolean logChat = true, logCommands = true;
@@ -52,12 +49,6 @@ public class MainManager {
     // tool settings
     private int toolLookupID = Material.WATCH.getId();
     private int toolSelectionID = Material.STICK.getId();
-
-    public MainManager() {
-        this.mainConsumer = Core.mainConsumer;
-        this.toolListener = Core.toolListener;
-        this.loadConfig();
-    }
 
     public WorldSettings getWorld(Player player) {
         return this.getWorld(player.getWorld().getName());
@@ -80,7 +71,7 @@ public class MainManager {
         return tmp;
     }
 
-    private void loadConfig() {
+    public void loadConfig() {
         worlds = new HashMap<String, WorldSettings>();
 
         File file = new File(Core.INSTANCE.getDataFolder(), "settings.yml");
@@ -99,7 +90,7 @@ public class MainManager {
                     if (world != null) {
                         WorldSettings settings = new WorldSettings(worldName);
                         this.worlds.put(worldName.toLowerCase(), settings);
-                        this.mainConsumer.addWorldConsumer(world.getName());
+                        Core.mainConsumer.addWorldConsumer(world.getName());
                     }
                 }
             }
@@ -123,8 +114,8 @@ public class MainManager {
             }
 
             // register Tools
-            this.toolListener.addTool(new BlockChangeInfoTool("Lookup", toolLookupID, "therock.tools.lookup"));
-            this.toolListener.addTool(new SelectionTool("Selection", toolSelectionID, "therock.tools.selection"));
+            Core.toolListener.addTool(new BlockChangeInfoTool("Lookup", toolLookupID, "therock.tools.lookup"));
+            Core.toolListener.addTool(new SelectionTool("Selection", toolSelectionID, "therock.tools.selection"));
 
             ConsoleUtils.printInfo(Core.NAME, "Amount of logged worlds: " + this.worlds.size());
         } catch (Exception e) {

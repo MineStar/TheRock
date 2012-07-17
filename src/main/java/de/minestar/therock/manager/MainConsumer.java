@@ -31,7 +31,9 @@ public class MainConsumer {
 
     public MainConsumer() {
         this.worldList = new HashMap<String, WorldConsumer>();
+    }
 
+    public void init() {
         // ChatQueue
         ValueList values = new ValueList();
         values.addValue(new Value("timestamp", "BIGINT"));
