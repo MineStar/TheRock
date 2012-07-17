@@ -20,6 +20,7 @@ package de.minestar.therock.manager;
 
 import java.util.HashMap;
 
+import de.minestar.therock.Core;
 import de.minestar.therock.data.SQLQueue;
 import de.minestar.therock.data.Value;
 import de.minestar.therock.data.ValueList;
@@ -36,14 +37,14 @@ public class MainConsumer {
         values.addValue(new Value("timestamp", "BIGINT"));
         values.addValue(new Value("playerName", "TEXT"));
         values.addValue(new Value("message", "TEXT"));
-        this.chatQueue = new SQLQueue("general", "chat", values, 2);
+        this.chatQueue = new SQLQueue("general", "chat", values, Core.mainManager.getBuffer_chat());
 
         // CommandQueue
         values = new ValueList();
         values.addValue(new Value("timestamp", "BIGINT"));
         values.addValue(new Value("playerName", "TEXT"));
         values.addValue(new Value("command", "TEXT"));
-        this.commandQueue = new SQLQueue("general", "commands", values, 2);
+        this.commandQueue = new SQLQueue("general", "commands", values, Core.mainManager.getBuffer_commands());
     }
 
     public WorldConsumer addWorldConsumer(String worldName) {

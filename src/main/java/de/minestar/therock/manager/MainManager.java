@@ -46,6 +46,9 @@ public class MainManager {
     // general settings
     private boolean logChat = true, logCommands = true;
 
+    // queue settings
+    private int buffer_blockChange = 100, buffer_chat = 50, buffer_commands = 50;
+
     // tool settings
     private int toolLookupID = Material.WATCH.getId();
     private int toolSelectionID = Material.STICK.getId();
@@ -100,9 +103,14 @@ public class MainManager {
                     }
                 }
             }
-
+            // GENERAL
             logChat = ymlFile.getBoolean("log.general.chat", true);
             logCommands = ymlFile.getBoolean("log.general.commands", true);
+            // BUFFER
+            buffer_blockChange = ymlFile.getInt("config.buffer.blockchange", buffer_blockChange);
+            buffer_chat = ymlFile.getInt("config.buffer.chat", buffer_chat);
+            buffer_commands = ymlFile.getInt("config.buffer.commands", buffer_commands);
+            // TOOLS
             toolLookupID = ymlFile.getInt("config.tool.lookup", toolLookupID);
             toolSelectionID = ymlFile.getInt("config.tool.selection", toolSelectionID);
 
@@ -124,18 +132,6 @@ public class MainManager {
         }
     }
 
-    public boolean isWorldWatched(String worldName) {
-        return this.worlds.containsKey(worldName);
-    }
-
-    private World getBukkitWorld(String worldName) {
-        for (World world : Bukkit.getWorlds()) {
-            if (world.getName().equalsIgnoreCase(worldName))
-                return world;
-        }
-        return null;
-    }
-
     private void writeDefaultConfig() {
         File file = new File(Core.INSTANCE.getDataFolder(), "settings.yml");
         if (file.exists()) {
@@ -149,14 +145,33 @@ public class MainManager {
             worldList.add("world_nether");
             worldList.add("world_the_end");
             ymlFile.set("log.worlds", worldList);
+            // GENERAL
             ymlFile.set("log.general.chat", logChat);
             ymlFile.set("log.general.commands", logCommands);
+            // BUFFER
+            ymlFile.set("config.buffer.blockchange", buffer_blockChange);
+            ymlFile.set("config.buffer.chat", buffer_chat);
+            ymlFile.set("config.buffer.commands", buffer_commands);
+            // TOOLS
             ymlFile.set("config.tool.lookup", toolLookupID);
             ymlFile.set("config.tool.selection", toolSelectionID);
+
             ymlFile.save(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isWorldWatched(String worldName) {
+        return this.worlds.containsKey(worldName);
+    }
+
+    private World getBukkitWorld(String worldName) {
+        for (World world : Bukkit.getWorlds()) {
+            if (world.getName().equalsIgnoreCase(worldName))
+                return world;
+        }
+        return null;
     }
 
     public boolean logChat() {
@@ -165,6 +180,18 @@ public class MainManager {
 
     public boolean logCommands() {
         return logCommands;
+    }
+
+    public int getBuffer_blockChange() {
+        return buffer_blockChange;
+    }
+
+    public int getBuffer_chat() {
+        return buffer_chat;
+    }
+
+    public int getBuffer_commands() {
+        return buffer_commands;
     }
 
     public int getToolLookupID() {
