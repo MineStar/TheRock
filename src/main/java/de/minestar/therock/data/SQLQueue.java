@@ -18,8 +18,6 @@
 
 package de.minestar.therock.data;
 
-import java.sql.PreparedStatement;
-
 import de.minestar.therock.Core;
 import de.minestar.therock.database.DatabaseHandler;
 
@@ -34,8 +32,6 @@ public class SQLQueue {
     private String worldName = "";
     private ValueList values = null;
     private StringBuilder stringBuilder;
-
-    private PreparedStatement statement;
 
     public SQLQueue(String worldName, String tableName, ValueList values) {
         this(worldName, tableName, values, 5);
@@ -85,7 +81,6 @@ public class SQLQueue {
                     tempBuilder.append(", ");
                 }
             }
-            this.statement = this.databaseHandler.getConnection().prepareStatement(tempBuilder.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
