@@ -44,7 +44,7 @@ public class MainManager {
     private boolean logChat = true, logCommands = true;
 
     // queue settings
-    private int buffer_blockChange = 100, buffer_chat = 50, buffer_commands = 50;
+    private int buffer_blockChange = 100, buffer_chat = 50, buffer_commands = 50, buffer_inventory = 100;
 
     // tool settings
     private int toolLookupID = Material.WATCH.getId();
@@ -101,6 +101,7 @@ public class MainManager {
             buffer_blockChange = ymlFile.getInt("config.buffer.blockchange", buffer_blockChange);
             buffer_chat = ymlFile.getInt("config.buffer.chat", buffer_chat);
             buffer_commands = ymlFile.getInt("config.buffer.commands", buffer_commands);
+            buffer_inventory = ymlFile.getInt("config.buffer.inventory", buffer_inventory);
             // TOOLS
             toolLookupID = ymlFile.getInt("config.tool.lookup", toolLookupID);
             toolSelectionID = ymlFile.getInt("config.tool.selection", toolSelectionID);
@@ -143,6 +144,7 @@ public class MainManager {
             ymlFile.set("config.buffer.blockchange", buffer_blockChange);
             ymlFile.set("config.buffer.chat", buffer_chat);
             ymlFile.set("config.buffer.commands", buffer_commands);
+            ymlFile.set("config.buffer.inventory", buffer_inventory);
             // TOOLS
             ymlFile.set("config.tool.lookup", toolLookupID);
             ymlFile.set("config.tool.selection", toolSelectionID);
@@ -183,6 +185,10 @@ public class MainManager {
 
     public int getBuffer_commands() {
         return buffer_commands;
+    }
+
+    public int getBuffer_inventory() {
+        return buffer_inventory;
     }
 
     public int getToolLookupID() {
