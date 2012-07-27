@@ -112,121 +112,146 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        // get the current item
-        ItemStack inCursor = event.getCurrentItem();
+        if (event.getRawSlot() < event.getInventory().getSize()) {
+            // get the current item
+            ItemStack inCursor = event.getCurrentItem();
 
-        // get the clicked item
-        ItemStack inSlot = event.getInventory().getItem(event.getSlot());
+            // get the clicked item
+            ItemStack inSlot = event.getInventory().getItem(event.getSlot());
 
-        // get some vars
-        boolean isShiftClick = event.isShiftClick();
-        boolean isLeftClick = event.isLeftClick();
-        boolean isRightClick = event.isRightClick();
-        boolean cursorNull = (inCursor == null || inCursor.getTypeId() == Material.AIR.getId());
-        boolean slotNull = (inSlot == null || inSlot.getTypeId() == Material.AIR.getId());
+            // get some vars
+            boolean isShiftClick = event.isShiftClick();
+            boolean isLeftClick = event.isLeftClick();
+            boolean isRightClick = event.isRightClick();
+            boolean cursorNull = (inCursor == null || inCursor.getTypeId() == Material.AIR.getId());
+            boolean slotNull = (inSlot == null || inSlot.getTypeId() == Material.AIR.getId());
 
-        // Cursor = null && Slot == null => nothing happens
-        if (cursorNull && slotNull) {
-            return;
-        }
-
-        // Cursor == null && Slot != null => we only took something out
-        if (cursorNull && !slotNull) {
-            Block block = loc.getBlock();
-            if (isShiftClick || isLeftClick) {
-                // shift OR left click => take all out
-
-                // /////////////////////////////////
-                // create data
-                // /////////////////////////////////
-                this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_TOOK.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), inSlot.getAmount());
-            } else if (isRightClick) {
-                // right click => take the half out
-                int amount = (int) (inSlot.getAmount() / 2);
-                if (inSlot.getAmount() % 2 != 0) {
-                    amount = amount + 1;
-                }
-
-                // /////////////////////////////////
-                // create data
-                // /////////////////////////////////
-                this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_TOOK.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), amount);
-            }
-            return;
-        }
-
-        // Slot == null && Cursor != null => we only place
-        if (slotNull && !cursorNull) {
-            Block block = loc.getBlock();
-            if (isShiftClick) {
-                // shift click => nothing happen
+            // Cursor = null && Slot == null => nothing happens
+            if (cursorNull && slotNull) {
                 return;
-            } else if (isLeftClick) {
-                // /////////////////////////////////
-                // create data
-                // /////////////////////////////////
-                this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inCursor.getTypeId(), inCursor.getDurability(), inCursor.getAmount());
-            } else if (isRightClick) {
-                // right click => only place 1
-
-                // /////////////////////////////////
-                // create data
-                // /////////////////////////////////
-                this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inCursor.getTypeId(), inCursor.getDurability(), 1);
             }
-            return;
-        }
 
-        // Slot != null && Cursor != null => we take first, and then place
-        if (!slotNull && !cursorNull) {
-            Block block = loc.getBlock();
-            boolean itemsEqual = inSlot.getTypeId() == inCursor.getTypeId() && inSlot.getDurability() == inCursor.getDurability();
-            if (!itemsEqual) {
-                // items are not equal => take out and place
+            // Cursor == null && Slot != null => we only took something out
+            if (cursorNull && !slotNull) {
+                Block block = loc.getBlock();
+                if (isShiftClick || isLeftClick) {
+                    // shift OR left click => take all out
 
-                // /////////////////////////////////
-                // create data : taken item
-                // /////////////////////////////////
-                this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_TOOK.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), inSlot.getAmount());
-
-                // /////////////////////////////////
-                // create data : placed item
-                // /////////////////////////////////
-                this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inCursor.getTypeId(), inCursor.getDurability(), inCursor.getAmount());
-            } else {
-                // items are equal => check the stacksizes
-
-                // maxStackSize already reached => return
-                if (inSlot.getAmount() >= inSlot.getMaxStackSize()) {
-                    return;
-                }
-
-                if (isLeftClick) {
-                    // left click => check stacksizes and queue
-                    int wantedSize = inSlot.getAmount() + inCursor.getAmount();
-                    if (wantedSize > inSlot.getMaxStackSize()) {
-                        int amount = inSlot.getMaxStackSize() - inSlot.getAmount();
-                        // /////////////////////////////////
-                        // create data : placed item
-                        // /////////////////////////////////
-                        this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), amount);
-                    }
-                    return;
+                    // /////////////////////////////////
+                    // create data
+                    // /////////////////////////////////
+                    this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_TOOK.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), inSlot.getAmount());
                 } else if (isRightClick) {
-                    // right click => check stacksizes and queue
-                    int wantedSize = inSlot.getAmount() + 1;
-                    if (wantedSize > inSlot.getMaxStackSize()) {
-                        // /////////////////////////////////
-                        // create data : placed item * 1
-                        // /////////////////////////////////
-                        this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), 1);
+                    // right click => take the half out
+                    int amount = (int) (inSlot.getAmount() / 2);
+                    if (inSlot.getAmount() % 2 != 0) {
+                        amount = amount + 1;
                     }
+
+                    // /////////////////////////////////
+                    // create data
+                    // /////////////////////////////////
+                    this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_TOOK.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), amount);
+                }
+                return;
+            }
+
+            // Slot == null && Cursor != null => we only place
+            if (slotNull && !cursorNull) {
+                Block block = loc.getBlock();
+                if (isShiftClick) {
+                    // shift click => nothing happen
                     return;
+                } else if (isLeftClick) {
+                    // /////////////////////////////////
+                    // create data
+                    // /////////////////////////////////
+                    this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inCursor.getTypeId(), inCursor.getDurability(), inCursor.getAmount());
+                } else if (isRightClick) {
+                    // right click => only place 1
+
+                    // /////////////////////////////////
+                    // create data
+                    // /////////////////////////////////
+                    this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inCursor.getTypeId(), inCursor.getDurability(), 1);
+                }
+                return;
+            }
+
+            // Slot != null && Cursor != null => we take first, and then place
+            if (!slotNull && !cursorNull) {
+                Block block = loc.getBlock();
+                boolean itemsEqual = inSlot.getTypeId() == inCursor.getTypeId() && inSlot.getDurability() == inCursor.getDurability();
+                if (!itemsEqual) {
+                    // items are not equal => take out and place
+
+                    // /////////////////////////////////
+                    // create data : taken item
+                    // /////////////////////////////////
+                    this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_TOOK.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), inSlot.getAmount());
+
+                    // /////////////////////////////////
+                    // create data : placed item
+                    // /////////////////////////////////
+                    this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inCursor.getTypeId(), inCursor.getDurability(), inCursor.getAmount());
+                } else {
+                    // items are equal => check the stacksizes
+
+                    // maxStackSize already reached => return
+                    if (inSlot.getAmount() >= inSlot.getMaxStackSize()) {
+                        return;
+                    }
+
+                    if (isLeftClick) {
+                        // left click => check stacksizes and queue
+                        int wantedSize = inSlot.getAmount() + inCursor.getAmount();
+                        if (wantedSize > inSlot.getMaxStackSize()) {
+                            int amount = inSlot.getMaxStackSize() - inSlot.getAmount();
+                            // /////////////////////////////////
+                            // create data : placed item
+                            // /////////////////////////////////
+                            this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), amount);
+                        }
+                        return;
+                    } else if (isRightClick) {
+                        // right click => check stacksizes and queue
+                        int wantedSize = inSlot.getAmount() + 1;
+                        if (wantedSize > inSlot.getMaxStackSize()) {
+                            // /////////////////////////////////
+                            // create data : placed item * 1
+                            // /////////////////////////////////
+                            this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), 1);
+                        }
+                        return;
+                    }
                 }
             }
+        } else {
+            System.out.println("click into playerinventory!");
+
+            // get the clicked item
+            ItemStack inSlot = event.getInventory().getItem(event.getSlot());
+
+            // get some vars
+            boolean isShiftClick = event.isShiftClick();
+            boolean slotNull = (inSlot == null || inSlot.getTypeId() == Material.AIR.getId());
+
+            // no shift-click => return
+            if (!isShiftClick) {
+                return;
+            }
+
+            // we need an item in the slot
+            if (slotNull) {
+                return;
+            }
+
+            // TODO: implement shift-click-bevahiour
+            // ...
+            // ...
+            // ...
         }
     }
-
     private void addInventoryChange(String reason, int eventType, String worldName, int blockX, int blockY, int blockZ, int ID, short Data, int Amount) {
         // "("
         this.queueBuilder.append("(");
@@ -262,7 +287,7 @@ public class InventoryListener implements Listener {
         // /////////////////////////////////
         // add to queue
         // /////////////////////////////////
-        this.mainConsumer.appendBlockEvent(worldName, this.queueBuilder);
+        this.mainConsumer.appendInventoryEvent(worldName, this.queueBuilder);
 
         // /////////////////////////////////
         // reset data

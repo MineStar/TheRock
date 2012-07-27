@@ -67,6 +67,10 @@ public class MainConsumer {
         this.getWorldConsumer(worldName).appendBlockEvent(stringBuilder);
     }
 
+    public void appendInventoryEvent(String worldName, StringBuilder stringBuilder) {
+        this.getWorldConsumer(worldName).appendInventoryEvent(stringBuilder);
+    }
+
     public void appendChatEvent(StringBuilder stringBuilder) {
         this.chatQueue.addToQueue(stringBuilder);
     }

@@ -49,10 +49,10 @@ public class WorldConsumer {
         values.addValue(new Value("blockX", "INTEGER"));
         values.addValue(new Value("blockY", "INTEGER"));
         values.addValue(new Value("blockZ", "INTEGER"));
-        values.addValue(new Value("ID", "INTEGER"));
+        values.addValue(new Value("TypeID", "INTEGER"));
         values.addValue(new Value("Data", "INTEGER"));
         values.addValue(new Value("Amount", "INTEGER"));
-        this.inventoryQueue = new SQLQueue(worldName, "inventory", values, Core.mainManager.getBuffer_blockChange());
+        this.inventoryQueue = new SQLQueue(worldName, "inventory", values, Core.mainManager.getBuffer_inventory());
     }
 
     public void appendBlockEvent(StringBuilder stringBuilder) {

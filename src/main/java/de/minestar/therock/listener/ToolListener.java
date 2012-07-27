@@ -52,7 +52,7 @@ public class ToolListener implements Listener {
     }
 
     private boolean onBlockInteract(final Player player, final Block block, final BlockFace blockFace, final boolean isLeftClick) {
-        Tool tool = this.toolList.get(player.getItemInHand().getTypeId());
+        Tool tool = this.getTool(player.getItemInHand().getTypeId());
         if (tool != null) {
             tool.onBlockInteract(player, block, blockFace, isLeftClick);
             return true;

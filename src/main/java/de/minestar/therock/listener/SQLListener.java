@@ -124,6 +124,8 @@ public class SQLListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onGetSingleBlockChangeInfo(GetSingleBlockChangesEvent event) {
+
+        System.out.println("single block changes");
         ResultSet results = event.getResults();
         Player player = Bukkit.getPlayerExact(event.getPlayerName());
         String message = "";
@@ -172,6 +174,8 @@ public class SQLListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onGetInventoryChanges(GetInventoryChangesEvent event) {
+        System.out.println("inventory block changes");
+
         ResultSet results = event.getResults();
         Player player = Bukkit.getPlayerExact(event.getPlayerName());
         String message = "";
@@ -188,11 +192,11 @@ public class SQLListener implements Listener {
                 message = dateFormat.format(results.getLong("timestamp"));
                 switch (InventoryEventTypes.byID(results.getInt("eventType"))) {
                     case PLAYER_TOOK : {
-                        message += ChatColor.GRAY + results.getString("reason") + " took " + results.getInt("Amount") + " * " + Material.getMaterial(results.getInt("ID")) + ":" + results.getInt("Data");
+                        message += ChatColor.GRAY + results.getString("reason") + " took " + results.getInt("Amount") + " * " + Material.getMaterial(results.getInt("TypeID")) + ":" + results.getInt("Data");
                         break;
                     }
                     case PLAYER_PLACED : {
-                        message += ChatColor.GRAY + results.getString("reason") + " placed " + results.getInt("Amount") + " * " + Material.getMaterial(results.getInt("ID")) + ":" + results.getInt("Data");
+                        message += ChatColor.GRAY + results.getString("reason") + " placed " + results.getInt("Amount") + " * " + Material.getMaterial(results.getInt("TypeID")) + ":" + results.getInt("Data");
                         break;
                     }
                     default : {

@@ -35,6 +35,7 @@ import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.therock.Core;
 import de.minestar.therock.data.WorldSettings;
 import de.minestar.therock.tools.BlockChangeInfoTool;
+import de.minestar.therock.tools.InventoryChangeTool;
 import de.minestar.therock.tools.SelectionTool;
 
 public class MainManager {
@@ -118,7 +119,7 @@ public class MainManager {
 
             // register Tools
             Core.toolListener.addTool(new BlockChangeInfoTool("Lookup", toolLookupID, "therock.tools.lookup"));
-            Core.toolListener.addTool(new BlockChangeInfoTool("Inventory-LookUp", toolInventoryID, "therock.tools.inventory"));
+            Core.toolListener.addTool(new InventoryChangeTool("Inventory-LookUp", toolInventoryID, "therock.tools.inventory"));
             Core.toolListener.addTool(new SelectionTool("Selection", toolSelectionID, "therock.tools.selection"));
 
             ConsoleUtils.printInfo(Core.NAME, "Amount of logged worlds: " + this.worlds.size());
