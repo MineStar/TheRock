@@ -26,6 +26,8 @@ import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Dispenser;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -36,6 +38,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+
+import com.bukkit.gemo.utils.InventoryUtils;
 
 import de.minestar.therock.Core;
 import de.minestar.therock.data.InventoryEventTypes;
@@ -49,7 +53,7 @@ public class InventoryListener implements Listener {
     private StringBuilder queueBuilder;
 
     private HashMap<String, Location> openedInventories;
-    private static final Set<Integer> checkableBlocks = new HashSet<Integer>(Arrays.asList(Material.CHEST.getId(), Material.DISPENSER.getId(), Material.FURNACE.getId(), Material.BURNING_FURNACE.getId()));
+    private static final Set<Integer> checkableBlocks = new HashSet<Integer>(Arrays.asList(Material.CHEST.getId(), Material.DISPENSER.getId(), Material.FURNACE.getId(), Material.BURNING_FURNACE.getId(), Material.BREWING_STAND.getId()));
 
     public InventoryListener() {
         this.mainManager = Core.mainManager;
@@ -235,10 +239,8 @@ public class InventoryListener implements Listener {
                 }
             }
         } else {
-            System.out.println("click into playerinventory!");
-
             // get the clicked item
-            ItemStack inSlot = event.getInventory().getItem(event.getSlot());
+            ItemStack inSlot = player.getInventory().getItem(event.getSlot());
 
             // get some vars
             boolean isShiftClick = event.isShiftClick();
@@ -253,11 +255,61 @@ public class InventoryListener implements Listener {
             if (slotNull) {
                 return;
             }
+            // get the current containerblock
+            Block block = loc.getBlock();
+            if (block.getTypeId() == Material.CHEST.getId()) {
+                // handle chest
+                Chest chest = (Chest) block.getState();
+                int freeSpace = InventoryUtils.countFreeSpace(chest.getInventory(), inSlot);
 
-            // TODO: implement shift-click-bevahiour
-            // ...
-            // ...
-            // ...
+                int amount = inSlot.getAmount();
+                // check the free amount
+                if (freeSpace < amount) {
+                    amount = freeSpace;
+                }
+
+                // check the amount
+                if (amount < 1) {
+                    return;
+                }
+
+                // /////////////////////////////////
+                // create data : placed item
+                // /////////////////////////////////
+                this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), amount);
+                return;
+            } else if (block.getTypeId() == Material.DISPENSER.getId()) {
+                // handle dispenser
+                Dispenser dispenser = (Dispenser) block.getState();
+                int freeSpace = InventoryUtils.countFreeSpace(dispenser.getInventory(), inSlot);
+
+                int amount = inSlot.getAmount();
+                // check the free amount
+                if (freeSpace < amount) {
+                    amount = freeSpace;
+                }
+
+                // check the amount
+                if (amount < 1) {
+                    return;
+                }
+
+                // /////////////////////////////////
+                // create data : placed item
+                // /////////////////////////////////
+                this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), amount);
+                return;
+            } else if (block.getTypeId() == Material.FURNACE.getId() || block.getTypeId() == Material.BURNING_FURNACE.getId()) {
+                // TODO: handle furnaces
+                // we have to wait for 1.3 for this... shiftclicking will
+                // currently end in a gamecrash
+                return;
+            } else if (block.getTypeId() == Material.BREWING_STAND.getId()) {
+                // TODO: handle brewing stands
+                // we have to wait for 1.3 for this... shiftclicking will
+                // currently end in a gamecrash
+                return;
+            }
         }
     }
 
