@@ -6,6 +6,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.Furnace;
 import org.bukkit.entity.Player;
 
 import de.minestar.minestarlibrary.commands.AbstractCommand;
@@ -76,25 +81,13 @@ public class RollbackCommand extends AbstractCommand {
             }
 
             // rollback blocks : Run ONE
-            for (BlockVector vector : run_one) {
-                vector.getLocation().getBlock().setTypeIdAndData(vector.getTypeID(), vector.getSubData(), true);
-                ++blockCount;
-            }
-            run_one.clear();
+            this.executeRun(run_one, blockCount);
 
             // rollback blocks : Run TWO
-            for (BlockVector vector : run_two) {
-                vector.getLocation().getBlock().setTypeIdAndData(vector.getTypeID(), vector.getSubData(), true);
-                ++blockCount;
-            }
-            run_two.clear();
+            this.executeRun(run_two, blockCount);
 
             // rollback blocks : Run THREE
-            for (BlockVector vector : run_three) {
-                vector.getLocation().getBlock().setTypeIdAndData(vector.getTypeID(), vector.getSubData(), true);
-                ++blockCount;
-            }
-            run_three.clear();
+            this.executeRun(run_three, blockCount);
 
             // send info
             PlayerUtils.sendSuccess(player, Core.NAME, "Rollback finished. ( " + blockCount + " Blocks)");
@@ -104,5 +97,22 @@ public class RollbackCommand extends AbstractCommand {
             Core.cacheHolder.clearCacheElement(player.getName());
             e.printStackTrace();
         }
+    }
+
+    private void executeRun(ArrayList<BlockVector> list, int blockCount) {
+        Block block;
+        for (BlockVector vector : list) {
+            block = vector.getLocation().getBlock();
+            if (block.getTypeId() == Material.CHEST.getId()) {
+                ((Chest) block.getState()).getBlockInventory().clear();
+            } else if (block.getTypeId() == Material.DISPENSER.getId()) {
+                ((Dispenser) block.getState()).getInventory().clear();
+            } else if (block.getTypeId() == Material.FURNACE.getId() || block.getTypeId() == Material.BURNING_FURNACE.getId()) {
+                ((Furnace) block.getState()).getInventory().clear();
+            }
+            block.setTypeIdAndData(vector.getTypeID(), vector.getSubData(), true);
+            ++blockCount;
+        }
+        list.clear();
     }
 }
