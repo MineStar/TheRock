@@ -49,6 +49,7 @@ public class MainManager {
     // tool settings
     private int toolLookupID = Material.WATCH.getId();
     private int toolSelectionID = Material.STICK.getId();
+    private int toolInventoryID = Material.BLAZE_ROD.getId();
 
     public WorldSettings getWorld(Player player) {
         return this.getWorld(player.getWorld().getName());
@@ -105,6 +106,7 @@ public class MainManager {
             // TOOLS
             toolLookupID = ymlFile.getInt("config.tool.lookup", toolLookupID);
             toolSelectionID = ymlFile.getInt("config.tool.selection", toolSelectionID);
+            toolInventoryID = ymlFile.getInt("config.tool.inventory", toolInventoryID);
 
             // TOOL-IDs must be valid
             if (Material.getMaterial(toolLookupID) == null) {
@@ -116,6 +118,7 @@ public class MainManager {
 
             // register Tools
             Core.toolListener.addTool(new BlockChangeInfoTool("Lookup", toolLookupID, "therock.tools.lookup"));
+            Core.toolListener.addTool(new BlockChangeInfoTool("Inventory-LookUp", toolInventoryID, "therock.tools.inventory"));
             Core.toolListener.addTool(new SelectionTool("Selection", toolSelectionID, "therock.tools.selection"));
 
             ConsoleUtils.printInfo(Core.NAME, "Amount of logged worlds: " + this.worlds.size());
@@ -148,6 +151,7 @@ public class MainManager {
             // TOOLS
             ymlFile.set("config.tool.lookup", toolLookupID);
             ymlFile.set("config.tool.selection", toolSelectionID);
+            ymlFile.set("config.tool.inventory", toolInventoryID);
 
             ymlFile.save(file);
         } catch (IOException e) {
@@ -201,5 +205,9 @@ public class MainManager {
 
     public int getToolSelectionID() {
         return toolSelectionID;
+    }
+
+    public int getToolInventoryID() {
+        return toolInventoryID;
     }
 }
