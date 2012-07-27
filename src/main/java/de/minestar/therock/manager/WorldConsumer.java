@@ -24,7 +24,7 @@ import de.minestar.therock.data.Value;
 import de.minestar.therock.data.ValueList;
 
 public class WorldConsumer {
-    private SQLQueue blockQueue;
+    private SQLQueue blockQueue, inventoryQueue;
 
     public WorldConsumer(String worldName) {
         // BlockQueue
@@ -40,13 +40,31 @@ public class WorldConsumer {
         values.addValue(new Value("toID", "INTEGER"));
         values.addValue(new Value("toData", "INTEGER"));
         this.blockQueue = new SQLQueue(worldName, "block", values, Core.mainManager.getBuffer_blockChange());
+
+        // InventoryQueue
+        values = new ValueList();
+        values.addValue(new Value("timestamp", "BIGINT"));
+        values.addValue(new Value("reason", "TEXT"));
+        values.addValue(new Value("eventType", "INTEGER"));
+        values.addValue(new Value("blockX", "INTEGER"));
+        values.addValue(new Value("blockY", "INTEGER"));
+        values.addValue(new Value("blockZ", "INTEGER"));
+        values.addValue(new Value("ID", "INTEGER"));
+        values.addValue(new Value("Data", "INTEGER"));
+        values.addValue(new Value("Amount", "INTEGER"));
+        this.inventoryQueue = new SQLQueue(worldName, "inventory", values, Core.mainManager.getBuffer_blockChange());
     }
 
     public void appendBlockEvent(StringBuilder stringBuilder) {
         this.blockQueue.addToQueue(stringBuilder);
     }
 
+    public void appendInventoryEvent(StringBuilder stringBuilder) {
+        this.inventoryQueue.addToQueue(stringBuilder);
+    }
+
     public void flushWithoutThread() {
         this.blockQueue.flushWithoutThread();
+        this.inventoryQueue.flushWithoutThread();
     }
 }
