@@ -114,7 +114,7 @@ public class InventoryListener implements Listener {
 
         if (event.getRawSlot() < event.getInventory().getSize()) {
             // get the current item
-            ItemStack inCursor = event.getCurrentItem();
+            ItemStack inCursor = event.getCursor();
 
             // get the clicked item
             ItemStack inSlot = event.getInventory().getItem(event.getSlot());
@@ -196,7 +196,6 @@ public class InventoryListener implements Listener {
                     this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inCursor.getTypeId(), inCursor.getDurability(), inCursor.getAmount());
                 } else {
                     // items are equal => check the stacksizes
-
                     // maxStackSize already reached => return
                     if (inSlot.getAmount() >= inSlot.getMaxStackSize()) {
                         return;
@@ -206,17 +205,22 @@ public class InventoryListener implements Listener {
                         // left click => check stacksizes and queue
                         int wantedSize = inSlot.getAmount() + inCursor.getAmount();
                         if (wantedSize > inSlot.getMaxStackSize()) {
-                            int amount = inSlot.getMaxStackSize() - inSlot.getAmount();
+                            wantedSize = inSlot.getMaxStackSize() - inSlot.getAmount();
                             // /////////////////////////////////
                             // create data : placed item
                             // /////////////////////////////////
-                            this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), amount);
+                            this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), wantedSize);
+                        } else {
+                            // /////////////////////////////////
+                            // create data : placed item
+                            // /////////////////////////////////
+                            this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), wantedSize);
                         }
                         return;
                     } else if (isRightClick) {
                         // right click => check stacksizes and queue
                         int wantedSize = inSlot.getAmount() + 1;
-                        if (wantedSize > inSlot.getMaxStackSize()) {
+                        if (wantedSize < inSlot.getMaxStackSize()) {
                             // /////////////////////////////////
                             // create data : placed item * 1
                             // /////////////////////////////////
