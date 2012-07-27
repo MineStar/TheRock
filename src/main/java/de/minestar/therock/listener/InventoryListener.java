@@ -116,7 +116,7 @@ public class InventoryListener implements Listener {
 
         // check the inventory type
         InventoryType type = event.getInventory().getType();
-        if (type != InventoryType.CHEST && type != InventoryType.DISPENSER && type != InventoryType.FURNACE) {
+        if (type != InventoryType.CHEST && type != InventoryType.DISPENSER && type != InventoryType.FURNACE && type != InventoryType.BREWING) {
             return;
         }
 
