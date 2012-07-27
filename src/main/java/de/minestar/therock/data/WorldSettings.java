@@ -30,6 +30,7 @@ public class WorldSettings {
     private boolean logBlockPlace = true, logBlockBreak = true;
     private boolean logWaterFlow = true, logLavaFlow = true;
     private boolean logEntityBlockExplode = true, logEntityBlockChange = true;
+    private boolean logInventoryChange = true;
 
     public WorldSettings() {
         logBucketEmpty = false;
@@ -40,6 +41,7 @@ public class WorldSettings {
         logLavaFlow = false;
         logEntityBlockExplode = false;
         logEntityBlockChange = false;
+        logInventoryChange = false;
     }
 
     public WorldSettings(String worldName) {
@@ -64,6 +66,7 @@ public class WorldSettings {
             logLavaFlow = ymlFile.getBoolean("log.flow.lava", logLavaFlow);
             logEntityBlockExplode = ymlFile.getBoolean("log.block.entityexplode", logEntityBlockExplode);
             logEntityBlockChange = ymlFile.getBoolean("log.block.entitychange", logEntityBlockChange);
+            logInventoryChange = ymlFile.getBoolean("log.inventory.change", logInventoryChange);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -84,6 +87,7 @@ public class WorldSettings {
         ymlFile.set("log.flow.lava", logLavaFlow);
         ymlFile.set("log.block.entityexplode", logEntityBlockExplode);
         ymlFile.set("log.block.entitychange", logEntityBlockChange);
+        ymlFile.set("log.inventory.change", logInventoryChange);
         try {
             ymlFile.save(file);
         } catch (IOException e) {
@@ -121,5 +125,9 @@ public class WorldSettings {
 
     public boolean logEntityBlockChange() {
         return logEntityBlockChange;
+    }
+
+    public boolean logInventoryChange() {
+        return logInventoryChange;
     }
 }
