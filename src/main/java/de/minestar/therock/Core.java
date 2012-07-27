@@ -29,6 +29,7 @@ import de.minestar.therock.data.CacheHolder;
 import de.minestar.therock.database.DatabaseHandler;
 import de.minestar.therock.listener.BlockChangeListener;
 import de.minestar.therock.listener.ChatAndCommandListener;
+import de.minestar.therock.listener.InventoryListener;
 import de.minestar.therock.listener.SQLListener;
 import de.minestar.therock.listener.ToolListener;
 import de.minestar.therock.manager.MainConsumer;
@@ -42,6 +43,7 @@ public class Core extends AbstractCore {
 
     /** LISTENER */
     public static BlockChangeListener blockListener;
+    public static InventoryListener inventoryListener;
     public static ChatAndCommandListener playerListener;
     public static ToolListener toolListener;
     public static SQLListener sqlListener;
@@ -93,6 +95,7 @@ public class Core extends AbstractCore {
     protected boolean createListener() {
         blockListener = new BlockChangeListener();
         playerListener = new ChatAndCommandListener();
+        inventoryListener = new InventoryListener();
         sqlListener = new SQLListener();
         return true;
     }
@@ -110,6 +113,7 @@ public class Core extends AbstractCore {
     protected boolean registerEvents(PluginManager pm) {
         pm.registerEvents(blockListener, this);
         pm.registerEvents(playerListener, this);
+        pm.registerEvents(inventoryListener, this);
         pm.registerEvents(toolListener, this);
         pm.registerEvents(sqlListener, this);
         return true;
