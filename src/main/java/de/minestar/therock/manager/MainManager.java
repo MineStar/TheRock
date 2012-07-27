@@ -159,6 +159,10 @@ public class MainManager {
         return this.worlds.containsKey(worldName);
     }
 
+    public boolean isWorldWatched(World world) {
+        return this.isWorldWatched(world.getName());
+    }
+
     private World getBukkitWorld(String worldName) {
         for (World world : Bukkit.getWorlds()) {
             if (world.getName().equalsIgnoreCase(worldName))
