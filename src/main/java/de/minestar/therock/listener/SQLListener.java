@@ -124,8 +124,6 @@ public class SQLListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onGetSingleBlockChangeInfo(GetSingleBlockChangesEvent event) {
-
-        System.out.println("single block changes");
         ResultSet results = event.getResults();
         Player player = Bukkit.getPlayerExact(event.getPlayerName());
         String message = "";
@@ -174,8 +172,6 @@ public class SQLListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onGetInventoryChanges(GetInventoryChangesEvent event) {
-        System.out.println("inventory block changes");
-
         ResultSet results = event.getResults();
         Player player = Bukkit.getPlayerExact(event.getPlayerName());
         String message = "";
