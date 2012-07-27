@@ -32,13 +32,19 @@ import org.bukkit.block.Block;
 public class GetInventoryChangesEvent extends SQLEvent {
 
     private final Block block;
+    private final boolean showBlockInfo;
 
-    public GetInventoryChangesEvent(String playerName, World world, ResultSet results, Block block) {
+    public GetInventoryChangesEvent(String playerName, World world, ResultSet results, Block block, boolean showBlockInfo) {
         super(playerName, world, results);
         this.block = block;
+        this.showBlockInfo = showBlockInfo;
     }
 
     public Block getBlock() {
         return block;
+    }
+
+    public boolean isShowBlockInfo() {
+        return showBlockInfo;
     }
 }

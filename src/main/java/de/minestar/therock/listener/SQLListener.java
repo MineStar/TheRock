@@ -181,7 +181,9 @@ public class SQLListener implements Listener {
             return;
 
         // send info
-        PlayerUtils.sendMessage(player, ChatColor.RED, "Inventorychanges for: " + event.getWorld().getName() + " - [ " + event.getBlock().getX() + " / " + event.getBlock().getY() + " / " + event.getBlock().getZ() + " ]");
+        if (event.isShowBlockInfo()) {
+            PlayerUtils.sendMessage(player, ChatColor.RED, "Inventorychanges for: " + event.getWorld().getName() + " - [ " + event.getBlock().getX() + " / " + event.getBlock().getY() + " / " + event.getBlock().getZ() + " ]");
+        }
         try {
             // iterate over blockchanges
             while (results.next()) {

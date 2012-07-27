@@ -58,6 +58,10 @@ public class InventoryListener implements Listener {
         this.openedInventories = new HashMap<String, Location>();
     }
 
+    public boolean isContainerBlock(Block block) {
+        return checkableBlocks.contains(block.getTypeId());
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerInteract(PlayerInteractEvent event) {
         // /////////////////////////////////
@@ -256,6 +260,7 @@ public class InventoryListener implements Listener {
             // ...
         }
     }
+
     private void addInventoryChange(String reason, int eventType, String worldName, int blockX, int blockY, int blockZ, int ID, short Data, int Amount) {
         // "("
         this.queueBuilder.append("(");

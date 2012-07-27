@@ -61,8 +61,8 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
     protected void createStructure(String pluginName, Connection con) throws Exception {
     }
 
-    public boolean getInventoryChanges(Player player, Block block) {
-        new GetInventoryChangesThread(player.getName(), block).start();
+    public boolean getInventoryChanges(Player player, Block block, boolean showBlockInfo) {
+        new GetInventoryChangesThread(player.getName(), block, showBlockInfo).start();
         return true;
     }
 

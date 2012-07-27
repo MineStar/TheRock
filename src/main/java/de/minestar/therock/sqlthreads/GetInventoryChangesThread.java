@@ -34,11 +34,13 @@ public class GetInventoryChangesThread extends Thread {
     private final String playerName;
     private final Block block;
     private final DatabaseHandler databaseHandler;
+    private final boolean showBlockInfo;
 
-    public GetInventoryChangesThread(String playerName, Block block) {
+    public GetInventoryChangesThread(String playerName, Block block, boolean showBlockInfo) {
         this.databaseHandler = Core.databaseHandler;
         this.playerName = playerName;
         this.block = block;
+        this.showBlockInfo = showBlockInfo;
     }
 
     @SuppressWarnings("deprecation")
@@ -48,7 +50,7 @@ public class GetInventoryChangesThread extends Thread {
             PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM " + block.getWorld().getName() + "_inventory WHERE blockX=" + block.getX() + " AND blockY=" + block.getY() + " AND blockZ=" + block.getZ() + " ORDER BY timestamp DESC LIMIT 9");
             ResultSet results = statement.executeQuery();
             if (results != null) {
-                GetInventoryChangesEvent event = new GetInventoryChangesEvent(playerName, block.getWorld(), results, block);
+                GetInventoryChangesEvent event = new GetInventoryChangesEvent(playerName, block.getWorld(), results, block, showBlockInfo);
                 Bukkit.getPluginManager().callEvent(event);
             }
         } catch (SQLException e) {
