@@ -35,6 +35,7 @@ import de.minestar.therock.Core;
 import de.minestar.therock.data.Selection;
 import de.minestar.therock.data.Value;
 import de.minestar.therock.data.ValueList;
+import de.minestar.therock.sqlthreads.GetInventoryChangesThread;
 import de.minestar.therock.sqlthreads.GetSelectionBlockChangesThread;
 import de.minestar.therock.sqlthreads.GetSingleBlockChangesThread;
 import de.minestar.therock.sqlthreads.InsertThread;
@@ -58,6 +59,11 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
     @Override
     protected void createStructure(String pluginName, Connection con) throws Exception {
+    }
+
+    public boolean getInventoryChanges(Player player, Block block) {
+        new GetInventoryChangesThread(player.getName(), block).start();
+        return true;
     }
 
     public boolean getBlockChanges(Player player, Block block) {

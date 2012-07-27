@@ -34,6 +34,8 @@ import de.minestar.minestarlibrary.utils.PlayerUtils;
 import de.minestar.therock.Core;
 import de.minestar.therock.data.BlockEventTypes;
 import de.minestar.therock.data.CacheElement;
+import de.minestar.therock.data.InventoryEventTypes;
+import de.minestar.therock.events.GetInventoryChangesEvent;
 import de.minestar.therock.events.GetSelectionBlockChangesEvent;
 import de.minestar.therock.events.GetSelectionPlayerBlockChangesEvent;
 import de.minestar.therock.events.GetSelectionPlayerTimeBlockChangesEvent;
@@ -168,4 +170,41 @@ public class SQLListener implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onGetInventoryChanges(GetInventoryChangesEvent event) {
+        ResultSet results = event.getResults();
+        Player player = Bukkit.getPlayerExact(event.getPlayerName());
+        String message = "";
+
+        // we need to find the player
+        if (player == null)
+            return;
+
+        // send info
+        PlayerUtils.sendMessage(player, ChatColor.RED, "Inventorychanges for: " + event.getWorld().getName() + " - [ " + event.getBlock().getX() + " / " + event.getBlock().getY() + " / " + event.getBlock().getZ() + " ]");
+        try {
+            // iterate over blockchanges
+            while (results.next()) {
+                message = dateFormat.format(results.getLong("timestamp"));
+                switch (InventoryEventTypes.byID(results.getInt("eventType"))) {
+                    case PLAYER_TOOK : {
+                        message += ChatColor.GRAY + results.getString("reason") + " took " + results.getInt("Amount") + " * " + Material.getMaterial(results.getInt("ID")) + ":" + results.getInt("Data");
+                        break;
+                    }
+                    case PLAYER_PLACED : {
+                        message += ChatColor.GRAY + results.getString("reason") + " placed " + results.getInt("Amount") + " * " + Material.getMaterial(results.getInt("ID")) + ":" + results.getInt("Data");
+                        break;
+                    }
+                    default : {
+                        message += "UNKNOWN ACTION by " + results.getString("reason");
+                        break;
+                    }
+                }
+                PlayerUtils.sendMessage(player, ChatColor.GOLD, message);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            PlayerUtils.sendError(player, Core.NAME, "Oooops.. something went wrong!");
+        }
+    }
 }
