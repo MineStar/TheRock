@@ -138,9 +138,25 @@ public class SQLListener implements Listener {
             // iterate over blockchanges
             while (results.next()) {
                 message = dateFormat.format(results.getLong("timestamp"));
+
                 switch (BlockEventTypes.byID(results.getInt("eventType"))) {
                     case PLAYER_PLACE : {
                         message += ChatColor.GRAY + results.getString("reason") + " placed " + Material.getMaterial(results.getInt("toID")) + ":" + results.getInt("toData");
+                        // handle signs
+                        if (results.getInt("toID") == Material.WALL_SIGN.getId() || results.getInt("toID") == Material.SIGN_POST.getId()) {
+                            message += ChatColor.GREEN + " [ ";
+
+                            String split[] = results.getString("extraData").split("-#*#-");
+                            for (int i = 0; i < split.length; i++) {
+                                message += (i + 1) + ". " + split;
+                                if (i < 3) {
+                                    message += " ; ";
+                                } else {
+                                    message += " ";
+                                }
+                            }
+                            message += " ] ";
+                        }
                         break;
                     }
                     case PLAYER_BREAK : {
@@ -159,6 +175,7 @@ public class SQLListener implements Listener {
                         message += "UNKNOWN ACTION by " + results.getString("reason");
                         break;
                     }
+
                 }
                 PlayerUtils.sendMessage(player, ChatColor.GOLD, message);
             }
@@ -169,7 +186,6 @@ public class SQLListener implements Listener {
             PlayerUtils.sendError(player, Core.NAME, "Oooops.. something went wrong!");
         }
     }
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void onGetInventoryChanges(GetInventoryChangesEvent event) {
         ResultSet results = event.getResults();

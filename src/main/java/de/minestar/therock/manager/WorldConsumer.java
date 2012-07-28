@@ -39,6 +39,7 @@ public class WorldConsumer {
         values.addValue(new Value("fromData", "INTEGER"));
         values.addValue(new Value("toID", "INTEGER"));
         values.addValue(new Value("toData", "INTEGER"));
+        values.addValue(new Value("extraData", "TEXT"));
         this.blockQueue = new SQLQueue(worldName, "block", values, Core.mainManager.getBuffer_blockChange());
 
         // InventoryQueue

@@ -32,6 +32,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -80,9 +81,11 @@ public class BlockChangeListener implements Listener {
             return;
 
         // /////////////////////////////////
-        // create data
+        // create data : all, except signs
         // /////////////////////////////////
-        this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_PLACE.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlockReplacedState().getTypeId(), event.getBlockReplacedState().getRawData(), event.getBlockPlaced().getTypeId(), event.getBlockPlaced().getData());
+        if (event.getBlock().getTypeId() != Material.WALL_SIGN.getId() && event.getBlock().getTypeId() != Material.SIGN_POST.getId()) {
+            this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_PLACE.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlockReplacedState().getTypeId(), event.getBlockReplacedState().getRawData(), event.getBlockPlaced().getTypeId(), event.getBlockPlaced().getData());
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -213,7 +216,25 @@ public class BlockChangeListener implements Listener {
         this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_BREAK.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getState().getTypeId(), block.getState().getRawData(), Material.AIR.getId(), (byte) 0);
     }
 
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onSignChange(SignChangeEvent event) {
+        // event cancelled => return
+        if (event.isCancelled() || !this.mainManager.isWorldWatched(event.getBlock().getWorld()) || !this.mainManager.getWorld(event.getPlayer()).logBlockPlace())
+            return;
+
+        // /////////////////////////////////
+        // create data
+        // /////////////////////////////////
+        Block block = event.getBlock();
+        String signData = event.getLine(0) + "-#*#-" + event.getLine(1) + "-#*#-" + event.getLine(2) + "-#*#-" + event.getLine(3);
+        this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_PLACE.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), 0, (byte) 0, block.getTypeId(), block.getData(), signData);
+    }
+
     private void addBlockChange(String reason, int eventType, String worldName, int blockX, int blockY, int blockZ, int fromID, byte fromData, int toID, byte toData) {
+        this.addBlockChange(reason, eventType, worldName, blockX, blockY, blockZ, fromID, fromData, toID, toData, "");
+    }
+
+    private void addBlockChange(String reason, int eventType, String worldName, int blockX, int blockY, int blockZ, int fromID, byte fromData, int toID, byte toData, String extraData) {
         // "("
         this.queueBuilder.append("(");
         // "TIMESTAMP"
@@ -245,6 +266,9 @@ public class BlockChangeListener implements Listener {
         // "TO SUBDATA"
         this.queueBuilder.append(", ");
         this.queueBuilder.append(toData);
+        // "EXTRADATA"
+        this.queueBuilder.append(", ");
+        this.queueBuilder.append(extraData);
         // ")"
         this.queueBuilder.append(")");
 
