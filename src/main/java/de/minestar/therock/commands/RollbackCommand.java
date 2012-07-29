@@ -37,7 +37,8 @@ public class RollbackCommand extends AbstractCommand {
         CacheElement cache = Core.cacheHolder.getCacheElement(player.getName());
         if (cache == null) {
             PlayerUtils.sendError(player, Core.NAME, "You must specify the rollback first.");
-            PlayerUtils.sendInfo(player, "NOTE: Use /tr selection [Player] [time]");
+            PlayerUtils.sendInfo(player, "NOTE: Use /tr selection [Player] [SINCE]");
+            PlayerUtils.sendInfo(player, "OR: Use /tr area <Radius> [<Player> [Time] | time <SINCE>]");
             return;
         }
 
