@@ -212,7 +212,7 @@ public class SQLListener implements Listener {
 
                             String split[] = results.getString("extraData").split("-#*#-");
                             for (int i = 0; i < split.length; i++) {
-                                message += (i + 1) + ". " + split;
+                                message += (i + 1) + ". " + split[i];
                                 if (i < 3) {
                                     message += " ; ";
                                 } else {
