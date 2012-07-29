@@ -60,6 +60,7 @@ public class RollbackCommand extends AbstractCommand {
                 newVector = new BlockVector(cache.getWorld().getName(), results.getInt("blockX"), results.getInt("blockY"), results.getInt("blockZ"));
                 newVector.setTypeID(results.getInt("fromID"));
                 newVector.setSubData((byte) results.getInt("fromData"));
+                System.out.println("data1: " + results.getString("extraData"));
                 newVector.setExtraData(results.getString("extraData"));
                 blockLists[newVector.getY()].add(newVector);
             }
@@ -124,6 +125,7 @@ public class RollbackCommand extends AbstractCommand {
                 block = vector.getLocation().getBlock();
                 Sign sign = (Sign) block.getState();
 
+                System.out.println("data2: " + vector.getExtraData());
                 String split[] = vector.getExtraData().split("`");
                 for (int i = 0; i < split.length && i < 4; i++) {
                     if (split[i].length() > 0) {
