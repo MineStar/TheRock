@@ -226,12 +226,12 @@ public class BlockChangeListener implements Listener {
         // create data
         // /////////////////////////////////
         Block block = event.getBlock();
-        String signData = event.getLine(0) + "-#*#-" + event.getLine(1) + "-#*#-" + event.getLine(2) + "-#*#-" + event.getLine(3);
+        String signData = event.getLine(0) + "`" + event.getLine(1) + "`" + event.getLine(2) + "`" + event.getLine(3);
         this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_PLACE.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), 0, (byte) 0, block.getTypeId(), block.getData(), signData);
     }
 
     private void addBlockChange(String reason, int eventType, String worldName, int blockX, int blockY, int blockZ, int fromID, byte fromData, int toID, byte toData) {
-        this.addBlockChange(reason, eventType, worldName, blockX, blockY, blockZ, fromID, fromData, toID, toData, "");
+        this.addBlockChange(reason, eventType, worldName, blockX, blockY, blockZ, fromID, fromData, toID, toData, "''");
     }
 
     private void addBlockChange(String reason, int eventType, String worldName, int blockX, int blockY, int blockZ, int fromID, byte fromData, int toID, byte toData, String extraData) {
@@ -268,7 +268,9 @@ public class BlockChangeListener implements Listener {
         this.queueBuilder.append(toData);
         // "EXTRADATA"
         this.queueBuilder.append(", ");
-        this.queueBuilder.append("''");
+        this.queueBuilder.append("'");
+        this.queueBuilder.append(extraData);
+        this.queueBuilder.append("'");
         // ")"
         this.queueBuilder.append(")");
 
