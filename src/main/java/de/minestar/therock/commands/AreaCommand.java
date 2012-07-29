@@ -69,11 +69,12 @@ public class AreaCommand extends AbstractExtendedCommand {
                 return;
             }
             String targetName = args[2];
-            // Command: /tr selection player 'Player'
+            // Command: /tr area <RADIUS> player <Player>
             if (args.length == 3) {
                 PlayerUtils.sendInfo(player, Core.NAME, "Getting results for player '" + targetName + "' with radius '" + radius + "'...");
                 Core.databaseHandler.getAreaPlayerChanges(player, radius, targetName);
             } else {
+                // Command: /tr area <RADIUS> player <Player> <1d2h3m4s>
                 int[] times = this.parseString(args[3], player);
                 if (times == null) {
                     PlayerUtils.sendError(player, Core.NAME, "Wrong syntax!");
