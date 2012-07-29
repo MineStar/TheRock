@@ -35,6 +35,9 @@ import de.minestar.therock.Core;
 import de.minestar.therock.data.BlockEventTypes;
 import de.minestar.therock.data.CacheElement;
 import de.minestar.therock.data.InventoryEventTypes;
+import de.minestar.therock.events.GetAreaPlayerChangesEvent;
+import de.minestar.therock.events.GetAreaPlayerTimeChangesEvent;
+import de.minestar.therock.events.GetAreaTimeChangesEvent;
 import de.minestar.therock.events.GetInventoryChangesEvent;
 import de.minestar.therock.events.GetSelectionBlockChangesEvent;
 import de.minestar.therock.events.GetSelectionPlayerBlockChangesEvent;
@@ -123,6 +126,67 @@ public class SQLListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
+    public void onAreaTimeChanges(GetAreaTimeChangesEvent event) {
+        Player player = Bukkit.getPlayerExact(event.getPlayerName());
+
+        // we need to find the player
+        if (player == null)
+            return;
+
+        // send info
+        PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "RESULTS");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "Radius: " + event.getRadius());
+        PlayerUtils.sendMessage(player, ChatColor.RED, "After: '" + dateFormat.format(event.getTimestamp()) + "'");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
+        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Changes: " + event.getTotalChanges());
+
+        // add cache-element for possible later use
+        Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onAreaPlayerChanges(GetAreaPlayerChangesEvent event) {
+        Player player = Bukkit.getPlayerExact(event.getPlayerName());
+
+        // we need to find the player
+        if (player == null)
+            return;
+
+        // send info
+        PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "RESULTS");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "Radius: " + event.getRadius());
+        PlayerUtils.sendMessage(player, ChatColor.RED, "Player: '" + event.getTargetPlayer() + "'");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
+        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Changes: " + event.getTotalChanges());
+
+        // add cache-element for possible later use
+        Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onAreaPlayerTimeChanges(GetAreaPlayerTimeChangesEvent event) {
+        Player player = Bukkit.getPlayerExact(event.getPlayerName());
+
+        // we need to find the player
+        if (player == null)
+            return;
+
+        // send info
+        PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "RESULTS");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "Radius: " + event.getRadius());
+        PlayerUtils.sendMessage(player, ChatColor.RED, "Player: '" + event.getTargetPlayer() + "'");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "After: '" + dateFormat.format(event.getTimestamp()) + "'");
+        PlayerUtils.sendMessage(player, ChatColor.RED, "----------------");
+        PlayerUtils.sendMessage(player, ChatColor.GRAY, "Changes: " + event.getTotalChanges());
+
+        // add cache-element for possible later use
+        Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onGetSingleBlockChangeInfo(GetSingleBlockChangesEvent event) {
         ResultSet results = event.getResults();
         Player player = Bukkit.getPlayerExact(event.getPlayerName());
@@ -186,6 +250,7 @@ public class SQLListener implements Listener {
             PlayerUtils.sendError(player, Core.NAME, "Oooops.. something went wrong!");
         }
     }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onGetInventoryChanges(GetInventoryChangesEvent event) {
         ResultSet results = event.getResults();
