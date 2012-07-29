@@ -110,7 +110,9 @@ public class RollbackCommand extends AbstractCommand {
             } else if (block.getTypeId() == Material.FURNACE.getId() || block.getTypeId() == Material.BURNING_FURNACE.getId()) {
                 ((Furnace) block.getState()).getInventory().clear();
             }
-            block.setTypeIdAndData(vector.getTypeID(), vector.getSubData(), true);
+            if (block.getTypeId() != vector.getTypeID() && vector.getSubData() != block.getData()) {
+                block.setTypeIdAndData(vector.getTypeID(), vector.getSubData(), true);
+            }
             ++blockCount;
         }
         list.clear();
