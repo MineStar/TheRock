@@ -22,6 +22,7 @@ import org.bukkit.plugin.PluginManager;
 
 import de.minestar.minestarlibrary.AbstractCore;
 import de.minestar.minestarlibrary.commands.CommandList;
+import de.minestar.therock.commands.AreaCommand;
 import de.minestar.therock.commands.RollbackCommand;
 import de.minestar.therock.commands.SelectionCommand;
 import de.minestar.therock.commands.TheRockCommand;
@@ -124,8 +125,9 @@ public class Core extends AbstractCore {
         //@formatter:off;
         this.cmdList = new CommandList(
                 new TheRockCommand    ("/tr", "", "",
-                            new SelectionCommand ("selection",    "[ Player ] [ since ]",    "therock.tools.selection"),
-                            new RollbackCommand ("rollback",      "",                        "therock.tools.rollback")
+                            new AreaCommand         ("area",         "<Radius> < player NAME [SINCE] | time SINCE>",    "therock.tools.area"),
+                            new SelectionCommand    ("selection",    "[ Player ] [ since ]",                    "therock.tools.selection"),
+                            new RollbackCommand     ("rollback",     "",                                        "therock.tools.rollback")
                           )
          );
         // @formatter: on;

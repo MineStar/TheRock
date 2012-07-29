@@ -99,9 +99,8 @@ public class SelectionCommand extends AbstractExtendedCommand {
     }
 
     private int[] parseString(String date, Player player) {
-        // days, hours, minutes
-        int[] result = new int[4];
         try {
+            int[] result = new int[4];
             // split the string at 'h' OR 'm' OR 'd' and remaine the delimiter
             StringTokenizer st = new StringTokenizer(date, "[d,h,m,s]", true);
             // parsed integer
@@ -115,14 +114,14 @@ public class SelectionCommand extends AbstractExtendedCommand {
                 // assign date
                 fillDates(result, c, i);
             }
+            // when all numbers are zero or negative
+            if (result[0] < 1 && result[1] < 1 && result[2] < 1 && result[3] < 1) {
+                return null;
+            }
+            return result;
         } catch (Exception e) {
             return null;
         }
-        // when all numbers are zero or negative
-        if (result[0] < 1 && result[1] < 1 && result[2] < 1 && result[3] < 1) {
-            return null;
-        }
-        return result;
     }
 
     private void fillDates(int[] result, char c, int i) {

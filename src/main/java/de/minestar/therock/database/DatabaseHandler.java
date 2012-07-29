@@ -71,6 +71,21 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
         return true;
     }
 
+    public boolean getAreaTimeChanges(Player player, int radius, long timestamp) {
+        // TODO: GET TIMECHANGES : /tr area <RADIUS> time <SINCE>
+        return true;
+    }
+
+    public boolean getAreaPlayerChanges(Player player, int radius, String targetPlayer) {
+        // TODO: GET TIMECHANGES : /tr area <RADIUS> player <PLAYER>
+        return true;
+    }
+
+    public boolean getAreaPlayerTimeChanges(Player player, int radius, String targetPlayer, long timestamp) {
+        // TODO: GET TIMECHANGES : /tr area <RADIUS> player <PLAYER> <SINCE>
+        return true;
+    }
+
     public boolean getSelectionBlockChanges(Player player, Selection selection) {
         new GetSelectionBlockChangesThread(player.getName(), selection.getMinCorner(), selection.getMaxCorner()).start();
         return true;
