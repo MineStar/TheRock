@@ -62,8 +62,8 @@ public class RollbackCommand extends AbstractCommand {
 
             // setup queues
             ArrayList<BlockVector> run_one = new ArrayList<BlockVector>(1024);
-            ArrayList<BlockVector> run_two = new ArrayList<BlockVector>(1024);
-            ArrayList<BlockVector> run_three = new ArrayList<BlockVector>(1024);
+            ArrayList<BlockVector> run_two = new ArrayList<BlockVector>(512);
+            ArrayList<BlockVector> run_three = new ArrayList<BlockVector>(256);
             for (ArrayList<BlockVector> curList : blockLists) {
                 for (BlockVector vector : curList) {
                     if (queue_single.contains(vector.getTypeID())) {
