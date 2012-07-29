@@ -8,9 +8,11 @@ import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Furnace;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
 import de.minestar.minestarlibrary.commands.AbstractCommand;
@@ -58,6 +60,7 @@ public class RollbackCommand extends AbstractCommand {
                 newVector = new BlockVector(cache.getWorld().getName(), results.getInt("blockX"), results.getInt("blockY"), results.getInt("blockZ"));
                 newVector.setTypeID(results.getInt("fromID"));
                 newVector.setSubData((byte) results.getInt("fromData"));
+                newVector.setExtraData(results.getString("extraData"));
                 blockLists[newVector.getY()].add(newVector);
             }
 
@@ -112,8 +115,24 @@ public class RollbackCommand extends AbstractCommand {
                 ((Dispenser) block.getState()).getInventory().clear();
             } else if (block.getTypeId() == Material.FURNACE.getId() || block.getTypeId() == Material.BURNING_FURNACE.getId()) {
                 ((Furnace) block.getState()).getInventory().clear();
+            } else if (block.getTypeId() == Material.BREWING_STAND.getId()) {
+                ((BrewingStand) block.getState()).getInventory().clear();
             }
             block.setTypeIdAndData(vector.getTypeID(), vector.getSubData(), true);
+
+            if (vector.getTypeID() == Material.WALL_SIGN.getId() || vector.getTypeID() == Material.SIGN_POST.getId()) {
+                block = vector.getLocation().getBlock();
+                Sign sign = (Sign) block.getState();
+
+                String split[] = vector.getExtraData().split("`");
+                for (int i = 0; i < split.length && i < 4; i++) {
+                    if (split[i].length() > 0) {
+                        sign.setLine(i, split[i]);
+                    }
+                }
+                sign.update(true);
+            }
+
             ++blockCount;
         }
         list.clear();

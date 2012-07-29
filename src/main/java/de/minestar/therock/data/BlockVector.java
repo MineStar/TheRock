@@ -11,6 +11,7 @@ public class BlockVector implements Comparable<BlockVector> {
     private Location location = null;
     private int TypeID;
     private byte subData;
+    private String extraData = null;
 
     /**
      * Constructor
@@ -27,6 +28,14 @@ public class BlockVector implements Comparable<BlockVector> {
         this.y = y;
         this.z = z;
         this.worldName = worldName;
+    }
+
+    public void setExtraData(String extraData) {
+        this.extraData = extraData;
+    }
+
+    public String getExtraData() {
+        return this.extraData;
     }
 
     /**
