@@ -268,7 +268,7 @@ public class BlockChangeListener implements Listener {
         this.queueBuilder.append(toData);
         // "EXTRADATA"
         this.queueBuilder.append(", ");
-        this.queueBuilder.append(extraData);
+        this.queueBuilder.append("''");
         // ")"
         this.queueBuilder.append(")");
 

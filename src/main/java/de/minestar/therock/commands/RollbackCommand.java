@@ -24,6 +24,8 @@ public class RollbackCommand extends AbstractCommand {
     private static final Set<Integer> queue_single = new HashSet<Integer>(Arrays.asList(6, 8, 9, 10, 11, 26, 27, 28, 30, 31, 32, 34, 37, 38, 39, 40, 50, 51, 55, 59, 63, 64, 66, 68, 69, 70, 71, 72, 75, 76, 77, 78, 83, 90, 93, 94, 96, 104, 105, 106, 115, 117, 118, 119, 127, 131, 132));
     private static final Set<Integer> queue_double = new HashSet<Integer>(Arrays.asList(111));
 
+    private int blockCount = 0;
+
     public RollbackCommand(String syntax, String arguments, String node) {
         super(Core.NAME, syntax, arguments, node);
         this.description = "Rollback the selected action.";
@@ -51,7 +53,6 @@ public class RollbackCommand extends AbstractCommand {
             }
 
             // sort the blocks into the blocklist
-            int blockCount = 0;
             while (results.next()) {
                 newVector = new BlockVector(cache.getWorld().getName(), results.getInt("blockX"), results.getInt("blockY"), results.getInt("blockZ"));
                 newVector.setTypeID(results.getInt("fromID"));
@@ -81,16 +82,17 @@ public class RollbackCommand extends AbstractCommand {
             }
 
             // rollback blocks : Run ONE
-            this.executeRun(run_one, blockCount);
+            this.executeRun(run_one);
 
             // rollback blocks : Run TWO
-            this.executeRun(run_two, blockCount);
+            this.executeRun(run_two);
 
             // rollback blocks : Run THREE
-            this.executeRun(run_three, blockCount);
+            this.executeRun(run_three);
 
             // send info
             PlayerUtils.sendSuccess(player, Core.NAME, "Rollback finished. ( " + blockCount + " Blocks)");
+            blockCount = 0;
             Core.cacheHolder.clearCacheElement(player.getName());
         } catch (Exception e) {
             PlayerUtils.sendError(player, Core.NAME, "Oooops.. something went wrong!");
@@ -99,7 +101,7 @@ public class RollbackCommand extends AbstractCommand {
         }
     }
 
-    private void executeRun(ArrayList<BlockVector> list, int blockCount) {
+    private void executeRun(ArrayList<BlockVector> list) {
         Block block;
         for (BlockVector vector : list) {
             block = vector.getLocation().getBlock();
@@ -110,9 +112,7 @@ public class RollbackCommand extends AbstractCommand {
             } else if (block.getTypeId() == Material.FURNACE.getId() || block.getTypeId() == Material.BURNING_FURNACE.getId()) {
                 ((Furnace) block.getState()).getInventory().clear();
             }
-            if (block.getTypeId() != vector.getTypeID() && vector.getSubData() != block.getData()) {
-                block.setTypeIdAndData(vector.getTypeID(), vector.getSubData(), true);
-            }
+            block.setTypeIdAndData(vector.getTypeID(), vector.getSubData(), true);
             ++blockCount;
         }
         list.clear();
