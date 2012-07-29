@@ -35,6 +35,7 @@ import de.minestar.therock.Core;
 import de.minestar.therock.data.Selection;
 import de.minestar.therock.data.Value;
 import de.minestar.therock.data.ValueList;
+import de.minestar.therock.sqlthreads.GetAreaChangesThread;
 import de.minestar.therock.sqlthreads.GetInventoryChangesThread;
 import de.minestar.therock.sqlthreads.GetSelectionBlockChangesThread;
 import de.minestar.therock.sqlthreads.GetSingleBlockChangesThread;
@@ -72,17 +73,17 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
     }
 
     public boolean getAreaTimeChanges(Player player, int radius, long timestamp) {
-        // TODO: GET TIMECHANGES : /tr area <RADIUS> time <SINCE>
+        new GetAreaChangesThread(player.getName(), player.getLocation().clone(), radius, timestamp).start();
         return true;
     }
 
     public boolean getAreaPlayerChanges(Player player, int radius, String targetPlayer) {
-        // TODO: GET TIMECHANGES : /tr area <RADIUS> player <PLAYER>
+        new GetAreaChangesThread(player.getName(), player.getLocation().clone(), radius, targetPlayer).start();
         return true;
     }
 
     public boolean getAreaPlayerTimeChanges(Player player, int radius, String targetPlayer, long timestamp) {
-        // TODO: GET TIMECHANGES : /tr area <RADIUS> player <PLAYER> <SINCE>
+        new GetAreaChangesThread(player.getName(), player.getLocation().clone(), radius, timestamp, targetPlayer).start();
         return true;
     }
 
