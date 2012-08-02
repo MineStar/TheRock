@@ -259,16 +259,24 @@ public class BlockChangeListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPistonRetract(BlockPistonRetractEvent event) {
         // event cancelled => return
-        if (event.isCancelled() || !event.isSticky() || !this.mainManager.isWorldWatched(event.getBlock().getWorld()) || !this.mainManager.getWorld(event.getBlock()).logPistonSticky())
+        if (event.isCancelled() || !this.mainManager.isWorldWatched(event.getBlock().getWorld()))
             return;
 
         // /////////////////////////////////
         // create data
         // /////////////////////////////////
-        Block block = event.getRetractLocation().getBlock();
-        this.addBlockChange("STICKY PISTON", BlockEventTypes.PISTON_RETRACT.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getState().getTypeId(), block.getState().getRawData(), Material.AIR.getId(), (byte) 0);
+        if (event.isSticky()) {
+            if (this.mainManager.getWorld(event.getBlock()).logPistonSticky()) {
+                Block block = event.getRetractLocation().getBlock();
+                this.addBlockChange("STICKY PISTON", BlockEventTypes.PISTON_RETRACT.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getState().getTypeId(), block.getState().getRawData(), Material.AIR.getId(), (byte) 0);
+            }
+        } else {
+            if (this.mainManager.getWorld(event.getBlock()).logPistonNormal()) {
+                Block block = event.getBlock().getRelative(event.getDirection());
+                this.addBlockChange("PISTON", BlockEventTypes.PISTON_RETRACT.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getState().getTypeId(), block.getState().getRawData(), Material.AIR.getId(), (byte) 0);
+            }
+        }
     }
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPistonExtend(BlockPistonExtendEvent event) {
         // event cancelled => return
@@ -314,25 +322,6 @@ public class BlockChangeListener implements Listener {
             pushedBlock = event.getBlock().getRelative(event.getDirection());
             this.addBlockChange("PISTON", BlockEventTypes.PISTON_PUSH.getID(), pushedBlock.getWorld().getName(), pushedBlock.getX(), pushedBlock.getY(), pushedBlock.getZ(), pushedBlock.getState().getTypeId(), pushedBlock.getState().getRawData(), Material.PISTON_EXTENSION.getId(), event.getBlock().getState().getRawData());
             return;
-        }
-    }
-
-    public BlockFace getOppositeFace(final BlockFace face) {
-        switch (face) {
-            case WEST :
-                return BlockFace.EAST;
-            case EAST :
-                return BlockFace.WEST;
-            case NORTH :
-                return BlockFace.SOUTH;
-            case SOUTH :
-                return BlockFace.NORTH;
-            case UP :
-                return BlockFace.DOWN;
-            case DOWN :
-                return BlockFace.UP;
-            default :
-                return face;
         }
     }
 

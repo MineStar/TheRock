@@ -237,8 +237,16 @@ public class SQLListener implements Listener {
                         message += ChatColor.GRAY + results.getString("reason") + " destroyed " + Material.getMaterial(results.getInt("fromID")) + ":" + results.getInt("fromData");
                         break;
                     }
+                    case PISTON_PUSH : {
+                        message += ChatColor.GRAY + results.getString("reason") + " replaced " + Material.getMaterial(results.getInt("fromID")) + ":" + results.getInt("fromData") + " with " + Material.getMaterial(results.getInt("toID")) + ":" + results.getInt("toData");
+                        break;
+                    }
+                    case PISTON_RETRACT : {
+                        message += ChatColor.GRAY + results.getString("reason") + " pulled " + Material.getMaterial(results.getInt("fromID")) + ":" + results.getInt("fromData");
+                        break;
+                    }
                     default : {
-                        message += "UNKNOWN ACTION by " + results.getString("reason");
+                        message += "UNKNOWN ACTION by " + results.getString("reason") + " - " + "OLD: " + Material.getMaterial(results.getInt("fromID")) + ":" + results.getInt("fromData") + " || NEW: " + Material.getMaterial(results.getInt("toID")) + ":" + results.getInt("toData");
                         break;
                     }
 
@@ -252,7 +260,6 @@ public class SQLListener implements Listener {
             PlayerUtils.sendError(player, Core.NAME, "Oooops.. something went wrong!");
         }
     }
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void onGetInventoryChanges(GetInventoryChangesEvent event) {
         ResultSet results = event.getResults();
