@@ -32,6 +32,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
@@ -50,7 +52,7 @@ public class BlockChangeListener implements Listener {
     private MainConsumer mainConsumer;
     private StringBuilder queueBuilder;
 
-    private static final Set<Integer> nonFluidProofBlocks = new HashSet<Integer>(Arrays.asList(6, 27, 28, 31, 32, 37, 38, 39, 40, 50, 51, 55, 59, 66, 69, 70, 72, 75, 76, 78, 83, 93, 94, 104, 105, 106, 115, 127, 131, 132));
+    private static final Set<Integer> nonFluidProofBlocks = new HashSet<Integer>(Arrays.asList(6, 26, 27, 28, 31, 32, 37, 38, 39, 40, 50, 51, 55, 59, 66, 69, 70, 72, 75, 76, 78, 83, 93, 94, 104, 105, 106, 115, 127, 131, 132));
     private static final Set<Integer> signBlocks = new HashSet<Integer>(Arrays.asList(Material.SIGN_POST.getId(), Material.WALL_SIGN.getId()));
 
     private final BlockFace[] faces = new BlockFace[]{BlockFace.DOWN, BlockFace.NORTH, BlockFace.WEST, BlockFace.EAST, BlockFace.SOUTH};
@@ -252,6 +254,76 @@ public class BlockChangeListener implements Listener {
         Block block = event.getBlock();
         String signData = event.getLine(0) + "`" + event.getLine(1) + "`" + event.getLine(2) + "`" + event.getLine(3);
         this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_PLACE.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), 0, (byte) 0, block.getTypeId(), block.getData(), signData);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPistonRetract(BlockPistonRetractEvent event) {
+        // event cancelled => return
+        if (event.isCancelled() || !event.isSticky() || !this.mainManager.isWorldWatched(event.getBlock().getWorld()) || !this.mainManager.getWorld(event.getBlock()).logPistonSticky())
+            return;
+
+        // /////////////////////////////////
+        // create data
+        // /////////////////////////////////
+        Block block = event.getRetractLocation().getBlock();
+        this.addBlockChange("STICKY PISTON", BlockEventTypes.PISTON_RETRACT.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getState().getTypeId(), block.getState().getRawData(), Material.AIR.getId(), (byte) 0);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPistonExtend(BlockPistonExtendEvent event) {
+        // event cancelled => return
+        if (event.isCancelled() || !this.mainManager.isWorldWatched(event.getBlock().getWorld()))
+            return;
+
+        // is it a sticky piston?
+        if (event.isSticky()) {
+            // do we log sticky pistons?
+            if (!this.mainManager.getWorld(event.getBlock()).logPistonSticky()) {
+                return;
+            }
+
+            Block pushedBlock;
+            for (Block block : event.getBlocks()) {
+                // /////////////////////////////////
+                // create data
+                // /////////////////////////////////
+                pushedBlock = event.getBlock().getRelative(this.getOppositeFace(event.getDirection()));
+                this.addBlockChange("STICKY PISTON", BlockEventTypes.PISTON_PUSH.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getState().getTypeId(), block.getState().getRawData(), pushedBlock.getState().getTypeId(), pushedBlock.getState().getRawData());
+            }
+        } else {
+            // do we log normal pistons?
+            if (!this.mainManager.getWorld(event.getBlock()).logPistonNormal()) {
+                return;
+            }
+
+            Block pushedBlock;
+            for (Block block : event.getBlocks()) {
+                // /////////////////////////////////
+                // create data
+                // /////////////////////////////////
+                pushedBlock = event.getBlock().getRelative(this.getOppositeFace(event.getDirection()));
+                this.addBlockChange("PISTON", BlockEventTypes.PISTON_PUSH.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getState().getTypeId(), block.getState().getRawData(), pushedBlock.getState().getTypeId(), pushedBlock.getState().getRawData());
+            }
+        }
+    }
+
+    public BlockFace getOppositeFace(final BlockFace face) {
+        switch (face) {
+            case WEST :
+                return BlockFace.EAST;
+            case EAST :
+                return BlockFace.WEST;
+            case NORTH :
+                return BlockFace.SOUTH;
+            case SOUTH :
+                return BlockFace.NORTH;
+            case UP :
+                return BlockFace.DOWN;
+            case DOWN :
+                return BlockFace.UP;
+            default :
+                return face;
+        }
     }
 
     private void addBlockChange(String reason, int eventType, String worldName, int blockX, int blockY, int blockZ, int fromID, byte fromData, int toID, byte toData) {
