@@ -26,6 +26,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -50,12 +51,23 @@ public class BlockChangeListener implements Listener {
     private StringBuilder queueBuilder;
 
     private static final Set<Integer> nonFluidProofBlocks = new HashSet<Integer>(Arrays.asList(6, 27, 28, 31, 32, 37, 38, 39, 40, 50, 51, 55, 59, 66, 69, 70, 72, 75, 76, 78, 83, 93, 94, 104, 105, 106, 115, 127, 131, 132));
+    private static final Set<Integer> signBlocks = new HashSet<Integer>(Arrays.asList(Material.SIGN_POST.getId(), Material.WALL_SIGN.getId()));
+
     private final BlockFace[] faces = new BlockFace[]{BlockFace.DOWN, BlockFace.NORTH, BlockFace.WEST, BlockFace.EAST, BlockFace.SOUTH};
 
     public BlockChangeListener() {
         this.mainManager = Core.mainManager;
         this.mainConsumer = Core.mainConsumer;
         this.queueBuilder = new StringBuilder();
+    }
+
+    private void handleSignBreak(String reason, Block block) {
+        // /////////////////////////////////
+        // create data
+        // /////////////////////////////////
+        Sign sign = (Sign) block.getState();
+        String signData = sign.getLine(0) + "`" + sign.getLine(1) + "`" + sign.getLine(2) + "`" + sign.getLine(3);
+        this.addBlockChange(reason, BlockEventTypes.PLAYER_PLACE.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), 0, (byte) 0, block.getTypeId(), block.getData(), signData);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -69,7 +81,11 @@ public class BlockChangeListener implements Listener {
         // /////////////////////////////////
         // create data
         // /////////////////////////////////
-        this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_BREAK.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlock().getTypeId(), event.getBlock().getData(), Material.AIR.getId(), (byte) Material.AIR.getId());
+        if (!signBlocks.contains(event.getBlock().getTypeId())) {
+            this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_BREAK.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlock().getTypeId(), event.getBlock().getData(), Material.AIR.getId(), (byte) Material.AIR.getId());
+        } else {
+            this.handleSignBreak(event.getPlayer().getName(), event.getBlock());
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -100,7 +116,11 @@ public class BlockChangeListener implements Listener {
             // /////////////////////////////////
             // create data
             // /////////////////////////////////
-            this.addBlockChange(event.getEntityType().getName(), BlockEventTypes.PHYSICS_DESTROY.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getTypeId(), block.getData(), Material.AIR.getId(), (byte) Material.AIR.getId());
+            if (!signBlocks.contains(block.getTypeId())) {
+                this.addBlockChange(event.getEntityType().getName(), BlockEventTypes.PHYSICS_DESTROY.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getTypeId(), block.getData(), Material.AIR.getId(), (byte) Material.AIR.getId());
+            } else {
+                this.handleSignBreak(event.getEntityType().getName(), block);
+            }
         }
     }
 
@@ -115,7 +135,11 @@ public class BlockChangeListener implements Listener {
         // /////////////////////////////////
         // create data
         // /////////////////////////////////
-        this.addBlockChange(event.getEntityType().getName(), BlockEventTypes.PHYSICS_DESTROY.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlock().getTypeId(), event.getBlock().getData(), event.getTo().getId(), (byte) 0);
+        if (!signBlocks.contains(event.getBlock().getTypeId())) {
+            this.addBlockChange(event.getEntityType().getName(), BlockEventTypes.PHYSICS_DESTROY.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlock().getTypeId(), event.getBlock().getData(), event.getTo().getId(), (byte) 0);
+        } else {
+            this.handleSignBreak(event.getEntityType().getName(), event.getBlock());
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
