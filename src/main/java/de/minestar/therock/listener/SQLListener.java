@@ -237,12 +237,8 @@ public class SQLListener implements Listener {
                         message += ChatColor.GRAY + results.getString("reason") + " destroyed " + Material.getMaterial(results.getInt("fromID")) + ":" + results.getInt("fromData");
                         break;
                     }
-                    case PISTON_PUSH : {
+                    case PISTON_REPLACE : {
                         message += ChatColor.GRAY + results.getString("reason") + " replaced " + Material.getMaterial(results.getInt("fromID")) + ":" + results.getInt("fromData") + " with " + Material.getMaterial(results.getInt("toID")) + ":" + results.getInt("toData");
-                        break;
-                    }
-                    case PISTON_RETRACT : {
-                        message += ChatColor.GRAY + results.getString("reason") + " pulled " + Material.getMaterial(results.getInt("fromID")) + ":" + results.getInt("fromData");
                         break;
                     }
                     default : {
