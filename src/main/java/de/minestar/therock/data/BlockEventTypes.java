@@ -23,6 +23,8 @@ public enum BlockEventTypes {
 
     PHYSICS_CREATE(3), PHYSICS_DESTROY(4),
 
+    PISTON_NORMAL(5), PISTON_STICKY(6),
+
     UNKNOWN(-1);
 
     private final int eventID;

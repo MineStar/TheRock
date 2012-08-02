@@ -134,6 +134,9 @@ public class WorldSettings {
         return logEntityBlockChange;
     }
 
+    public boolean logInventoryChange() {
+        return logInventoryChange;
+    }
     public boolean logPistonNormal() {
         return logPistonNormal;
     }
