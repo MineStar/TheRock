@@ -61,13 +61,13 @@ public class BlockChangeListener implements Listener {
         this.queueBuilder = new StringBuilder();
     }
 
-    private void handleSignBreak(String reason, Block block) {
+    private void handleSignBreak(String reason, Block block, BlockEventTypes eventType) {
         // /////////////////////////////////
         // create data
         // /////////////////////////////////
         Sign sign = (Sign) block.getState();
         String signData = sign.getLine(0) + "`" + sign.getLine(1) + "`" + sign.getLine(2) + "`" + sign.getLine(3);
-        this.addBlockChange(reason, BlockEventTypes.PLAYER_PLACE.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), 0, (byte) 0, block.getTypeId(), block.getData(), signData);
+        this.addBlockChange(reason, eventType.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getTypeId(), block.getData(), Material.AIR.getId(), (byte) Material.AIR.getId(), signData);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -84,7 +84,7 @@ public class BlockChangeListener implements Listener {
         if (!signBlocks.contains(event.getBlock().getTypeId())) {
             this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_BREAK.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlock().getTypeId(), event.getBlock().getData(), Material.AIR.getId(), (byte) Material.AIR.getId());
         } else {
-            this.handleSignBreak(event.getPlayer().getName(), event.getBlock());
+            this.handleSignBreak(event.getPlayer().getName(), event.getBlock(), BlockEventTypes.PLAYER_BREAK);
         }
     }
 
@@ -119,7 +119,7 @@ public class BlockChangeListener implements Listener {
             if (!signBlocks.contains(block.getTypeId())) {
                 this.addBlockChange(event.getEntityType().getName(), BlockEventTypes.PHYSICS_DESTROY.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getTypeId(), block.getData(), Material.AIR.getId(), (byte) Material.AIR.getId());
             } else {
-                this.handleSignBreak(event.getEntityType().getName(), block);
+                this.handleSignBreak(event.getEntityType().getName(), block, BlockEventTypes.PHYSICS_DESTROY);
             }
         }
     }
@@ -138,7 +138,7 @@ public class BlockChangeListener implements Listener {
         if (!signBlocks.contains(event.getBlock().getTypeId())) {
             this.addBlockChange(event.getEntityType().getName(), BlockEventTypes.PHYSICS_DESTROY.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlock().getTypeId(), event.getBlock().getData(), event.getTo().getId(), (byte) 0);
         } else {
-            this.handleSignBreak(event.getEntityType().getName(), event.getBlock());
+            this.handleSignBreak(event.getEntityType().getName(), event.getBlock(), BlockEventTypes.PHYSICS_DESTROY);
         }
     }
 

@@ -118,9 +118,11 @@ public class RollbackCommand extends AbstractCommand {
             } else if (block.getTypeId() == Material.BREWING_STAND.getId()) {
                 ((BrewingStand) block.getState()).getInventory().clear();
             }
+            System.out.println("rollback block: " + Material.getMaterial(vector.getTypeID()).name());
             block.setTypeIdAndData(vector.getTypeID(), vector.getSubData(), true);
 
             if (vector.getTypeID() == Material.WALL_SIGN.getId() || vector.getTypeID() == Material.SIGN_POST.getId()) {
+                System.out.println("updating sign");
                 block = vector.getLocation().getBlock();
                 Sign sign = (Sign) block.getState();
                 String split[] = vector.getExtraData().split("`");
