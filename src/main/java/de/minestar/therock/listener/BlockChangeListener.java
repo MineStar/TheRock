@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -171,7 +170,6 @@ public class BlockChangeListener implements Listener {
             // /////////////////////////////////
             if (replacedID != Material.AIR.getId()) {
                 // DONE!
-                Bukkit.getServer().broadcastMessage("Lavaflow destroyed " + Material.getMaterial(replacedID) + ":" + replacedData);
                 this.addBlockChange("Lavaflow", BlockEventTypes.PHYSICS_DESTROY.getID(), toBlock.getWorld().getName(), toBlock.getX(), toBlock.getY(), toBlock.getZ(), replacedID, replacedData, newID, newData);
             }
 
@@ -180,10 +178,8 @@ public class BlockChangeListener implements Listener {
                 final Block lower = toBlock.getRelative(blockFace);
                 if (lower.getTypeId() == 8 || lower.getTypeId() == 9) {
                     if (lower.getData() <= 2) {
-                        Bukkit.getServer().broadcastMessage("Lavaflow created " + Material.getMaterial(1) + ":" + replacedData);
                         this.addBlockChange("Lavaflow", BlockEventTypes.PHYSICS_CREATE.getID(), toBlock.getWorld().getName(), lower.getX(), lower.getY(), lower.getZ(), lower.getTypeId(), lower.getData(), Material.STONE.getId(), (byte) 0);
                     } else {
-                        Bukkit.getServer().broadcastMessage("Lavaflow created " + Material.getMaterial(4) + ":" + replacedData);
                         this.addBlockChange("Lavaflow", BlockEventTypes.PHYSICS_CREATE.getID(), toBlock.getWorld().getName(), lower.getX(), lower.getY(), lower.getZ(), lower.getTypeId(), lower.getData(), Material.COBBLESTONE.getId(), (byte) 0);
                     }
                 }
@@ -194,7 +190,6 @@ public class BlockChangeListener implements Listener {
             // /////////////////////////////////
             if (replacedID != Material.AIR.getId()) {
                 // DONE!
-                Bukkit.getServer().broadcastMessage("Waterflow destroyed " + Material.getMaterial(replacedID) + ":" + replacedData);
                 this.addBlockChange("Waterflow", BlockEventTypes.PHYSICS_DESTROY.getID(), toBlock.getWorld().getName(), toBlock.getX(), toBlock.getY(), toBlock.getZ(), replacedID, replacedData, 8, newData);
             }
 
@@ -203,11 +198,9 @@ public class BlockChangeListener implements Listener {
                 final Block relative = toBlock.getRelative(blockFace);
                 if (relative.getTypeId() == 10 || relative.getTypeId() == 11) {
                     if (relative.getData() == 0) {
-                        Bukkit.getServer().broadcastMessage("Waterflow created " + Material.getMaterial(49) + ":" + replacedData);
                         this.addBlockChange("Waterflow", BlockEventTypes.PHYSICS_CREATE.getID(), toBlock.getWorld().getName(), relative.getX(), relative.getY(), relative.getZ(), relative.getTypeId(), relative.getData(), Material.OBSIDIAN.getId(), (byte) 0);
                     } else {
                         if (relative.getData() < 6) {
-                            Bukkit.getServer().broadcastMessage("Waterflow created " + Material.getMaterial(4) + ":" + replacedData);
                             this.addBlockChange("Waterflow", BlockEventTypes.PHYSICS_CREATE.getID(), toBlock.getWorld().getName(), relative.getX(), relative.getY(), relative.getZ(), relative.getTypeId(), relative.getData(), Material.COBBLESTONE.getId(), (byte) 0);
                         }
                     }
