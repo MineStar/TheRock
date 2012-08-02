@@ -31,6 +31,7 @@ public class WorldSettings {
     private boolean logWaterFlow = true, logLavaFlow = true;
     private boolean logEntityBlockExplode = true, logEntityBlockChange = true;
     private boolean logInventoryChange = true;
+    private boolean logPistonNormal = true, logPistonSticky = true;
 
     public WorldSettings() {
         logBucketEmpty = false;
@@ -42,6 +43,8 @@ public class WorldSettings {
         logEntityBlockExplode = false;
         logEntityBlockChange = false;
         logInventoryChange = false;
+        logPistonNormal = false;
+        logPistonSticky = false;
     }
 
     public WorldSettings(String worldName) {
@@ -67,6 +70,8 @@ public class WorldSettings {
             logEntityBlockExplode = ymlFile.getBoolean("log.block.entityexplode", logEntityBlockExplode);
             logEntityBlockChange = ymlFile.getBoolean("log.block.entitychange", logEntityBlockChange);
             logInventoryChange = ymlFile.getBoolean("log.inventory.change", logInventoryChange);
+            logPistonNormal = ymlFile.getBoolean("log.block.piston.normal", logPistonNormal);
+            logPistonSticky = ymlFile.getBoolean("log.block.piston.sticky", logPistonSticky);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -88,6 +93,8 @@ public class WorldSettings {
         ymlFile.set("log.block.entityexplode", logEntityBlockExplode);
         ymlFile.set("log.block.entitychange", logEntityBlockChange);
         ymlFile.set("log.inventory.change", logInventoryChange);
+        ymlFile.set("log.block.piston.normal", logPistonNormal);
+        ymlFile.set("log.block.piston.sticky", logPistonSticky);
         try {
             ymlFile.save(file);
         } catch (IOException e) {
@@ -127,7 +134,11 @@ public class WorldSettings {
         return logEntityBlockChange;
     }
 
-    public boolean logInventoryChange() {
-        return logInventoryChange;
+    public boolean logPistonNormal() {
+        return logPistonNormal;
+    }
+
+    public boolean logPistonSticky() {
+        return logPistonSticky;
     }
 }
