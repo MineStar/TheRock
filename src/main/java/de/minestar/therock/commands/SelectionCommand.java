@@ -41,6 +41,7 @@ public class SelectionCommand extends AbstractExtendedCommand {
         // Command: /tr selection
         if (args.length == 0) {
             PlayerUtils.sendInfo(player, Core.NAME, "Getting results...");
+            Core.mainConsumer.flushWithoutThread();
             Core.databaseHandler.getSelectionBlockChanges(player, selection);
         } else {
             // Command: /tr selection player <Player> [1d2h3m4s]
@@ -56,6 +57,7 @@ public class SelectionCommand extends AbstractExtendedCommand {
                 // Command: /tr selection player 'Player'
                 if (args.length == 2) {
                     PlayerUtils.sendInfo(player, Core.NAME, "Getting results for player '" + targetName + "'...");
+                    Core.mainConsumer.flushWithoutThread();
                     Core.databaseHandler.getSelectionPlayerBlockChanges(player, selection, targetName);
                 } else {
                     int[] times = this.parseString(args[2], player);
@@ -70,6 +72,7 @@ public class SelectionCommand extends AbstractExtendedCommand {
                     long timestamp = System.currentTimeMillis() - seconds * 1000;
 
                     PlayerUtils.sendInfo(player, Core.NAME, "Getting results for player '" + targetName + "', time " + args[2] + " ...");
+                    Core.mainConsumer.flushWithoutThread();
                     Core.databaseHandler.getSelectionPlayerTimeBlockChanges(player, selection, targetName, timestamp);
                 }
             }
@@ -87,6 +90,7 @@ public class SelectionCommand extends AbstractExtendedCommand {
                 long timestamp = System.currentTimeMillis() - seconds * 1000;
 
                 PlayerUtils.sendInfo(player, Core.NAME, "Getting results for time " + args[1] + " ...");
+                Core.mainConsumer.flushWithoutThread();
                 Core.databaseHandler.getSelectionTimeBlockChanges(player, selection, timestamp);
             } else {
                 // wrong syntax

@@ -58,6 +58,7 @@ public class AreaCommand extends AbstractExtendedCommand {
             long timestamp = System.currentTimeMillis() - seconds * 1000;
 
             PlayerUtils.sendInfo(player, Core.NAME, "Getting results for radius '" + radius + "'...");
+            Core.mainConsumer.flushWithoutThread();
             Core.databaseHandler.getAreaTimeChanges(player, radius, timestamp);
             return;
         } else if (args[1].equalsIgnoreCase("player")) {
@@ -72,6 +73,7 @@ public class AreaCommand extends AbstractExtendedCommand {
             // Command: /tr area <RADIUS> player <Player>
             if (args.length == 3) {
                 PlayerUtils.sendInfo(player, Core.NAME, "Getting results for player '" + targetName + "' with radius '" + radius + "'...");
+                Core.mainConsumer.flushWithoutThread();
                 Core.databaseHandler.getAreaPlayerChanges(player, radius, targetName);
             } else {
                 // Command: /tr area <RADIUS> player <Player> <1d2h3m4s>
@@ -87,6 +89,7 @@ public class AreaCommand extends AbstractExtendedCommand {
                 long timestamp = System.currentTimeMillis() - seconds * 1000;
 
                 PlayerUtils.sendInfo(player, Core.NAME, "Getting results for player '" + targetName + "', time " + args[2] + ", radius '" + radius + "'...");
+                Core.mainConsumer.flushWithoutThread();
                 Core.databaseHandler.getAreaPlayerTimeChanges(player, radius, targetName, timestamp);
             }
         }
