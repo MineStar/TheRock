@@ -268,9 +268,9 @@ public class BlockChangeListener implements Listener {
         if (event.isSticky()) {
             if (this.mainManager.getWorld(event.getBlock()).logPistonSticky()) {
                 Block block = event.getRetractLocation().getBlock();
-                this.addBlockChange("STICKY PISTON", BlockEventTypes.PISTON_REPLACE.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getState().getTypeId(), block.getState().getRawData(), Material.AIR.getId(), (byte) 0);
+                this.addBlockChange("STICKY_PISTON", BlockEventTypes.PISTON_REPLACE.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getState().getTypeId(), block.getState().getRawData(), Material.AIR.getId(), (byte) 0);
                 Block extension = event.getRetractLocation().getBlock().getRelative(event.getDirection().getOppositeFace());
-                this.addBlockChange("STICKY PISTON", BlockEventTypes.PISTON_REPLACE.getID(), extension.getWorld().getName(), extension.getX(), extension.getY(), extension.getZ(), extension.getState().getTypeId(), extension.getState().getRawData(), block.getState().getTypeId(), block.getState().getRawData());
+                this.addBlockChange("STICKY_PISTON", BlockEventTypes.PISTON_REPLACE.getID(), extension.getWorld().getName(), extension.getX(), extension.getY(), extension.getZ(), extension.getState().getTypeId(), extension.getState().getRawData(), block.getState().getTypeId(), block.getState().getRawData());
             }
         } else {
             if (this.mainManager.getWorld(event.getBlock()).logPistonNormal()) {
@@ -299,12 +299,12 @@ public class BlockChangeListener implements Listener {
                 // create data
                 // /////////////////////////////////
                 pushedBlock = block.getRelative(event.getDirection());
-                this.addBlockChange("STICKY PISTON", BlockEventTypes.PISTON_REPLACE.getID(), pushedBlock.getWorld().getName(), pushedBlock.getX(), pushedBlock.getY(), pushedBlock.getZ(), pushedBlock.getState().getTypeId(), pushedBlock.getState().getRawData(), block.getState().getTypeId(), block.getState().getRawData());
+                this.addBlockChange("STICKY_PISTON", BlockEventTypes.PISTON_REPLACE.getID(), pushedBlock.getWorld().getName(), pushedBlock.getX(), pushedBlock.getY(), pushedBlock.getZ(), pushedBlock.getState().getTypeId(), pushedBlock.getState().getRawData(), block.getState().getTypeId(), block.getState().getRawData());
             }
 
             // create data for PistonExtension
             pushedBlock = event.getBlock().getRelative(event.getDirection());
-            this.addBlockChange("STICKY PISTON", BlockEventTypes.PISTON_REPLACE.getID(), pushedBlock.getWorld().getName(), pushedBlock.getX(), pushedBlock.getY(), pushedBlock.getZ(), pushedBlock.getState().getTypeId(), pushedBlock.getState().getRawData(), Material.PISTON_EXTENSION.getId(), event.getBlock().getState().getRawData());
+            this.addBlockChange("STICKY_PISTON", BlockEventTypes.PISTON_REPLACE.getID(), pushedBlock.getWorld().getName(), pushedBlock.getX(), pushedBlock.getY(), pushedBlock.getZ(), pushedBlock.getState().getTypeId(), pushedBlock.getState().getRawData(), Material.PISTON_EXTENSION.getId(), event.getBlock().getState().getRawData());
             return;
         } else {
             // do we log normal pistons?
@@ -339,7 +339,7 @@ public class BlockChangeListener implements Listener {
         this.queueBuilder.append(System.currentTimeMillis());
         // "REASON"
         this.queueBuilder.append(", ");
-        this.queueBuilder.append("'" + reason + "'");
+        this.queueBuilder.append("'" + reason.replace(" ", "_") + "'");
         // "EVENTTYPE"
         this.queueBuilder.append(", ");
         this.queueBuilder.append(eventType);
