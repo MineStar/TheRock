@@ -2,6 +2,7 @@ name: TheRock
 main: de.minestar.therock.Core
 version: ${pom.version}
 depend: [MineStarLibrary, MinestarCore]
+softdepend: [GreenMile]
 commands:
   tr:
     description: TheRock-related commands
