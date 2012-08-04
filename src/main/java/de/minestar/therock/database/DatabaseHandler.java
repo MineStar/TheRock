@@ -25,11 +25,7 @@ import java.sql.PreparedStatement;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import de.minestar.minestarlibrary.config.MinestarConfig;
-import de.minestar.minestarlibrary.database.AbstractDatabaseHandler;
-import de.minestar.minestarlibrary.database.DatabaseConnection;
-import de.minestar.minestarlibrary.database.DatabaseType;
-import de.minestar.minestarlibrary.database.DatabaseUtils;
+import de.minestar.minestarlibrary.database.AbstractMySQLHandler;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.therock.Core;
 import de.minestar.therock.data.Selection;
@@ -41,21 +37,10 @@ import de.minestar.therock.sqlthreads.GetSelectionBlockChangesThread;
 import de.minestar.therock.sqlthreads.GetSingleBlockChangesThread;
 import de.minestar.therock.sqlthreads.InsertThread;
 
-public class DatabaseHandler extends AbstractDatabaseHandler {
+public class DatabaseHandler extends AbstractMySQLHandler {
 
-    public DatabaseHandler(String pluginName, File dataFolder) {
-        super(pluginName, dataFolder);
-    }
-
-    @Override
-    protected DatabaseConnection createConnection(String pluginName, File dataFolder) throws Exception {
-        File configFile = new File(dataFolder, "sqlconfig.yml");
-        if (!configFile.exists()) {
-            DatabaseUtils.createDatabaseConfig(DatabaseType.MySQL, configFile, pluginName);
-            return null;
-        } else {
-            return new DatabaseConnection(pluginName, DatabaseType.MySQL, new MinestarConfig(configFile));
-        }
+    public DatabaseHandler(String pluginName, File SQLConfigFile) {
+        super(pluginName, SQLConfigFile);
     }
 
     @Override

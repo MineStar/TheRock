@@ -18,6 +18,8 @@
 
 package de.minestar.therock;
 
+import java.io.File;
+
 import org.bukkit.plugin.PluginManager;
 
 import de.minestar.minestarlibrary.AbstractCore;
@@ -68,7 +70,7 @@ public class Core extends AbstractCore {
     protected boolean createManager() {
         INSTANCE = this;
 
-        databaseHandler = new DatabaseHandler(NAME, getDataFolder());
+        databaseHandler = new DatabaseHandler(NAME, new File(getDataFolder(), "sqlconfig.yml"));
         if (!databaseHandler.hasConnection()) {
             return false;
         }
