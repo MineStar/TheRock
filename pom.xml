@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.minestar</groupId>
 	<artifactId>TheRock</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<distributionManagement>
 		<!-- use the following if you're not using a snapshot version. -->
 		<repository>
@@ -22,17 +22,17 @@
 		<dependency>
 			<groupId>de.minestar</groupId>
 			<artifactId>minestarlibrary</artifactId>
-			<version>1.9-SNAPSHOT</version>
+			<version>1.9</version>
 		</dependency>
 		<dependency>
 			<groupId>de.minestar</groupId>
 			<artifactId>MinestarCore</artifactId>
-			<version>1.6.4</version>
+			<version>1.6.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.3.1-R0.1-SNAPSHOT</version>
+			<version>1.3.1-R1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>de.minestar</groupId>
