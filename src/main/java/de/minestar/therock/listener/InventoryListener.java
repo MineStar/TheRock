@@ -124,6 +124,11 @@ public class InventoryListener implements Listener {
             // get the current item
             ItemStack inCursor = event.getCursor();
 
+            // fix slot < 0
+            if (event.getSlot() < 0) {
+                return;
+            }
+
             // get the clicked item
             ItemStack inSlot = event.getInventory().getItem(event.getSlot());
 
