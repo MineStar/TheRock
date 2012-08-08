@@ -22,6 +22,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -93,7 +94,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     }
 
     public boolean executeStatement(String query) {
-        new InsertThread(query).start();
+        Bukkit.getScheduler().scheduleAsyncDelayedTask(Core.INSTANCE, new InsertThread(query), 1);
         return true;
     }
 

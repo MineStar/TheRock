@@ -100,6 +100,7 @@ public class Core extends AbstractCore {
         playerListener = new ChatAndCommandListener();
         inventoryListener = new InventoryListener();
         sqlListener = new SQLListener();
+
         return true;
     }
 

@@ -24,7 +24,7 @@ import java.sql.SQLException;
 import de.minestar.therock.Core;
 import de.minestar.therock.database.DatabaseHandler;
 
-public class InsertThread extends Thread {
+public class InsertThread implements Runnable {
 
     private final String query;
     private final DatabaseHandler databaseHandler;
@@ -34,7 +34,6 @@ public class InsertThread extends Thread {
         this.query = query;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void run() {
         try {
@@ -43,6 +42,5 @@ public class InsertThread extends Thread {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        this.stop();
     }
 }
