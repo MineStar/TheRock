@@ -31,7 +31,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import de.minestar.minestarlibrary.utils.PlayerUtils;
-import de.minestar.therock.Core;
+import de.minestar.therock.TheRockCore;
 import de.minestar.therock.data.BlockEventTypes;
 import de.minestar.therock.data.CacheElement;
 import de.minestar.therock.data.InventoryEventTypes;
@@ -64,7 +64,7 @@ public class SQLListener implements Listener {
         PlayerUtils.sendMessage(player, ChatColor.GRAY, "Changes: " + event.getTotalChanges());
 
         // add cache-element for possible later use
-        Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
+        TheRockCore.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -83,7 +83,7 @@ public class SQLListener implements Listener {
         PlayerUtils.sendMessage(player, ChatColor.GRAY, "Changes: " + event.getTotalChanges());
 
         // add cache-element for possible later use
-        Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
+        TheRockCore.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -102,7 +102,7 @@ public class SQLListener implements Listener {
         PlayerUtils.sendMessage(player, ChatColor.GRAY, "Changes: " + event.getTotalChanges());
 
         // add cache-element for possible later use
-        Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
+        TheRockCore.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -122,7 +122,7 @@ public class SQLListener implements Listener {
         PlayerUtils.sendMessage(player, ChatColor.GRAY, "Changes: " + event.getTotalChanges());
 
         // add cache-element for possible later use
-        Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
+        TheRockCore.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -142,7 +142,7 @@ public class SQLListener implements Listener {
         PlayerUtils.sendMessage(player, ChatColor.GRAY, "Changes: " + event.getTotalChanges());
 
         // add cache-element for possible later use
-        Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
+        TheRockCore.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -162,7 +162,7 @@ public class SQLListener implements Listener {
         PlayerUtils.sendMessage(player, ChatColor.GRAY, "Changes: " + event.getTotalChanges());
 
         // add cache-element for possible later use
-        Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
+        TheRockCore.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -183,7 +183,7 @@ public class SQLListener implements Listener {
         PlayerUtils.sendMessage(player, ChatColor.GRAY, "Changes: " + event.getTotalChanges());
 
         // add cache-element for possible later use
-        Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
+        TheRockCore.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -250,10 +250,10 @@ public class SQLListener implements Listener {
                 PlayerUtils.sendMessage(player, ChatColor.GOLD, message);
             }
             // add cache-element for possible later use
-            Core.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
+            TheRockCore.cacheHolder.addCacheElement(new CacheElement(event.getPlayerName(), event.getWorld(), event.getResults()));
         } catch (SQLException e) {
             e.printStackTrace();
-            PlayerUtils.sendError(player, Core.NAME, "Oooops.. something went wrong!");
+            PlayerUtils.sendError(player, TheRockCore.NAME, "Oooops.. something went wrong!");
         }
     }
     @EventHandler(priority = EventPriority.MONITOR)
@@ -292,7 +292,7 @@ public class SQLListener implements Listener {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            PlayerUtils.sendError(player, Core.NAME, "Oooops.. something went wrong!");
+            PlayerUtils.sendError(player, TheRockCore.NAME, "Oooops.. something went wrong!");
         }
     }
 }

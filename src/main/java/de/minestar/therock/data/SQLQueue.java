@@ -18,7 +18,7 @@
 
 package de.minestar.therock.data;
 
-import de.minestar.therock.Core;
+import de.minestar.therock.TheRockCore;
 import de.minestar.therock.database.DatabaseHandler;
 
 public class SQLQueue {
@@ -38,7 +38,7 @@ public class SQLQueue {
     }
 
     public SQLQueue(String worldName, String tableName, ValueList values, int buffer_size) {
-        this.databaseHandler = Core.databaseHandler;
+        this.databaseHandler = TheRockCore.databaseHandler;
         this.tableName = tableName;
         this.worldName = worldName;
         this.values = values;

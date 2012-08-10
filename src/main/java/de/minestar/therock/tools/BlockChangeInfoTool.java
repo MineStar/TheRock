@@ -22,7 +22,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
-import de.minestar.therock.Core;
+import de.minestar.therock.TheRockCore;
 
 public class BlockChangeInfoTool extends Tool {
 
@@ -34,9 +34,9 @@ public class BlockChangeInfoTool extends Tool {
     public void onBlockInteract(Player player, Block block, BlockFace blockFace, boolean isLeftClick) {
         if (this.hasPermission(player)) {
             if (isLeftClick) {
-                Core.databaseHandler.getBlockChanges(player, block);
+                TheRockCore.databaseHandler.getBlockChanges(player, block);
             } else {
-                Core.databaseHandler.getBlockChanges(player, block.getRelative(blockFace));
+                TheRockCore.databaseHandler.getBlockChanges(player, block.getRelative(blockFace));
             }
         }
     }

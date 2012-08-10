@@ -32,7 +32,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import de.minestar.minestarlibrary.utils.PlayerUtils;
-import de.minestar.therock.Core;
+import de.minestar.therock.TheRockCore;
 import de.minestar.therock.tools.Tool;
 
 public class ToolListener implements Listener {
@@ -90,7 +90,7 @@ public class ToolListener implements Listener {
         if (this.isTool(ID)) {
             Tool tool = this.getTool(ID);
             if (tool.hasPermission(event.getPlayer())) {
-                PlayerUtils.sendError(event.getPlayer(), Core.NAME, "You cannot drop the " + tool.getToolName() + "-tool!");
+                PlayerUtils.sendError(event.getPlayer(), TheRockCore.NAME, "You cannot drop the " + tool.getToolName() + "-tool!");
                 event.setCancelled(true);
             }
         }

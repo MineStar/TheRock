@@ -40,7 +40,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 
-import de.minestar.therock.Core;
+import de.minestar.therock.TheRockCore;
 import de.minestar.therock.data.BlockEventTypes;
 import de.minestar.therock.manager.MainConsumer;
 import de.minestar.therock.manager.MainManager;
@@ -57,8 +57,8 @@ public class BlockChangeListener implements Listener {
     private final BlockFace[] faces = new BlockFace[]{BlockFace.DOWN, BlockFace.NORTH, BlockFace.WEST, BlockFace.EAST, BlockFace.SOUTH};
 
     public BlockChangeListener() {
-        this.mainManager = Core.mainManager;
-        this.mainConsumer = Core.mainConsumer;
+        this.mainManager = TheRockCore.mainManager;
+        this.mainConsumer = TheRockCore.mainConsumer;
         this.queueBuilder = new StringBuilder();
     }
 

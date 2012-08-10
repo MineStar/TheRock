@@ -18,7 +18,7 @@
 
 package de.minestar.therock.manager;
 
-import de.minestar.therock.Core;
+import de.minestar.therock.TheRockCore;
 import de.minestar.therock.data.SQLQueue;
 import de.minestar.therock.data.Value;
 import de.minestar.therock.data.ValueList;
@@ -40,7 +40,7 @@ public class WorldConsumer {
         values.addValue(new Value("toID", "INTEGER"));
         values.addValue(new Value("toData", "INTEGER"));
         values.addValue(new Value("extraData", "TEXT"));
-        this.blockQueue = new SQLQueue(worldName, "block", values, Core.mainManager.getBuffer_blockChange());
+        this.blockQueue = new SQLQueue(worldName, "block", values, TheRockCore.mainManager.getBuffer_blockChange());
 
         // InventoryQueue
         values = new ValueList();
@@ -53,7 +53,7 @@ public class WorldConsumer {
         values.addValue(new Value("TypeID", "INTEGER"));
         values.addValue(new Value("Data", "INTEGER"));
         values.addValue(new Value("Amount", "INTEGER"));
-        this.inventoryQueue = new SQLQueue(worldName, "inventory", values, Core.mainManager.getBuffer_inventory());
+        this.inventoryQueue = new SQLQueue(worldName, "inventory", values, TheRockCore.mainManager.getBuffer_inventory());
     }
 
     public void appendBlockEvent(StringBuilder stringBuilder) {

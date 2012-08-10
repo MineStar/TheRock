@@ -6,12 +6,12 @@ import org.bukkit.entity.Player;
 
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
-import de.minestar.therock.Core;
+import de.minestar.therock.TheRockCore;
 
 public class AreaCommand extends AbstractExtendedCommand {
 
     public AreaCommand(String syntax, String arguments, String node) {
-        super(Core.NAME, syntax, arguments, node);
+        super(TheRockCore.NAME, syntax, arguments, node);
         this.description = "Count the changes in a given area.";
     }
 
@@ -19,7 +19,7 @@ public class AreaCommand extends AbstractExtendedCommand {
 
         // wrong syntax : too many arguments
         if (args.length > 3) {
-            PlayerUtils.sendError(player, Core.NAME, "Wrong syntax! Too many arguments.");
+            PlayerUtils.sendError(player, TheRockCore.NAME, "Wrong syntax! Too many arguments.");
             PlayerUtils.sendInfo(player, "Example: /tr area 20 time 2d");
             PlayerUtils.sendInfo(player, "Example: /tr area 20 player GeMoschen 2d");
             return;
@@ -30,7 +30,7 @@ public class AreaCommand extends AbstractExtendedCommand {
         try {
             radius = Integer.valueOf(args[0]);
         } catch (Exception e) {
-            PlayerUtils.sendError(player, Core.NAME, "Wrong syntax! Radius must be an integer.");
+            PlayerUtils.sendError(player, TheRockCore.NAME, "Wrong syntax! Radius must be an integer.");
             PlayerUtils.sendInfo(player, "Example: /tr area 10 time 1d2h3m4s");
             PlayerUtils.sendInfo(player, "Example: /tr area 15 player GeMoschen");
             PlayerUtils.sendInfo(player, "Example: /tr area 20 player GeMoschen 1d2h3m4s");
@@ -41,7 +41,7 @@ public class AreaCommand extends AbstractExtendedCommand {
         if (args[1].equalsIgnoreCase("time")) {
             // wrong syntax : too less arguments
             if (args.length < 3) {
-                PlayerUtils.sendError(player, Core.NAME, "Wrong syntax! Too less arguments.");
+                PlayerUtils.sendError(player, TheRockCore.NAME, "Wrong syntax! Too less arguments.");
                 PlayerUtils.sendInfo(player, "Example: /tr area time 1d2h3m4s");
                 return;
             }
@@ -49,7 +49,7 @@ public class AreaCommand extends AbstractExtendedCommand {
             // get the timestamp
             int[] times = this.parseString(args[2], player);
             if (times == null) {
-                PlayerUtils.sendError(player, Core.NAME, "Wrong syntax!");
+                PlayerUtils.sendError(player, TheRockCore.NAME, "Wrong syntax!");
                 PlayerUtils.sendInfo(player, "Example: /tr area time 1d2h3m4s");
                 return;
             }
@@ -57,14 +57,14 @@ public class AreaCommand extends AbstractExtendedCommand {
             long seconds = times[3] + times[2] * 60 + times[1] * 60 * 60 + times[0] * 60 * 60 * 24;
             long timestamp = System.currentTimeMillis() - seconds * 1000;
 
-            PlayerUtils.sendInfo(player, Core.NAME, "Getting results for radius '" + radius + "'...");
-            Core.mainConsumer.flushWithoutThread();
-            Core.databaseHandler.getAreaTimeChanges(player, radius, timestamp);
+            PlayerUtils.sendInfo(player, TheRockCore.NAME, "Getting results for radius '" + radius + "'...");
+            TheRockCore.mainConsumer.flushWithoutThread();
+            TheRockCore.databaseHandler.getAreaTimeChanges(player, radius, timestamp);
             return;
         } else if (args[1].equalsIgnoreCase("player")) {
             // wrong syntax : too less arguments
             if (args.length < 3) {
-                PlayerUtils.sendError(player, Core.NAME, "Wrong syntax! Too less arguments.");
+                PlayerUtils.sendError(player, TheRockCore.NAME, "Wrong syntax! Too less arguments.");
                 PlayerUtils.sendInfo(player, "Example: /tr area 15 player GeMoschen");
                 PlayerUtils.sendInfo(player, "Example: /tr area 20 player GeMoschen 1d2h3m4s");
                 return;
@@ -72,14 +72,14 @@ public class AreaCommand extends AbstractExtendedCommand {
             String targetName = args[2];
             // Command: /tr area <RADIUS> player <Player>
             if (args.length == 3) {
-                PlayerUtils.sendInfo(player, Core.NAME, "Getting results for player '" + targetName + "' with radius '" + radius + "'...");
-                Core.mainConsumer.flushWithoutThread();
-                Core.databaseHandler.getAreaPlayerChanges(player, radius, targetName);
+                PlayerUtils.sendInfo(player, TheRockCore.NAME, "Getting results for player '" + targetName + "' with radius '" + radius + "'...");
+                TheRockCore.mainConsumer.flushWithoutThread();
+                TheRockCore.databaseHandler.getAreaPlayerChanges(player, radius, targetName);
             } else {
                 // Command: /tr area <RADIUS> player <Player> <1d2h3m4s>
                 int[] times = this.parseString(args[3], player);
                 if (times == null) {
-                    PlayerUtils.sendError(player, Core.NAME, "Wrong syntax!");
+                    PlayerUtils.sendError(player, TheRockCore.NAME, "Wrong syntax!");
                     PlayerUtils.sendInfo(player, "Example: /tr area 15 player GeMoschen");
                     PlayerUtils.sendInfo(player, "Example: /tr area 20 player GeMoschen 1d2h3m4s");
                     return;
@@ -88,9 +88,9 @@ public class AreaCommand extends AbstractExtendedCommand {
                 long seconds = times[3] + times[2] * 60 + times[1] * 60 * 60 + times[0] * 60 * 60 * 24;
                 long timestamp = System.currentTimeMillis() - seconds * 1000;
 
-                PlayerUtils.sendInfo(player, Core.NAME, "Getting results for player '" + targetName + "', time " + args[2] + ", radius '" + radius + "'...");
-                Core.mainConsumer.flushWithoutThread();
-                Core.databaseHandler.getAreaPlayerTimeChanges(player, radius, targetName, timestamp);
+                PlayerUtils.sendInfo(player, TheRockCore.NAME, "Getting results for player '" + targetName + "', time " + args[2] + ", radius '" + radius + "'...");
+                TheRockCore.mainConsumer.flushWithoutThread();
+                TheRockCore.databaseHandler.getAreaPlayerTimeChanges(player, radius, targetName, timestamp);
             }
         }
     }

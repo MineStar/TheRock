@@ -25,7 +25,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import de.minestar.minestarlibrary.utils.PlayerUtils;
-import de.minestar.therock.Core;
+import de.minestar.therock.TheRockCore;
 import de.minestar.therock.data.Selection;
 
 public class SelectionTool extends Tool {
@@ -55,16 +55,16 @@ public class SelectionTool extends Tool {
             if (isLeftClick) {
                 Selection selection = this.getSelection(player);
                 selection.setCorner1(block.getLocation());
-                PlayerUtils.sendSuccess(player, Core.NAME, "Point 1 set.");
+                PlayerUtils.sendSuccess(player, TheRockCore.NAME, "Point 1 set.");
                 if (!selection.isValid()) {
-                    PlayerUtils.sendInfo(player, Core.NAME, "Please select the second point in this world via rightclick.");
+                    PlayerUtils.sendInfo(player, TheRockCore.NAME, "Please select the second point in this world via rightclick.");
                 }
             } else {
                 Selection selection = this.getSelection(player);
                 selection.setCorner2(block.getLocation());
-                PlayerUtils.sendSuccess(player, Core.NAME, "Point 2 set.");
+                PlayerUtils.sendSuccess(player, TheRockCore.NAME, "Point 2 set.");
                 if (!selection.isValid()) {
-                    PlayerUtils.sendInfo(player, Core.NAME, "Please select the first point in this world via leftclick.");
+                    PlayerUtils.sendInfo(player, TheRockCore.NAME, "Please select the first point in this world via leftclick.");
                 }
             }
         }

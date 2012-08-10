@@ -38,9 +38,9 @@ import de.minestar.therock.listener.ToolListener;
 import de.minestar.therock.manager.MainConsumer;
 import de.minestar.therock.manager.MainManager;
 
-public class Core extends AbstractCore {
+public class TheRockCore extends AbstractCore {
 
-    public static Core INSTANCE;
+    public static TheRockCore INSTANCE;
 
     public static final String NAME = "TheRock";
 
@@ -62,7 +62,7 @@ public class Core extends AbstractCore {
     public static CacheHolder cacheHolder;
 
     /** CONSTRUCTOR */
-    public Core() {
+    public TheRockCore() {
         super(NAME);
     }
 

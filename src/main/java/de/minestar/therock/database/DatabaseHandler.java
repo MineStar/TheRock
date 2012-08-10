@@ -28,7 +28,7 @@ import org.bukkit.entity.Player;
 
 import de.minestar.minestarlibrary.database.AbstractMySQLHandler;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
-import de.minestar.therock.Core;
+import de.minestar.therock.TheRockCore;
 import de.minestar.therock.data.Selection;
 import de.minestar.therock.data.Value;
 import de.minestar.therock.data.ValueList;
@@ -94,7 +94,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     }
 
     public boolean executeStatement(String query) {
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(Core.INSTANCE, new InsertThread(query), 1);
+        Bukkit.getScheduler().scheduleAsyncDelayedTask(TheRockCore.INSTANCE, new InsertThread(query), 1);
         return true;
     }
 
@@ -104,7 +104,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
             return (statement.executeUpdate() > 0);
         } catch (Exception e) {
             e.printStackTrace();
-            ConsoleUtils.printException(e, Core.NAME, "Can't execute query: " + query);
+            ConsoleUtils.printException(e, TheRockCore.NAME, "Can't execute query: " + query);
             return false;
         }
     }
@@ -144,7 +144,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
             return (statement.executeUpdate() > 0);
         } catch (Exception e) {
             e.printStackTrace();
-            ConsoleUtils.printException(e, Core.NAME, "Can't execute query: " + builder.toString());
+            ConsoleUtils.printException(e, TheRockCore.NAME, "Can't execute query: " + builder.toString());
             return false;
         }
     }

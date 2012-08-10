@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
 
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
-import de.minestar.therock.Core;
+import de.minestar.therock.TheRockCore;
 import de.minestar.therock.data.BlockVector;
 import de.minestar.therock.data.CacheElement;
 
@@ -29,16 +29,16 @@ public class RollbackCommand extends AbstractCommand {
     private int blockCount = 0;
 
     public RollbackCommand(String syntax, String arguments, String node) {
-        super(Core.NAME, syntax, arguments, node);
+        super(TheRockCore.NAME, syntax, arguments, node);
         this.description = "Rollback the selected action.";
     }
 
     @SuppressWarnings("unchecked")
     public void execute(String[] args, Player player) {
         // Validate cache
-        CacheElement cache = Core.cacheHolder.getCacheElement(player.getName());
+        CacheElement cache = TheRockCore.cacheHolder.getCacheElement(player.getName());
         if (cache == null) {
-            PlayerUtils.sendError(player, Core.NAME, "You must specify the rollback first.");
+            PlayerUtils.sendError(player, TheRockCore.NAME, "You must specify the rollback first.");
             PlayerUtils.sendInfo(player, "NOTE: Use /tr selection [Player] [SINCE]");
             PlayerUtils.sendInfo(player, "OR: Use /tr area <Radius> [player <Player> [Time] | time <SINCE>]");
             return;
@@ -95,12 +95,12 @@ public class RollbackCommand extends AbstractCommand {
             this.executeRun(run_three);
 
             // send info
-            PlayerUtils.sendSuccess(player, Core.NAME, "Rollback finished. ( " + blockCount + " Blocks)");
+            PlayerUtils.sendSuccess(player, TheRockCore.NAME, "Rollback finished. ( " + blockCount + " Blocks)");
             blockCount = 0;
-            Core.cacheHolder.clearCacheElement(player.getName());
+            TheRockCore.cacheHolder.clearCacheElement(player.getName());
         } catch (Exception e) {
-            PlayerUtils.sendError(player, Core.NAME, "Oooops.. something went wrong!");
-            Core.cacheHolder.clearCacheElement(player.getName());
+            PlayerUtils.sendError(player, TheRockCore.NAME, "Oooops.. something went wrong!");
+            TheRockCore.cacheHolder.clearCacheElement(player.getName());
             e.printStackTrace();
         }
     }

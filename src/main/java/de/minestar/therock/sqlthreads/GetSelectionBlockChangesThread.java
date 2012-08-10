@@ -25,7 +25,7 @@ import java.sql.SQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-import de.minestar.therock.Core;
+import de.minestar.therock.TheRockCore;
 import de.minestar.therock.database.DatabaseHandler;
 import de.minestar.therock.events.GetSelectionBlockChangesEvent;
 import de.minestar.therock.events.GetSelectionPlayerBlockChangesEvent;
@@ -54,7 +54,7 @@ public class GetSelectionBlockChangesThread extends Thread {
     }
 
     public GetSelectionBlockChangesThread(String playerName, String targetPlayer, Location min, Location max, long timestamp) {
-        this.databaseHandler = Core.databaseHandler;
+        this.databaseHandler = TheRockCore.databaseHandler;
         this.playerName = playerName;
         this.min = min;
         this.max = max;

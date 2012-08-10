@@ -32,7 +32,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
-import de.minestar.therock.Core;
+import de.minestar.therock.TheRockCore;
 import de.minestar.therock.data.WorldSettings;
 import de.minestar.therock.tools.BlockChangeInfoTool;
 import de.minestar.therock.tools.InventoryChangeTool;
@@ -76,7 +76,7 @@ public class MainManager {
     public void loadConfig() {
         worlds = new HashMap<String, WorldSettings>();
 
-        File file = new File(Core.INSTANCE.getDataFolder(), "settings.yml");
+        File file = new File(TheRockCore.INSTANCE.getDataFolder(), "settings.yml");
         if (!file.exists()) {
             this.writeDefaultConfig();
         }
@@ -92,7 +92,7 @@ public class MainManager {
                     if (world != null) {
                         WorldSettings settings = new WorldSettings(worldName);
                         this.worlds.put(worldName.toLowerCase(), settings);
-                        Core.mainConsumer.addWorldConsumer(world.getName());
+                        TheRockCore.mainConsumer.addWorldConsumer(world.getName());
                     }
                 }
             }
@@ -118,18 +118,18 @@ public class MainManager {
             }
 
             // register Tools
-            Core.toolListener.addTool(new BlockChangeInfoTool("Lookup", toolLookupID, "therock.tools.lookup"));
-            Core.toolListener.addTool(new InventoryChangeTool("Inventory-LookUp", toolInventoryID, "therock.tools.inventory"));
-            Core.toolListener.addTool(new SelectionTool("Selection", toolSelectionID, "therock.tools.selection"));
+            TheRockCore.toolListener.addTool(new BlockChangeInfoTool("Lookup", toolLookupID, "therock.tools.lookup"));
+            TheRockCore.toolListener.addTool(new InventoryChangeTool("Inventory-LookUp", toolInventoryID, "therock.tools.inventory"));
+            TheRockCore.toolListener.addTool(new SelectionTool("Selection", toolSelectionID, "therock.tools.selection"));
 
-            ConsoleUtils.printInfo(Core.NAME, "Amount of logged worlds: " + this.worlds.size());
+            ConsoleUtils.printInfo(TheRockCore.NAME, "Amount of logged worlds: " + this.worlds.size());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void writeDefaultConfig() {
-        File file = new File(Core.INSTANCE.getDataFolder(), "settings.yml");
+        File file = new File(TheRockCore.INSTANCE.getDataFolder(), "settings.yml");
         if (file.exists()) {
             file.delete();
         }

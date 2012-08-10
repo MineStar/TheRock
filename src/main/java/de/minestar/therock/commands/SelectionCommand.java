@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
-import de.minestar.therock.Core;
+import de.minestar.therock.TheRockCore;
 import de.minestar.therock.data.Selection;
 import de.minestar.therock.manager.MainManager;
 import de.minestar.therock.tools.SelectionTool;
@@ -16,23 +16,23 @@ public class SelectionCommand extends AbstractExtendedCommand {
     private MainManager mainManager;
 
     public SelectionCommand(String syntax, String arguments, String node) {
-        super(Core.NAME, syntax, arguments, node);
+        super(TheRockCore.NAME, syntax, arguments, node);
         this.description = "Count the changes in the selected zone.";
-        this.mainManager = Core.mainManager;
+        this.mainManager = TheRockCore.mainManager;
     }
 
     public void execute(String[] args, Player player) {
         // Validate selection
-        Selection selection = ((SelectionTool) Core.toolListener.getTool(this.mainManager.getToolSelectionID())).getSelection(player);
+        Selection selection = ((SelectionTool) TheRockCore.toolListener.getTool(this.mainManager.getToolSelectionID())).getSelection(player);
         if (!selection.isValid()) {
-            PlayerUtils.sendError(player, Core.NAME, "Your selection is not valid.");
+            PlayerUtils.sendError(player, TheRockCore.NAME, "Your selection is not valid.");
             PlayerUtils.sendInfo(player, "NOTE: You must select two points in the same world.");
             return;
         }
 
         // wrong syntax : too many arguments
         if (args.length > 3) {
-            PlayerUtils.sendError(player, Core.NAME, "Wrong syntax! Too many arguments.");
+            PlayerUtils.sendError(player, TheRockCore.NAME, "Wrong syntax! Too many arguments.");
             PlayerUtils.sendInfo(player, "Example: /tr selection time 2d");
             PlayerUtils.sendInfo(player, "Example: /tr selection player GeMoschen 2d");
             return;
@@ -40,15 +40,15 @@ public class SelectionCommand extends AbstractExtendedCommand {
 
         // Command: /tr selection
         if (args.length == 0) {
-            PlayerUtils.sendInfo(player, Core.NAME, "Getting results...");
-            Core.mainConsumer.flushWithoutThread();
-            Core.databaseHandler.getSelectionBlockChanges(player, selection);
+            PlayerUtils.sendInfo(player, TheRockCore.NAME, "Getting results...");
+            TheRockCore.mainConsumer.flushWithoutThread();
+            TheRockCore.databaseHandler.getSelectionBlockChanges(player, selection);
         } else {
             // Command: /tr selection player <Player> [1d2h3m4s]
             if (args[0].equalsIgnoreCase("player")) {
                 // wrong syntax : too less arguments
                 if (args.length < 2) {
-                    PlayerUtils.sendError(player, Core.NAME, "Wrong syntax! Too less arguments.");
+                    PlayerUtils.sendError(player, TheRockCore.NAME, "Wrong syntax! Too less arguments.");
                     PlayerUtils.sendInfo(player, "Example: /tr selection player GeMoschen");
                     PlayerUtils.sendInfo(player, "Example: /tr selection player GeMoschen 1d2h3m4s");
                     return;
@@ -56,13 +56,13 @@ public class SelectionCommand extends AbstractExtendedCommand {
                 String targetName = args[1];
                 // Command: /tr selection player 'Player'
                 if (args.length == 2) {
-                    PlayerUtils.sendInfo(player, Core.NAME, "Getting results for player '" + targetName + "'...");
-                    Core.mainConsumer.flushWithoutThread();
-                    Core.databaseHandler.getSelectionPlayerBlockChanges(player, selection, targetName);
+                    PlayerUtils.sendInfo(player, TheRockCore.NAME, "Getting results for player '" + targetName + "'...");
+                    TheRockCore.mainConsumer.flushWithoutThread();
+                    TheRockCore.databaseHandler.getSelectionPlayerBlockChanges(player, selection, targetName);
                 } else {
                     int[] times = this.parseString(args[2], player);
                     if (times == null) {
-                        PlayerUtils.sendError(player, Core.NAME, "Wrong syntax!");
+                        PlayerUtils.sendError(player, TheRockCore.NAME, "Wrong syntax!");
                         PlayerUtils.sendInfo(player, "Example: /tr selection player GeMoschen");
                         PlayerUtils.sendInfo(player, "Example: /tr selection player GeMoschen 1d2h3m4s");
                         return;
@@ -71,16 +71,16 @@ public class SelectionCommand extends AbstractExtendedCommand {
                     long seconds = times[3] + times[2] * 60 + times[1] * 60 * 60 + times[0] * 60 * 60 * 24;
                     long timestamp = System.currentTimeMillis() - seconds * 1000;
 
-                    PlayerUtils.sendInfo(player, Core.NAME, "Getting results for player '" + targetName + "', time " + args[2] + " ...");
-                    Core.mainConsumer.flushWithoutThread();
-                    Core.databaseHandler.getSelectionPlayerTimeBlockChanges(player, selection, targetName, timestamp);
+                    PlayerUtils.sendInfo(player, TheRockCore.NAME, "Getting results for player '" + targetName + "', time " + args[2] + " ...");
+                    TheRockCore.mainConsumer.flushWithoutThread();
+                    TheRockCore.databaseHandler.getSelectionPlayerTimeBlockChanges(player, selection, targetName, timestamp);
                 }
             }
             // Command: /tr selection time <1d2h3m4s>
             else if (args[0].equalsIgnoreCase("time")) {
                 int[] times = this.parseString(args[1], player);
                 if (times == null) {
-                    PlayerUtils.sendError(player, Core.NAME, "Wrong syntax!");
+                    PlayerUtils.sendError(player, TheRockCore.NAME, "Wrong syntax!");
                     PlayerUtils.sendInfo(player, "Example: /tr selection player GeMoschen");
                     PlayerUtils.sendInfo(player, "Example: /tr selection player GeMoschen 1d2h3m4s");
                     return;
@@ -89,12 +89,12 @@ public class SelectionCommand extends AbstractExtendedCommand {
                 long seconds = times[3] + times[2] * 60 + times[1] * 60 * 60 + times[0] * 60 * 60 * 24;
                 long timestamp = System.currentTimeMillis() - seconds * 1000;
 
-                PlayerUtils.sendInfo(player, Core.NAME, "Getting results for time " + args[1] + " ...");
-                Core.mainConsumer.flushWithoutThread();
-                Core.databaseHandler.getSelectionTimeBlockChanges(player, selection, timestamp);
+                PlayerUtils.sendInfo(player, TheRockCore.NAME, "Getting results for time " + args[1] + " ...");
+                TheRockCore.mainConsumer.flushWithoutThread();
+                TheRockCore.databaseHandler.getSelectionTimeBlockChanges(player, selection, timestamp);
             } else {
                 // wrong syntax
-                PlayerUtils.sendError(player, Core.NAME, "Wrong syntax! Too many arguments.");
+                PlayerUtils.sendError(player, TheRockCore.NAME, "Wrong syntax! Too many arguments.");
                 PlayerUtils.sendInfo(player, "Example: /tr selection");
                 PlayerUtils.sendInfo(player, "Example: /tr selection time 2d");
                 PlayerUtils.sendInfo(player, "Example: /tr selection player GeMoschen 2d");

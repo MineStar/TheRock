@@ -25,7 +25,7 @@ import java.sql.SQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 
-import de.minestar.therock.Core;
+import de.minestar.therock.TheRockCore;
 import de.minestar.therock.database.DatabaseHandler;
 import de.minestar.therock.events.GetInventoryChangesEvent;
 
@@ -37,7 +37,7 @@ public class GetInventoryChangesThread extends Thread {
     private final boolean showBlockInfo;
 
     public GetInventoryChangesThread(String playerName, Block block, boolean showBlockInfo) {
-        this.databaseHandler = Core.databaseHandler;
+        this.databaseHandler = TheRockCore.databaseHandler;
         this.playerName = playerName;
         this.block = block;
         this.showBlockInfo = showBlockInfo;

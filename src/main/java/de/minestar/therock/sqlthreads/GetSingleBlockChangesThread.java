@@ -25,7 +25,7 @@ import java.sql.SQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 
-import de.minestar.therock.Core;
+import de.minestar.therock.TheRockCore;
 import de.minestar.therock.database.DatabaseHandler;
 import de.minestar.therock.events.GetSingleBlockChangesEvent;
 
@@ -36,7 +36,7 @@ public class GetSingleBlockChangesThread extends Thread {
     private final DatabaseHandler databaseHandler;
 
     public GetSingleBlockChangesThread(String playerName, Block block) {
-        this.databaseHandler = Core.databaseHandler;
+        this.databaseHandler = TheRockCore.databaseHandler;
         this.playerName = playerName;
         this.block = block;
     }

@@ -25,7 +25,7 @@ import java.sql.SQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-import de.minestar.therock.Core;
+import de.minestar.therock.TheRockCore;
 import de.minestar.therock.database.DatabaseHandler;
 import de.minestar.therock.events.GetAreaPlayerChangesEvent;
 import de.minestar.therock.events.GetAreaPlayerTimeChangesEvent;
@@ -50,7 +50,7 @@ public class GetAreaChangesThread extends Thread {
     }
 
     public GetAreaChangesThread(String playerName, Location location, int radius, long timestamp, String targetPlayer) {
-        this.databaseHandler = Core.databaseHandler;
+        this.databaseHandler = TheRockCore.databaseHandler;
         this.playerName = playerName;
         this.location = location;
         this.radius = radius;

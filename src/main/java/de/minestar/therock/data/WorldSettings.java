@@ -23,7 +23,7 @@ import java.io.IOException;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import de.minestar.therock.Core;
+import de.minestar.therock.TheRockCore;
 
 public class WorldSettings {
     private boolean logBucketEmpty = true, logBucketFill = true;
@@ -52,7 +52,7 @@ public class WorldSettings {
     }
 
     private void loadSettings(String worldName) {
-        File file = new File(Core.INSTANCE.getDataFolder(), "config_" + worldName + ".yml");
+        File file = new File(TheRockCore.INSTANCE.getDataFolder(), "config_" + worldName + ".yml");
         if (!file.exists()) {
             this.saveSettings(worldName);
             return;
@@ -78,7 +78,7 @@ public class WorldSettings {
     }
 
     private void saveSettings(String worldName) {
-        File file = new File(Core.INSTANCE.getDataFolder(), "config_" + worldName + ".yml");
+        File file = new File(TheRockCore.INSTANCE.getDataFolder(), "config_" + worldName + ".yml");
         if (file.exists()) {
             file.delete();
         }

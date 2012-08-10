@@ -26,7 +26,7 @@ import org.bukkit.entity.Player;
 
 import com.bukkit.gemo.utils.BlockUtils;
 
-import de.minestar.therock.Core;
+import de.minestar.therock.TheRockCore;
 
 public class InventoryChangeTool extends Tool {
 
@@ -36,15 +36,15 @@ public class InventoryChangeTool extends Tool {
 
     @Override
     public void onBlockInteract(Player player, Block block, BlockFace blockFace, boolean isLeftClick) {
-        if (Core.inventoryListener.isContainerBlock(block)) {
+        if (TheRockCore.inventoryListener.isContainerBlock(block)) {
             if (this.hasPermission(player)) {
-                Core.databaseHandler.getInventoryChanges(player, block, true);
+                TheRockCore.databaseHandler.getInventoryChanges(player, block, true);
 
                 // for double chests : get both changes
                 if (block.getTypeId() == Material.CHEST.getId()) {
                     Chest dChest = BlockUtils.isDoubleChest(block);
                     if (dChest != null) {
-                        Core.databaseHandler.getInventoryChanges(player, dChest.getBlock(), false);
+                        TheRockCore.databaseHandler.getInventoryChanges(player, dChest.getBlock(), false);
                     }
                 }
             }
