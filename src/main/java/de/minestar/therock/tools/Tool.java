@@ -24,6 +24,8 @@ import org.bukkit.entity.Player;
 
 import com.bukkit.gemo.utils.UtilPermissions;
 
+import de.minestar.therock.Core;
+
 public abstract class Tool {
 
     private final String toolName;
@@ -49,7 +51,7 @@ public abstract class Tool {
     }
 
     public boolean hasPermission(Player player) {
-        return UtilPermissions.playerCanUseCommand(player, this.getPermission());
+        return UtilPermissions.playerCanUseCommand(player, this.getPermission()) && Core.mainManager.isWorldWatched(player.getWorld());
     }
 
     public abstract void onBlockInteract(final Player player, final Block block, final BlockFace blockFace, final boolean isLeftClick);
