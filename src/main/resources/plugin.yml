@@ -1,5 +1,5 @@
 name: TheRock
-main: de.minestar.therock.Core
+main: de.minestar.therock.TheRockCore
 version: ${pom.version}
 depend: [MineStarLibrary, MinestarCore]
 softdepend: [GreenMile]

@@ -18,7 +18,7 @@ public class AreaCommand extends AbstractExtendedCommand {
     public void execute(String[] args, Player player) {
 
         // wrong syntax : too many arguments
-        if (args.length > 3) {
+        if (args.length > 4) {
             PlayerUtils.sendError(player, TheRockCore.NAME, "Wrong syntax! Too many arguments.");
             PlayerUtils.sendInfo(player, "Example: /tr area 20 time 2d");
             PlayerUtils.sendInfo(player, "Example: /tr area 20 player GeMoschen 2d");
