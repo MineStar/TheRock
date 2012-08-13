@@ -32,7 +32,7 @@ import de.minestar.therock.events.GetSelectionPlayerBlockChangesEvent;
 import de.minestar.therock.events.GetSelectionPlayerTimeBlockChangesEvent;
 import de.minestar.therock.events.GetSelectionTimeBlockChangesEvent;
 
-public class GetSelectionBlockChangesThread extends Thread {
+public class GetSelectionBlockChangesThread implements Runnable {
 
     private final String playerName;
     private final Location min, max;
@@ -62,7 +62,6 @@ public class GetSelectionBlockChangesThread extends Thread {
         this.timestamp = timestamp;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void run() {
         try {
@@ -102,6 +101,5 @@ public class GetSelectionBlockChangesThread extends Thread {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        this.stop();
     }
 }

@@ -29,7 +29,7 @@ import de.minestar.therock.TheRockCore;
 import de.minestar.therock.database.DatabaseHandler;
 import de.minestar.therock.events.GetInventoryChangesEvent;
 
-public class GetInventoryChangesThread extends Thread {
+public class GetInventoryChangesThread implements Runnable {
 
     private final String playerName;
     private final Block block;
@@ -43,7 +43,6 @@ public class GetInventoryChangesThread extends Thread {
         this.showBlockInfo = showBlockInfo;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void run() {
         try {
@@ -56,6 +55,5 @@ public class GetInventoryChangesThread extends Thread {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        this.stop();
     }
 }

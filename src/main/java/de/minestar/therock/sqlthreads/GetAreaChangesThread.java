@@ -31,7 +31,7 @@ import de.minestar.therock.events.GetAreaPlayerChangesEvent;
 import de.minestar.therock.events.GetAreaPlayerTimeChangesEvent;
 import de.minestar.therock.events.GetAreaTimeChangesEvent;
 
-public class GetAreaChangesThread extends Thread {
+public class GetAreaChangesThread implements Runnable {
 
     private final String playerName;
     private final Location location;
@@ -58,7 +58,6 @@ public class GetAreaChangesThread extends Thread {
         this.targetPlayer = targetPlayer;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void run() {
         try {
@@ -95,6 +94,5 @@ public class GetAreaChangesThread extends Thread {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        this.stop();
     }
 }

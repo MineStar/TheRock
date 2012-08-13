@@ -29,7 +29,7 @@ import de.minestar.therock.TheRockCore;
 import de.minestar.therock.database.DatabaseHandler;
 import de.minestar.therock.events.GetSingleBlockChangesEvent;
 
-public class GetSingleBlockChangesThread extends Thread {
+public class GetSingleBlockChangesThread implements Runnable {
 
     private final String playerName;
     private final Block block;
@@ -41,7 +41,6 @@ public class GetSingleBlockChangesThread extends Thread {
         this.block = block;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void run() {
         try {
@@ -54,6 +53,5 @@ public class GetSingleBlockChangesThread extends Thread {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        this.stop();
     }
 }
