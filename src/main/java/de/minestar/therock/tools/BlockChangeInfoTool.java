@@ -22,6 +22,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
+import de.minestar.minestarlibrary.utils.PlayerUtils;
 import de.minestar.therock.TheRockCore;
 
 public class BlockChangeInfoTool extends Tool {
@@ -33,6 +34,7 @@ public class BlockChangeInfoTool extends Tool {
     @Override
     public void onBlockInteract(Player player, Block block, BlockFace blockFace, boolean isLeftClick) {
         if (this.hasPermission(player)) {
+            PlayerUtils.sendInfo(player, TheRockCore.NAME, "Getting results...");
             if (isLeftClick) {
                 TheRockCore.databaseHandler.getBlockChanges(player, block);
             } else {
