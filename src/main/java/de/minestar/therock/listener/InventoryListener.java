@@ -130,7 +130,7 @@ public class InventoryListener implements Listener {
             }
 
             // get the clicked item
-            ItemStack inSlot = event.getInventory().getItem(event.getSlot());
+            ItemStack inSlot = event.getView().getItem(event.getRawSlot());
 
             // get some vars
             boolean isShiftClick = event.isShiftClick();

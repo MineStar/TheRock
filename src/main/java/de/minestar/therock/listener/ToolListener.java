@@ -20,6 +20,7 @@ package de.minestar.therock.listener;
 
 import java.util.HashMap;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -28,8 +29,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 import de.minestar.therock.TheRockCore;
@@ -58,6 +62,64 @@ public class ToolListener implements Listener {
             return true;
         }
         return false;
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onInventoryClick(InventoryClickEvent event) {
+
+        // check the inventory type
+        InventoryType type = event.getInventory().getType();
+        if (type != InventoryType.CHEST && type != InventoryType.DISPENSER && type != InventoryType.FURNACE && type != InventoryType.BREWING && type != InventoryType.ENDER_CHEST) {
+            return;
+        }
+
+        // get the current item
+        ItemStack inCursor = event.getCursor();
+
+        // fix slot < 0
+        if (event.getSlot() < 0) {
+            return;
+        }
+
+        // get the clicked item
+        ItemStack inSlot = event.getView().getItem(event.getRawSlot());
+
+        // get the player
+        Player player = (Player) event.getWhoClicked();
+
+        boolean cursorNull = (inCursor == null || inCursor.getTypeId() == Material.AIR.getId());
+        boolean slotNull = (inSlot == null || inSlot.getTypeId() == Material.AIR.getId());
+
+        // Cursor = null && Slot == null => nothing happens
+        if (cursorNull && slotNull) {
+            return;
+        }
+
+        if (!slotNull) {
+            // do we have a tool?
+            int ID = inSlot.getTypeId();
+            if (this.isTool(ID)) {
+                Tool tool = this.getTool(ID);
+                if (tool.hasPermission(player)) {
+                    PlayerUtils.sendError(player, TheRockCore.NAME, "You cannot drop the " + tool.getToolName() + "-tool!");
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+        }
+
+        if (!cursorNull) {
+            // do we have a tool?
+            int ID = inCursor.getTypeId();
+            if (this.isTool(ID)) {
+                Tool tool = this.getTool(ID);
+                if (tool.hasPermission(player)) {
+                    PlayerUtils.sendError(player, TheRockCore.NAME, "You cannot drop the " + tool.getToolName() + "-tool!");
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
