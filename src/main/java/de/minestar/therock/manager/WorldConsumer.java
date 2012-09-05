@@ -30,7 +30,7 @@ public class WorldConsumer {
         // BlockQueue
         ValueList values = new ValueList();
         values.addValue(new Value("timestamp", "BIGINT"));
-        values.addValue(new Value("reason", "TEXT"));
+        values.addValue(new Value("reason", "VARCHAR(255)"));
         values.addValue(new Value("eventType", "INTEGER"));
         values.addValue(new Value("blockX", "INTEGER"));
         values.addValue(new Value("blockY", "INTEGER"));
@@ -40,12 +40,13 @@ public class WorldConsumer {
         values.addValue(new Value("toID", "INTEGER"));
         values.addValue(new Value("toData", "INTEGER"));
         values.addValue(new Value("extraData", "TEXT"));
+        // TODO: add keys
         this.blockQueue = new SQLQueue(worldName, "block", values, TheRockCore.mainManager.getBuffer_blockChange());
 
         // InventoryQueue
         values = new ValueList();
         values.addValue(new Value("timestamp", "BIGINT"));
-        values.addValue(new Value("reason", "TEXT"));
+        values.addValue(new Value("reason", "VARCHAR(255)"));
         values.addValue(new Value("eventType", "INTEGER"));
         values.addValue(new Value("blockX", "INTEGER"));
         values.addValue(new Value("blockY", "INTEGER"));
@@ -53,6 +54,7 @@ public class WorldConsumer {
         values.addValue(new Value("TypeID", "INTEGER"));
         values.addValue(new Value("Data", "INTEGER"));
         values.addValue(new Value("Amount", "INTEGER"));
+        // TODO: add keys
         this.inventoryQueue = new SQLQueue(worldName, "inventory", values, TheRockCore.mainManager.getBuffer_inventory());
     }
 

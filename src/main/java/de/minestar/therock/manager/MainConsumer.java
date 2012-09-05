@@ -37,15 +37,17 @@ public class MainConsumer {
         // ChatQueue
         ValueList values = new ValueList();
         values.addValue(new Value("timestamp", "BIGINT"));
-        values.addValue(new Value("playerName", "TEXT"));
+        values.addValue(new Value("playerName", "VARCHAR(255)"));
         values.addValue(new Value("message", "TEXT"));
+        // TODO: add keys
         this.chatQueue = new SQLQueue("general", "chat", values, TheRockCore.mainManager.getBuffer_chat());
 
         // CommandQueue
         values = new ValueList();
         values.addValue(new Value("timestamp", "BIGINT"));
-        values.addValue(new Value("playerName", "TEXT"));
+        values.addValue(new Value("playerName", "VARCHAR(255)"));
         values.addValue(new Value("command", "TEXT"));
+        // TODO: add keys
         this.commandQueue = new SQLQueue("general", "commands", values, TheRockCore.mainManager.getBuffer_commands());
     }
 
