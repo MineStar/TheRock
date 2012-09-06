@@ -21,6 +21,7 @@ package de.minestar.therock.database;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -117,7 +118,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     protected void createStatements(String pluginName, Connection con) throws Exception {
     }
 
-    public boolean createTable(String worldName, String tableName, ValueList values) {
+    public boolean createTable(String worldName, String tableName, ValueList values, ArrayList<ValueList> keyList) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("CREATE TABLE IF NOT EXISTS `");
@@ -127,17 +128,37 @@ public class DatabaseHandler extends AbstractMySQLHandler {
         builder.append("` (`ID` INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,");
         int i = 0;
         for (Value value : values.getValues()) {
-            builder.append("`");
             builder.append(value.getName());
-            builder.append("` ");
-            builder.append(value.getSqlDefinition());
+            builder.append(value.getSqlTypeDefinition());
             builder.append(" NOT NULL");
             ++i;
             if (i != values.getSize()) {
                 builder.append(", ");
             }
         }
-        builder.append(");");
+
+        if (keyList != null && keyList.size() > 0) {
+            for (int currentListIndex = 0; currentListIndex < keyList.size(); currentListIndex++) {
+                ValueList list = keyList.get(currentListIndex);
+                if (list.getSize() > 0) {
+                    builder.append(", KEY ");
+
+                    // append keyname
+                    builder.append(list.getName());
+                    builder.append(" (");
+                    i = 0;
+                    for (Value key : list.getValues()) {
+                        builder.append(key.getName());
+                        ++i;
+                        if (i != list.getSize()) {
+                            builder.append(", ");
+                        }
+                    }
+                    builder.append(")");
+                }
+            }
+        }
+        builder.append(") ENGINE=MYISAM DEFAULT CHARSET=utf8;");
 
         try {
             PreparedStatement statement = this.getConnection().prepareStatement(builder.toString());

@@ -18,6 +18,8 @@
 
 package de.minestar.therock.data;
 
+import java.util.ArrayList;
+
 import de.minestar.therock.TheRockCore;
 import de.minestar.therock.database.DatabaseHandler;
 
@@ -33,11 +35,11 @@ public class SQLQueue {
     private ValueList values = null;
     private StringBuilder stringBuilder;
 
-    public SQLQueue(String worldName, String tableName, ValueList values) {
-        this(worldName, tableName, values, 5);
+    public SQLQueue(String worldName, String tableName, ValueList values, ArrayList<ValueList> keyList) {
+        this(worldName, tableName, values, keyList, 5);
     }
 
-    public SQLQueue(String worldName, String tableName, ValueList values, int buffer_size) {
+    public SQLQueue(String worldName, String tableName, ValueList values, ArrayList<ValueList> keyList, int buffer_size) {
         this.databaseHandler = TheRockCore.databaseHandler;
         this.tableName = tableName;
         this.worldName = worldName;
@@ -46,7 +48,7 @@ public class SQLQueue {
         this.stringBuilder = new StringBuilder();
         this.resetStringBuilder();
         this.createStatement();
-        this.databaseHandler.createTable(worldName, tableName, values);
+        this.databaseHandler.createTable(worldName, tableName, values, keyList);
     }
 
     private void createStatement() {

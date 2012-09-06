@@ -21,7 +21,21 @@ package de.minestar.therock.data;
 import java.util.ArrayList;
 
 public class ValueList {
+    private String name;
+
     private ArrayList<Value> values = new ArrayList<Value>();
+
+    public ValueList() {
+        this.name = "";
+    }
+
+    public ValueList(String name) {
+        this.name = "`" + name + "`";
+    }
+
+    public String getName() {
+        return name;
+    }
 
     public void addValue(Value value) {
         this.values.add(value);

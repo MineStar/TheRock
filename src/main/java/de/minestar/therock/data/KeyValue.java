@@ -18,20 +18,9 @@
 
 package de.minestar.therock.data;
 
-public class Value {
-    private final String name;
-    private final String sqlTypeDefinition;
+public class KeyValue extends Value {
 
-    public Value(String name, String sqlDefinition) {
-        this.name = "`" + name + "`";
-        this.sqlTypeDefinition = sqlDefinition;
-    }
-
-    public String getName() {
-        return name + " ";
-    }
-
-    public String getSqlTypeDefinition() {
-        return sqlTypeDefinition;
+    public KeyValue(String name) {
+        super(name, name);
     }
 }

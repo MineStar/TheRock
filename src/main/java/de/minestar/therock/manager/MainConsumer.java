@@ -18,9 +18,11 @@
 
 package de.minestar.therock.manager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.minestar.therock.TheRockCore;
+import de.minestar.therock.data.KeyHelper;
 import de.minestar.therock.data.SQLQueue;
 import de.minestar.therock.data.Value;
 import de.minestar.therock.data.ValueList;
@@ -34,21 +36,22 @@ public class MainConsumer {
     }
 
     public void init() {
+        // create Keys
+        ArrayList<ValueList> keyList = KeyHelper.getTimeAndPlayerKey();
+
         // ChatQueue
         ValueList values = new ValueList();
         values.addValue(new Value("timestamp", "BIGINT"));
         values.addValue(new Value("playerName", "VARCHAR(255)"));
         values.addValue(new Value("message", "TEXT"));
-        // TODO: add keys
-        this.chatQueue = new SQLQueue("general", "chat", values, TheRockCore.mainManager.getBuffer_chat());
+        this.chatQueue = new SQLQueue("general", "chat", values, keyList, TheRockCore.mainManager.getBuffer_chat());
 
         // CommandQueue
         values = new ValueList();
         values.addValue(new Value("timestamp", "BIGINT"));
         values.addValue(new Value("playerName", "VARCHAR(255)"));
         values.addValue(new Value("command", "TEXT"));
-        // TODO: add keys
-        this.commandQueue = new SQLQueue("general", "commands", values, TheRockCore.mainManager.getBuffer_commands());
+        this.commandQueue = new SQLQueue("general", "commands", values, keyList, TheRockCore.mainManager.getBuffer_commands());
     }
 
     public WorldConsumer addWorldConsumer(String worldName) {
