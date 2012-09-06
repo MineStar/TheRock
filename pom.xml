@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.minestar</groupId>
 	<artifactId>TheRock</artifactId>
-	<version>1.0</version>
+	<version>1.0.1</version>
 	<distributionManagement>
 		<!-- use the following if you're not using a snapshot version. -->
 		<repository>
