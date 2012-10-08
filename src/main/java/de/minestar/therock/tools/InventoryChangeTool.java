@@ -35,7 +35,7 @@ public class InventoryChangeTool extends Tool {
     }
 
     @Override
-    public void onBlockInteract(Player player, Block block, BlockFace blockFace, boolean isLeftClick) {
+    public boolean onBlockInteract(Player player, Block block, BlockFace blockFace, boolean isLeftClick) {
         if (TheRockCore.inventoryListener.isContainerBlock(block)) {
             if (this.hasPermission(player)) {
                 TheRockCore.databaseHandler.getInventoryChanges(player, block, true);
@@ -47,7 +47,9 @@ public class InventoryChangeTool extends Tool {
                         TheRockCore.databaseHandler.getInventoryChanges(player, dChest.getBlock(), false);
                     }
                 }
+                return true;
             }
         }
+        return false;
     }
 }

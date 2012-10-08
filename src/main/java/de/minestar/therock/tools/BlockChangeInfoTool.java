@@ -32,7 +32,7 @@ public class BlockChangeInfoTool extends Tool {
     }
 
     @Override
-    public void onBlockInteract(Player player, Block block, BlockFace blockFace, boolean isLeftClick) {
+    public boolean onBlockInteract(Player player, Block block, BlockFace blockFace, boolean isLeftClick) {
         if (this.hasPermission(player)) {
             PlayerUtils.sendInfo(player, TheRockCore.NAME, "Getting results...");
             if (isLeftClick) {
@@ -40,6 +40,8 @@ public class BlockChangeInfoTool extends Tool {
             } else {
                 TheRockCore.databaseHandler.getBlockChanges(player, block.getRelative(blockFace));
             }
+            return true;
         }
+        return false;
     }
 }

@@ -50,7 +50,7 @@ public class SelectionTool extends Tool {
     }
 
     @Override
-    public void onBlockInteract(Player player, Block block, BlockFace blockFace, boolean isLeftClick) {
+    public boolean onBlockInteract(Player player, Block block, BlockFace blockFace, boolean isLeftClick) {
         if (this.hasPermission(player)) {
             if (isLeftClick) {
                 Selection selection = this.getSelection(player);
@@ -67,6 +67,8 @@ public class SelectionTool extends Tool {
                     PlayerUtils.sendInfo(player, TheRockCore.NAME, "Please select the first point in this world via leftclick.");
                 }
             }
+            return true;
         }
+        return false;
     }
 }

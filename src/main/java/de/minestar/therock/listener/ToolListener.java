@@ -35,8 +35,6 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import de.minestar.minestarlibrary.utils.PlayerUtils;
-import de.minestar.therock.TheRockCore;
 import de.minestar.therock.tools.Tool;
 
 public class ToolListener implements Listener {
@@ -101,7 +99,7 @@ public class ToolListener implements Listener {
             if (this.isTool(ID)) {
                 Tool tool = this.getTool(ID);
                 if (tool.hasPermission(player)) {
-                    PlayerUtils.sendError(player, TheRockCore.NAME, "You cannot drop the " + tool.getToolName() + "-tool!");
+                    inSlot.setAmount(0);
                     event.setCancelled(true);
                     return;
                 }
@@ -114,7 +112,7 @@ public class ToolListener implements Listener {
             if (this.isTool(ID)) {
                 Tool tool = this.getTool(ID);
                 if (tool.hasPermission(player)) {
-                    PlayerUtils.sendError(player, TheRockCore.NAME, "You cannot drop the " + tool.getToolName() + "-tool!");
+                    inSlot.setAmount(0);
                     event.setCancelled(true);
                     return;
                 }
@@ -124,10 +122,6 @@ public class ToolListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        // event cancelled => return
-        if (event.isCancelled())
-            return;
-
         if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
             if (this.onBlockInteract(event.getPlayer(), event.getClickedBlock(), event.getBlockFace(), true)) {
                 event.setCancelled(true);
@@ -152,7 +146,7 @@ public class ToolListener implements Listener {
         if (this.isTool(ID)) {
             Tool tool = this.getTool(ID);
             if (tool.hasPermission(event.getPlayer())) {
-                PlayerUtils.sendError(event.getPlayer(), TheRockCore.NAME, "You cannot drop the " + tool.getToolName() + "-tool!");
+                event.getItemDrop().setItemStack(null);
                 event.setCancelled(true);
             }
         }

@@ -54,5 +54,5 @@ public abstract class Tool {
         return UtilPermissions.playerCanUseCommand(player, this.getPermission()) && TheRockCore.mainManager.isWorldWatched(player.getWorld());
     }
 
-    public abstract void onBlockInteract(final Player player, final Block block, final BlockFace blockFace, final boolean isLeftClick);
+    public abstract boolean onBlockInteract(final Player player, final Block block, final BlockFace blockFace, final boolean isLeftClick);
 }
