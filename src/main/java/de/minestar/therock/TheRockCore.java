@@ -20,6 +20,7 @@ package de.minestar.therock;
 
 import java.io.File;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
 import de.minestar.minestarlibrary.AbstractCore;
@@ -37,6 +38,7 @@ import de.minestar.therock.listener.SQLListener;
 import de.minestar.therock.listener.ToolListener;
 import de.minestar.therock.manager.MainConsumer;
 import de.minestar.therock.manager.MainManager;
+import de.minestar.therock.sqlthreads.DeleteThread;
 
 public class TheRockCore extends AbstractCore {
 
@@ -75,6 +77,8 @@ public class TheRockCore extends AbstractCore {
             return false;
         }
 
+        startCleaningThreads();
+
         // ToolManager
         toolListener = new ToolListener();
 
@@ -92,6 +96,32 @@ public class TheRockCore extends AbstractCore {
         cacheHolder = new CacheHolder();
 
         return true;
+    }
+
+    private void startCleaningThreads() {
+        DeleteThread thread = new DeleteThread("world", "block");
+        thread.TASKID = Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, thread, 20, 20 * 5);
+
+        thread = new DeleteThread("world", "inventory");
+        thread.TASKID = Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, thread, 20, 20 * 5);
+
+        thread = new DeleteThread("probe", "block");
+        thread.TASKID = Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, thread, 20, 20 * 5);
+
+        thread = new DeleteThread("probe", "inventory");
+        thread.TASKID = Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, thread, 20, 20 * 5);
+
+        thread = new DeleteThread("world_nether", "block");
+        thread.TASKID = Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, thread, 20, 20 * 5);
+
+        thread = new DeleteThread("world_nether", "inventory");
+        thread.TASKID = Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, thread, 20, 20 * 5);
+
+        thread = new DeleteThread("world_the_end", "block");
+        thread.TASKID = Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, thread, 20, 20 * 5);
+
+        thread = new DeleteThread("world_the_end", "inventory");
+        thread.TASKID = Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, thread, 20, 20 * 5);
     }
 
     @Override
