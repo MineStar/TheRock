@@ -73,6 +73,7 @@ public class DeleteThread implements Runnable {
         try {
             PreparedStatement statement = handler.getConnection().prepareStatement("DELETE FROM " + this.worldName + "_" + this.tableType + " WHERE timestamp<=" + this.beforeDate + " LIMIT " + LIMIT);
             int changes = statement.executeUpdate();
+            statement.getGeneratedKeys().close();
             lock = false;
             return changes;
         } catch (Exception e) {

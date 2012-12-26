@@ -50,52 +50,52 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     }
 
     public boolean getInventoryChanges(Player player, Block block, boolean showBlockInfo) {
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(TheRockCore.INSTANCE, new GetInventoryChangesThread(player.getName(), block, showBlockInfo));
+        Bukkit.getScheduler().runTaskAsynchronously(TheRockCore.INSTANCE, new GetInventoryChangesThread(player.getName(), block, showBlockInfo));
         return true;
     }
 
     public boolean getBlockChanges(Player player, Block block) {
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(TheRockCore.INSTANCE, new GetSingleBlockChangesThread(player.getName(), block));
+        Bukkit.getScheduler().runTaskAsynchronously(TheRockCore.INSTANCE, new GetSingleBlockChangesThread(player.getName(), block));
         return true;
     }
 
     public boolean getAreaTimeChanges(Player player, int radius, long timestamp) {
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(TheRockCore.INSTANCE, new GetAreaChangesThread(player.getName(), player.getLocation().clone(), radius, timestamp));
+        Bukkit.getScheduler().runTaskAsynchronously(TheRockCore.INSTANCE, new GetAreaChangesThread(player.getName(), player.getLocation().clone(), radius, timestamp));
         return true;
     }
 
     public boolean getAreaPlayerChanges(Player player, int radius, String targetPlayer) {
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(TheRockCore.INSTANCE, new GetAreaChangesThread(player.getName(), player.getLocation().clone(), radius, targetPlayer));
+        Bukkit.getScheduler().runTaskAsynchronously(TheRockCore.INSTANCE, new GetAreaChangesThread(player.getName(), player.getLocation().clone(), radius, targetPlayer));
         return true;
     }
 
     public boolean getAreaPlayerTimeChanges(Player player, int radius, String targetPlayer, long timestamp) {
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(TheRockCore.INSTANCE, new GetAreaChangesThread(player.getName(), player.getLocation().clone(), radius, timestamp, targetPlayer));
+        Bukkit.getScheduler().runTaskAsynchronously(TheRockCore.INSTANCE, new GetAreaChangesThread(player.getName(), player.getLocation().clone(), radius, timestamp, targetPlayer));
         return true;
     }
 
     public boolean getSelectionBlockChanges(Player player, Selection selection) {
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(TheRockCore.INSTANCE, new GetSelectionBlockChangesThread(player.getName(), selection.getMinCorner(), selection.getMaxCorner()));
+        Bukkit.getScheduler().runTaskAsynchronously(TheRockCore.INSTANCE, new GetSelectionBlockChangesThread(player.getName(), selection.getMinCorner(), selection.getMaxCorner()));
         return true;
     }
 
     public boolean getSelectionTimeBlockChanges(Player player, Selection selection, long timestamp) {
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(TheRockCore.INSTANCE, new GetSelectionBlockChangesThread(player.getName(), selection.getMinCorner(), selection.getMaxCorner(), timestamp));
+        Bukkit.getScheduler().runTaskAsynchronously(TheRockCore.INSTANCE, new GetSelectionBlockChangesThread(player.getName(), selection.getMinCorner(), selection.getMaxCorner(), timestamp));
         return true;
     }
 
     public boolean getSelectionPlayerBlockChanges(Player player, Selection selection, String targetPlayer) {
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(TheRockCore.INSTANCE, new GetSelectionBlockChangesThread(player.getName(), targetPlayer, selection.getMinCorner(), selection.getMaxCorner()));
+        Bukkit.getScheduler().runTaskAsynchronously(TheRockCore.INSTANCE, new GetSelectionBlockChangesThread(player.getName(), targetPlayer, selection.getMinCorner(), selection.getMaxCorner()));
         return true;
     }
 
     public boolean getSelectionPlayerTimeBlockChanges(Player player, Selection selection, String targetPlayer, long timestamp) {
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(TheRockCore.INSTANCE, new GetSelectionBlockChangesThread(player.getName(), targetPlayer, selection.getMinCorner(), selection.getMaxCorner(), timestamp));
+        Bukkit.getScheduler().runTaskAsynchronously(TheRockCore.INSTANCE, new GetSelectionBlockChangesThread(player.getName(), targetPlayer, selection.getMinCorner(), selection.getMaxCorner(), timestamp));
         return true;
     }
 
     public boolean executeStatement(String query) {
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(TheRockCore.INSTANCE, new InsertThread(query), 1);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(TheRockCore.INSTANCE, new InsertThread(query), 1);
         return true;
     }
 
