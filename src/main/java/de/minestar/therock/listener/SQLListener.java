@@ -44,6 +44,7 @@ import de.minestar.therock.events.GetSelectionPlayerBlockChangesEvent;
 import de.minestar.therock.events.GetSelectionPlayerTimeBlockChangesEvent;
 import de.minestar.therock.events.GetSelectionTimeBlockChangesEvent;
 import de.minestar.therock.events.GetSingleBlockChangesEvent;
+import de.minestar.therock.events.UndoLastBlockChangesEvent;
 
 public class SQLListener implements Listener {
 
@@ -256,6 +257,41 @@ public class SQLListener implements Listener {
             PlayerUtils.sendError(player, TheRockCore.NAME, "Oooops.. something went wrong!");
         }
     }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onUndoLastBlockChange(UndoLastBlockChangesEvent event) {
+        ResultSet results = event.getResults();
+        Player player = Bukkit.getPlayerExact(event.getPlayerName());
+
+        // we need to find the player
+        if (player == null)
+            return;
+
+        // send info
+        PlayerUtils.sendMessage(player, ChatColor.RED, "Undo last change: " + event.getWorld().getName() + " - [ " + event.getBlock().getX() + " / " + event.getBlock().getY() + " / " + event.getBlock().getZ() + " ]");
+        try {
+            // iterate over blockchanges
+            int lastID = 0;
+            byte lastData = 0;
+            while (results.next()) {
+                lastID = results.getInt("fromID");
+                lastData = results.getByte("fromData");
+
+                event.getBlock().setTypeIdAndData(lastID, lastData, true);
+                PlayerUtils.sendMessage(player, ChatColor.GOLD, "DONE!");
+                // add cache-element for possible later use
+                TheRockCore.cacheHolder.clearCacheElement(event.getPlayerName());
+                return;
+            }
+            PlayerUtils.sendMessage(player, ChatColor.GOLD, "No changes found!");
+            TheRockCore.cacheHolder.clearCacheElement(event.getPlayerName());
+            return;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            PlayerUtils.sendError(player, TheRockCore.NAME, "Oooops.. something went wrong!");
+        }
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onGetInventoryChanges(GetInventoryChangesEvent event) {
         ResultSet results = event.getResults();

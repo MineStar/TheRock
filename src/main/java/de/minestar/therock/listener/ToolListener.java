@@ -146,7 +146,7 @@ public class ToolListener implements Listener {
         if (this.isTool(ID)) {
             Tool tool = this.getTool(ID);
             if (tool.hasPermission(event.getPlayer())) {
-                event.getItemDrop().setItemStack(null);
+                // event.getItemDrop().setItemStack(null);
                 event.setCancelled(true);
             }
         }

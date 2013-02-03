@@ -38,6 +38,7 @@ import de.minestar.therock.sqlthreads.GetInventoryChangesThread;
 import de.minestar.therock.sqlthreads.GetSelectionBlockChangesThread;
 import de.minestar.therock.sqlthreads.GetSingleBlockChangesThread;
 import de.minestar.therock.sqlthreads.InsertThread;
+import de.minestar.therock.sqlthreads.UndoLastBlockChangesThread;
 
 public class DatabaseHandler extends AbstractMySQLHandler {
 
@@ -56,6 +57,11 @@ public class DatabaseHandler extends AbstractMySQLHandler {
 
     public boolean getBlockChanges(Player player, Block block) {
         Bukkit.getScheduler().runTaskAsynchronously(TheRockCore.INSTANCE, new GetSingleBlockChangesThread(player.getName(), block));
+        return true;
+    }
+
+    public boolean getUndoLastBlockChanges(Player player, Block block) {
+        Bukkit.getScheduler().runTaskAsynchronously(TheRockCore.INSTANCE, new UndoLastBlockChangesThread(player.getName(), block));
         return true;
     }
 

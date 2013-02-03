@@ -37,6 +37,7 @@ import de.minestar.therock.data.WorldSettings;
 import de.minestar.therock.tools.BlockChangeInfoTool;
 import de.minestar.therock.tools.InventoryChangeTool;
 import de.minestar.therock.tools.SelectionTool;
+import de.minestar.therock.tools.UndoLastChangeTool;
 
 public class MainManager {
     private HashMap<String, WorldSettings> worlds;
@@ -51,6 +52,7 @@ public class MainManager {
     private int toolLookupID = Material.WATCH.getId();
     private int toolSelectionID = Material.STICK.getId();
     private int toolInventoryID = Material.BLAZE_ROD.getId();
+    private int toolFastRollbackID = Material.SOIL.getId();
 
     public WorldSettings getWorld(Player player) {
         return this.getWorld(player.getWorld().getName());
@@ -108,6 +110,7 @@ public class MainManager {
             toolLookupID = ymlFile.getInt("config.tool.lookup", toolLookupID);
             toolSelectionID = ymlFile.getInt("config.tool.selection", toolSelectionID);
             toolInventoryID = ymlFile.getInt("config.tool.inventory", toolInventoryID);
+            toolFastRollbackID = ymlFile.getInt("config.tool.fastrollback", toolFastRollbackID);
 
             // TOOL-IDs must be valid
             if (Material.getMaterial(toolLookupID) == null) {
@@ -121,6 +124,7 @@ public class MainManager {
             TheRockCore.toolListener.addTool(new BlockChangeInfoTool("Lookup", toolLookupID, "therock.tools.lookup"));
             TheRockCore.toolListener.addTool(new InventoryChangeTool("Inventory-LookUp", toolInventoryID, "therock.tools.inventory"));
             TheRockCore.toolListener.addTool(new SelectionTool("Selection", toolSelectionID, "therock.tools.selection"));
+            TheRockCore.toolListener.addTool(new UndoLastChangeTool("Undo", toolFastRollbackID, "therock.tools.fastrollback"));
 
             ConsoleUtils.printInfo(TheRockCore.NAME, "Amount of logged worlds: " + this.worlds.size());
         } catch (Exception e) {
@@ -153,6 +157,7 @@ public class MainManager {
             ymlFile.set("config.tool.lookup", toolLookupID);
             ymlFile.set("config.tool.selection", toolSelectionID);
             ymlFile.set("config.tool.inventory", toolInventoryID);
+            ymlFile.set("config.tool.fastrollback", toolFastRollbackID);
 
             ymlFile.save(file);
         } catch (IOException e) {

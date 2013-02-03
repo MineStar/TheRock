@@ -39,7 +39,6 @@ public class SQLEvent extends Event {
         this.playerName = playerName;
         this.world = world;
         this.results = results;
-
         try {
             HashSet<BlockVector> blocks = new HashSet<BlockVector>();
             BlockVector tmpVector;

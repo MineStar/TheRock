@@ -41,7 +41,6 @@ public class SelectionCommand extends AbstractExtendedCommand {
         // Command: /tr selection
         if (args.length == 0) {
             PlayerUtils.sendInfo(player, TheRockCore.NAME, "Getting results...");
-            TheRockCore.mainConsumer.flushWithoutThread();
             TheRockCore.databaseHandler.getSelectionBlockChanges(player, selection);
         } else {
             // Command: /tr selection player <Player> [1d2h3m4s]
@@ -57,7 +56,6 @@ public class SelectionCommand extends AbstractExtendedCommand {
                 // Command: /tr selection player 'Player'
                 if (args.length == 2) {
                     PlayerUtils.sendInfo(player, TheRockCore.NAME, "Getting results for player '" + targetName + "'...");
-                    TheRockCore.mainConsumer.flushWithoutThread();
                     TheRockCore.databaseHandler.getSelectionPlayerBlockChanges(player, selection, targetName);
                 } else {
                     int[] times = this.parseString(args[2], player);
@@ -72,7 +70,6 @@ public class SelectionCommand extends AbstractExtendedCommand {
                     long timestamp = System.currentTimeMillis() - seconds * 1000;
 
                     PlayerUtils.sendInfo(player, TheRockCore.NAME, "Getting results for player '" + targetName + "', time " + args[2] + " ...");
-                    TheRockCore.mainConsumer.flushWithoutThread();
                     TheRockCore.databaseHandler.getSelectionPlayerTimeBlockChanges(player, selection, targetName, timestamp);
                 }
             }
@@ -90,7 +87,6 @@ public class SelectionCommand extends AbstractExtendedCommand {
                 long timestamp = System.currentTimeMillis() - seconds * 1000;
 
                 PlayerUtils.sendInfo(player, TheRockCore.NAME, "Getting results for time " + args[1] + " ...");
-                TheRockCore.mainConsumer.flushWithoutThread();
                 TheRockCore.databaseHandler.getSelectionTimeBlockChanges(player, selection, timestamp);
             } else {
                 // wrong syntax

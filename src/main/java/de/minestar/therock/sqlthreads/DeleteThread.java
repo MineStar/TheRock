@@ -43,7 +43,7 @@ public class DeleteThread implements Runnable {
         long aHour = aMinute * 60;
         long aDay = aHour * 24;
         long aMonth = aDay * 31;
-        long fullTime = aMonth + (aDay * 14);
+        long fullTime = aMonth;
         this.beforeDate = System.currentTimeMillis() - fullTime;
     }
 
@@ -73,7 +73,6 @@ public class DeleteThread implements Runnable {
         try {
             PreparedStatement statement = handler.getConnection().prepareStatement("DELETE FROM " + this.worldName + "_" + this.tableType + " WHERE timestamp<=" + this.beforeDate + " LIMIT " + LIMIT);
             int changes = statement.executeUpdate();
-            statement.getGeneratedKeys().close();
             lock = false;
             return changes;
         } catch (Exception e) {
