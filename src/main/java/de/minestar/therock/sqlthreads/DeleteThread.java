@@ -22,6 +22,7 @@ import java.sql.PreparedStatement;
 
 import org.bukkit.Bukkit;
 
+import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.therock.TheRockCore;
 import de.minestar.therock.database.DatabaseHandler;
 
@@ -53,17 +54,17 @@ public class DeleteThread implements Runnable {
             return;
         }
         lock = true;
-        System.out.println("Deleting " + tableType + " in " + worldName + "...");
+        ConsoleUtils.printInfo(TheRockCore.NAME, "Deleting " + tableType + " in " + worldName + "...");
         DatabaseHandler handler = TheRockCore.databaseHandler;
         int changes = this.runBlockDelete(handler);
         if (changes > 0) {
             lock = false;
         } else if (changes == 0) {
-            System.out.println("NO CHANGES IN " + worldName + "_" + tableType + "! CANCELLING TASK!");
+            ConsoleUtils.printInfo(TheRockCore.NAME, "NO CHANGES IN " + worldName + "_" + tableType + "! CANCELLING TASK!");
             Bukkit.getScheduler().cancelTask(TASKID);
             lock = false;
         } else {
-            System.out.println("ERROR!");
+            ConsoleUtils.printError(TheRockCore.NAME, "ERROR!");
             Bukkit.getScheduler().cancelTask(TASKID);
             lock = false;
         }

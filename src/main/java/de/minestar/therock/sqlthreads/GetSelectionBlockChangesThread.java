@@ -65,12 +65,10 @@ public class GetSelectionBlockChangesThread implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println("getting blockchanges...");
             if (targetPlayer == null) {
                 if (timestamp < 0) {
                     PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM " + min.getWorld().getName() + "_block WHERE blockX>=" + min.getBlockX() + " AND blockX<=" + max.getBlockX() + " AND blockY>=" + min.getBlockY() + " AND blockY<=" + max.getBlockY() + " AND blockZ>=" + min.getBlockZ() + " AND blockZ<=" + max.getBlockZ() + " GROUP BY blockX, blockY, blockZ ORDER BY timestamp DESC");
                     ResultSet results = statement.executeQuery();
-                    System.out.println("query done 1");
                     if (results != null) {
                         GetSelectionBlockChangesEvent event = new GetSelectionBlockChangesEvent(playerName, this.min.getWorld(), results);
                         Bukkit.getPluginManager().callEvent(event);
@@ -78,7 +76,6 @@ public class GetSelectionBlockChangesThread implements Runnable {
                 } else {
                     PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM " + min.getWorld().getName() + "_block WHERE timestamp>=" + timestamp + " AND blockX>=" + min.getBlockX() + " AND blockX<=" + max.getBlockX() + " AND blockY>=" + min.getBlockY() + " AND blockY<=" + max.getBlockY() + " AND blockZ>=" + min.getBlockZ() + " AND blockZ<=" + max.getBlockZ() + " GROUP BY blockX, blockY, blockZ ORDER BY timestamp DESC");
                     ResultSet results = statement.executeQuery();
-                    System.out.println("query done 2");
                     if (results != null) {
                         GetSelectionTimeBlockChangesEvent event = new GetSelectionTimeBlockChangesEvent(playerName, this.min.getWorld(), results, timestamp);
                         Bukkit.getPluginManager().callEvent(event);
@@ -88,7 +85,6 @@ public class GetSelectionBlockChangesThread implements Runnable {
                 if (timestamp < 0) {
                     PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM " + min.getWorld().getName() + "_block WHERE reason='" + targetPlayer + "' AND blockX>=" + min.getBlockX() + " AND blockX<=" + max.getBlockX() + " AND blockY>=" + min.getBlockY() + " AND blockY<=" + max.getBlockY() + " AND blockZ>=" + min.getBlockZ() + " AND blockZ<=" + max.getBlockZ() + " GROUP BY blockX, blockY, blockZ ORDER BY timestamp DESC");
                     ResultSet results = statement.executeQuery();
-                    System.out.println("query done 3");
                     if (results != null) {
                         GetSelectionPlayerBlockChangesEvent event = new GetSelectionPlayerBlockChangesEvent(playerName, this.min.getWorld(), results, targetPlayer);
                         Bukkit.getPluginManager().callEvent(event);
@@ -96,7 +92,6 @@ public class GetSelectionBlockChangesThread implements Runnable {
                 } else {
                     PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement("SELECT * FROM " + min.getWorld().getName() + "_block WHERE reason='" + targetPlayer + "' AND timestamp>=" + timestamp + " AND blockX>=" + min.getBlockX() + " AND blockX<=" + max.getBlockX() + " AND blockY>=" + min.getBlockY() + " AND blockY<=" + max.getBlockY() + " AND blockZ>=" + min.getBlockZ() + " AND blockZ<=" + max.getBlockZ() + " GROUP BY blockX, blockY, blockZ ORDER BY timestamp DESC");
                     ResultSet results = statement.executeQuery();
-                    System.out.println("query done 4");
                     if (results != null) {
                         GetSelectionPlayerTimeBlockChangesEvent event = new GetSelectionPlayerTimeBlockChangesEvent(playerName, this.min.getWorld(), results, targetPlayer, timestamp);
                         Bukkit.getPluginManager().callEvent(event);

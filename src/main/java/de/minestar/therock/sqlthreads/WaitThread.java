@@ -21,6 +21,7 @@ package de.minestar.therock.sqlthreads;
 import java.sql.PreparedStatement;
 import java.util.TimerTask;
 
+import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.therock.TheRockCore;
 import de.minestar.therock.database.DatabaseHandler;
 
@@ -49,12 +50,12 @@ public class WaitThread extends TimerTask {
         DatabaseHandler handler = TheRockCore.databaseHandler;
         int changes = this.runBlockDelete(handler);
         if (changes > 0) {
-            System.out.println("DELETED " + changes + " ROWS!");
+            ConsoleUtils.printInfo(TheRockCore.NAME, "Deleted " + changes + " rows!");
         } else if (changes == 0) {
-            System.out.println("NO CHANGES! CANCELLING TASK!");
+            ConsoleUtils.printInfo(TheRockCore.NAME, "No more changes! Cancelling task...");
             end = true;
         } else {
-            System.out.println("ERROR!");
+            ConsoleUtils.printError(TheRockCore.NAME, "ERROR!");
         }
     }
 
