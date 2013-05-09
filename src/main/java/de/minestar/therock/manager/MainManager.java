@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -64,6 +66,10 @@ public class MainManager {
 
     public WorldSettings getWorld(World world) {
         return this.getWorld(world.getName());
+    }
+
+    public Set<Entry<String, WorldSettings>> getWorlds() {
+        return worlds.entrySet();
     }
 
     public WorldSettings getWorld(String worldName) {

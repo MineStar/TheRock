@@ -19,6 +19,7 @@
 package de.minestar.therock;
 
 import java.io.File;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -30,6 +31,7 @@ import de.minestar.therock.commands.RollbackCommand;
 import de.minestar.therock.commands.SelectionCommand;
 import de.minestar.therock.commands.TheRockCommand;
 import de.minestar.therock.data.CacheHolder;
+import de.minestar.therock.data.WorldSettings;
 import de.minestar.therock.database.DatabaseHandler;
 import de.minestar.therock.listener.BlockChangeListener;
 import de.minestar.therock.listener.ChatAndCommandListener;
@@ -77,8 +79,6 @@ public class TheRockCore extends AbstractCore {
             return false;
         }
 
-        startCleaningThreads();
-
         // ToolManager
         toolListener = new ToolListener();
 
@@ -95,33 +95,20 @@ public class TheRockCore extends AbstractCore {
         // CacheHolder
         cacheHolder = new CacheHolder();
 
+        startCleaningThreads();
+
         return true;
     }
 
     private void startCleaningThreads() {
-        DeleteThread thread = new DeleteThread("world", "block");
-        thread.TASKID = Bukkit.getScheduler().runTaskTimerAsynchronously(this, thread, 20, 20 * 5).getTaskId();
+        DeleteThread thread;
+        for (Map.Entry<String, WorldSettings> entry : TheRockCore.mainManager.getWorlds()) {
+            thread = new DeleteThread(entry.getKey().toLowerCase(), "block");
+            thread.TASKID = Bukkit.getScheduler().runTaskTimerAsynchronously(this, thread, 20, 20 * 5).getTaskId();
 
-        thread = new DeleteThread("world", "inventory");
-        thread.TASKID = Bukkit.getScheduler().runTaskTimerAsynchronously(this, thread, 20, 20 * 5).getTaskId();
-
-        thread = new DeleteThread("probe", "block");
-        thread.TASKID = Bukkit.getScheduler().runTaskTimerAsynchronously(this, thread, 20, 20 * 5).getTaskId();
-
-        thread = new DeleteThread("probe", "inventory");
-        thread.TASKID = Bukkit.getScheduler().runTaskTimerAsynchronously(this, thread, 20, 20 * 5).getTaskId();
-
-        thread = new DeleteThread("world_nether", "block");
-        thread.TASKID = Bukkit.getScheduler().runTaskTimerAsynchronously(this, thread, 20, 20 * 5).getTaskId();
-
-        thread = new DeleteThread("world_nether", "inventory");
-        thread.TASKID = Bukkit.getScheduler().runTaskTimerAsynchronously(this, thread, 20, 20 * 5).getTaskId();
-
-        thread = new DeleteThread("world_the_end", "block");
-        thread.TASKID = Bukkit.getScheduler().runTaskTimerAsynchronously(this, thread, 20, 20 * 5).getTaskId();
-
-        thread = new DeleteThread("world_the_end", "inventory");
-        thread.TASKID = Bukkit.getScheduler().runTaskTimerAsynchronously(this, thread, 20, 20 * 5).getTaskId();
+            thread = new DeleteThread(entry.getKey().toLowerCase(), "inventory");
+            thread.TASKID = Bukkit.getScheduler().runTaskTimerAsynchronously(this, thread, 20, 20 * 5).getTaskId();
+        }
     }
 
     @Override
