@@ -20,12 +20,7 @@
 		<dependency>
 			<groupId>de.minestar</groupId>
 			<artifactId>MineStarLibrary</artifactId>
-			<version>1.5.2_R1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>de.minestar</groupId>
-			<artifactId>MinestarCore</artifactId>
-			<version>1.5.2_R1-SNAPSHOT</version>
+			<version>1.6.2_R1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -53,5 +48,5 @@
 		<version>1.5.1_R2</version>
 		<relativePath>../MinestarPlugins</relativePath>
 	</parent>
-	<version>1.5.2_R1-SNAPSHOT</version>
+	<version>1.6.2_R1-SNAPSHOT</version>
 </project>
