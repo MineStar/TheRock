@@ -41,6 +41,7 @@ public class InsertThread implements Runnable {
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("STATEMENT: ----- " + this.query + " -----");
         }
     }
 }

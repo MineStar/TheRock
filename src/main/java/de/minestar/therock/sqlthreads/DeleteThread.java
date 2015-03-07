@@ -72,7 +72,12 @@ public class DeleteThread implements Runnable {
 
     private int runBlockDelete(DatabaseHandler handler) {
         try {
-            PreparedStatement statement = handler.getConnection().prepareStatement("DELETE FROM " + this.worldName + "_" + this.tableType + " WHERE timestamp<=" + this.beforeDate + " LIMIT " + LIMIT);
+            PreparedStatement statement;
+            if (this.tableType.equalsIgnoreCase("block")) {
+                statement = handler.getConnection().prepareStatement("DELETE FROM " + this.worldName + "_" + this.tableType + " WHERE timestamp<=" + this.beforeDate + " AND fromID!=46 AND toID!=46 LIMIT " + LIMIT);
+            } else {
+                statement = handler.getConnection().prepareStatement("DELETE FROM " + this.worldName + "_" + this.tableType + " WHERE timestamp<=" + this.beforeDate + " LIMIT " + LIMIT);
+            }
             int changes = statement.executeUpdate();
             lock = false;
             return changes;

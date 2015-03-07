@@ -153,7 +153,7 @@ public class InventoryListener implements Listener {
                     // /////////////////////////////////
                     // create data
                     // /////////////////////////////////
-                    this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_TOOK.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), inSlot.getAmount());
+                    this.addInventoryChange(player.getUniqueId().toString().replaceAll("-", ""), InventoryEventTypes.PLAYER_TOOK.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), inSlot.getAmount());
                 } else if (isRightClick) {
                     // right click => take the half out
                     int amount = (int) (inSlot.getAmount() / 2);
@@ -164,7 +164,7 @@ public class InventoryListener implements Listener {
                     // /////////////////////////////////
                     // create data
                     // /////////////////////////////////
-                    this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_TOOK.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), amount);
+                    this.addInventoryChange(player.getUniqueId().toString().replaceAll("-", ""), InventoryEventTypes.PLAYER_TOOK.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), amount);
                 }
                 return;
             }
@@ -179,14 +179,14 @@ public class InventoryListener implements Listener {
                     // /////////////////////////////////
                     // create data
                     // /////////////////////////////////
-                    this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inCursor.getTypeId(), inCursor.getDurability(), inCursor.getAmount());
+                    this.addInventoryChange(player.getUniqueId().toString().replaceAll("-", ""), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inCursor.getTypeId(), inCursor.getDurability(), inCursor.getAmount());
                 } else if (isRightClick) {
                     // right click => only place 1
 
                     // /////////////////////////////////
                     // create data
                     // /////////////////////////////////
-                    this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inCursor.getTypeId(), inCursor.getDurability(), 1);
+                    this.addInventoryChange(player.getUniqueId().toString().replaceAll("-", ""), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inCursor.getTypeId(), inCursor.getDurability(), 1);
                 }
                 return;
             }
@@ -201,12 +201,12 @@ public class InventoryListener implements Listener {
                     // /////////////////////////////////
                     // create data : taken item
                     // /////////////////////////////////
-                    this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_TOOK.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), inSlot.getAmount());
+                    this.addInventoryChange(player.getUniqueId().toString().replaceAll("-", ""), InventoryEventTypes.PLAYER_TOOK.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), inSlot.getAmount());
 
                     // /////////////////////////////////
                     // create data : placed item
                     // /////////////////////////////////
-                    this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inCursor.getTypeId(), inCursor.getDurability(), inCursor.getAmount());
+                    this.addInventoryChange(player.getUniqueId().toString().replaceAll("-", ""), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inCursor.getTypeId(), inCursor.getDurability(), inCursor.getAmount());
                 } else {
                     // items are equal => check the stacksizes
                     // maxStackSize already reached => return
@@ -222,12 +222,12 @@ public class InventoryListener implements Listener {
                             // /////////////////////////////////
                             // create data : placed item
                             // /////////////////////////////////
-                            this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), wantedSize);
+                            this.addInventoryChange(player.getUniqueId().toString().replaceAll("-", ""), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), wantedSize);
                         } else {
                             // /////////////////////////////////
                             // create data : placed item
                             // /////////////////////////////////
-                            this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), wantedSize);
+                            this.addInventoryChange(player.getUniqueId().toString().replaceAll("-", ""), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), wantedSize);
                         }
                         return;
                     } else if (isRightClick) {
@@ -237,7 +237,7 @@ public class InventoryListener implements Listener {
                             // /////////////////////////////////
                             // create data : placed item * 1
                             // /////////////////////////////////
-                            this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), 1);
+                            this.addInventoryChange(player.getUniqueId().toString().replaceAll("-", ""), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), 1);
                         }
                         return;
                     }
@@ -281,7 +281,7 @@ public class InventoryListener implements Listener {
                 // /////////////////////////////////
                 // create data : placed item
                 // /////////////////////////////////
-                this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), amount);
+                this.addInventoryChange(player.getUniqueId().toString().replaceAll("-", ""), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), amount);
                 return;
             } else if (block.getTypeId() == Material.DISPENSER.getId()) {
                 // handle dispenser
@@ -302,7 +302,7 @@ public class InventoryListener implements Listener {
                 // /////////////////////////////////
                 // create data : placed item
                 // /////////////////////////////////
-                this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), amount);
+                this.addInventoryChange(player.getUniqueId().toString().replaceAll("-", ""), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), amount);
                 return;
             } else if (block.getTypeId() == Material.FURNACE.getId() || block.getTypeId() == Material.BURNING_FURNACE.getId()) {
                 // TODO: handle furnaces
