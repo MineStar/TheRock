@@ -35,6 +35,10 @@ public abstract class AbstractSQLUpdateQueue {
         this.maxQueueSize = maxQueueSize;
     }
 
+    public final void init() {
+        this.createTable();
+    }
+
     public final void add(AbstractSQLElement element) {
         this.list.add(element);
         if (this.isQueueFull()) {

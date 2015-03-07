@@ -36,6 +36,8 @@ public class MainConsumer {
     public void init() {
         this.chatQueue = new MessageQueue("general_chat", TheRockCore.mainManager.getBuffer_chat());
         this.commandQueue = new MessageQueue("general_commands", TheRockCore.mainManager.getBuffer_commands());
+        this.chatQueue.init();
+        this.commandQueue.init();
     }
 
     public WorldConsumer addWorldConsumer(String worldName) {

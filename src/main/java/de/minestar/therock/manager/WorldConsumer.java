@@ -30,6 +30,9 @@ public class WorldConsumer {
     public WorldConsumer(String worldName) {
         this.blockChangeQueue = new BlockChangeQueue(worldName, TheRockCore.mainManager.getBuffer_blockChange());
         this.inventoryChangeQueue = new InventoryChangeQueue(worldName, TheRockCore.mainManager.getBuffer_inventory());
+
+        this.blockChangeQueue.init();
+        this.inventoryChangeQueue.init();
     }
 
     public void appendBlockEvent(AbstractSQLElement element) {
