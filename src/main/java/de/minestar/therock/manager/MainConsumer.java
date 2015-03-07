@@ -18,40 +18,24 @@
 
 package de.minestar.therock.manager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.minestar.therock.TheRockCore;
-import de.minestar.therock.data.KeyHelper;
-import de.minestar.therock.data.SQLQueue;
-import de.minestar.therock.data.Value;
-import de.minestar.therock.data.ValueList;
+import de.minestar.therock.data.queues.AbstractSQLUpdateQueue;
+import de.minestar.therock.data.queues.MessageQueue;
+import de.minestar.therock.data.sqlElements.AbstractSQLElement;
 
 public class MainConsumer {
     private HashMap<String, WorldConsumer> worldList;
-    private SQLQueue chatQueue, commandQueue;
+    private AbstractSQLUpdateQueue chatQueue, commandQueue;
 
     public MainConsumer() {
         this.worldList = new HashMap<String, WorldConsumer>();
     }
 
     public void init() {
-        // create Keys
-        ArrayList<ValueList> keyList = KeyHelper.getTimeAndPlayerKey();
-
-        // ChatQueue
-        ValueList values = new ValueList();
-        values.addValue(new Value("timestamp", "BIGINT"));
-        values.addValue(new Value("playerName", "VARCHAR(255)"));
-        values.addValue(new Value("message", "TEXT"));
-        this.chatQueue = new SQLQueue("general", "chat", values, keyList, TheRockCore.mainManager.getBuffer_chat());
-
-        // CommandQueue
-        values = new ValueList();
-        values.addValue(new Value("timestamp", "BIGINT"));
-        values.addValue(new Value("playerName", "VARCHAR(255)"));
-        values.addValue(new Value("command", "TEXT"));
-        this.commandQueue = new SQLQueue("general", "commands", values, keyList, TheRockCore.mainManager.getBuffer_commands());
+        this.chatQueue = new MessageQueue("general_chat", TheRockCore.mainManager.getBuffer_chat());
+        this.commandQueue = new MessageQueue("general_commands", TheRockCore.mainManager.getBuffer_commands());
     }
 
     public WorldConsumer addWorldConsumer(String worldName) {
@@ -68,25 +52,25 @@ public class MainConsumer {
         return tmp;
     }
 
-    public void appendBlockEvent(String worldName, StringBuilder stringBuilder) {
-        this.getWorldConsumer(worldName).appendBlockEvent(stringBuilder);
+    public void appendBlockEvent(String worldName, AbstractSQLElement element) {
+        this.getWorldConsumer(worldName).appendBlockEvent(element);
     }
 
-    public void appendInventoryEvent(String worldName, StringBuilder stringBuilder) {
-        this.getWorldConsumer(worldName).appendInventoryEvent(stringBuilder);
+    public void appendInventoryEvent(String worldName, AbstractSQLElement element) {
+        this.getWorldConsumer(worldName).appendInventoryEvent(element);
     }
 
-    public void appendChatEvent(StringBuilder stringBuilder) {
-        this.chatQueue.addToQueue(stringBuilder);
+    public void appendChatEvent(AbstractSQLElement element) {
+        this.chatQueue.add(element);
     }
 
-    public void appendCommandEvent(StringBuilder stringBuilder) {
-        this.commandQueue.addToQueue(stringBuilder);
+    public void appendCommandEvent(AbstractSQLElement element) {
+        this.commandQueue.add(element);
     }
 
     public void flushWithoutThread() {
-        this.chatQueue.flushWithoutThread();
-        this.commandQueue.flushWithoutThread();
+        this.chatQueue.flush(false);
+        this.commandQueue.flush(false);
 
         for (WorldConsumer consumer : this.worldList.values()) {
             consumer.flushWithoutThread();

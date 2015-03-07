@@ -21,24 +21,18 @@ package de.minestar.therock.sqlthreads;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import de.minestar.therock.TheRockCore;
-import de.minestar.therock.database.DatabaseHandler;
+public class UpdateSQLThread implements Runnable {
 
-public class InsertThread implements Runnable {
+    private final PreparedStatement statement;
 
-    private final String query;
-    private final DatabaseHandler databaseHandler;
-
-    public InsertThread(String query) {
-        this.databaseHandler = TheRockCore.databaseHandler;
-        this.query = query;
+    public UpdateSQLThread(PreparedStatement statement) {
+        this.statement = statement;
     }
 
     @Override
     public void run() {
         try {
-            PreparedStatement statement = this.databaseHandler.getConnection().prepareStatement(this.query);
-            statement.executeUpdate();
+            this.statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 MineStar.de 
+ * Copyright (C) 2015 MineStar.de 
  * 
  * This file is part of TheRock.
  * 
@@ -16,11 +16,7 @@
  * along with TheRock.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.therock.data;
+package de.minestar.therock.data.sqlElements;
 
-public class KeyValue extends Value {
-
-    public KeyValue(String name) {
-        super(name, name);
-    }
+public interface AbstractSQLElement {
 }

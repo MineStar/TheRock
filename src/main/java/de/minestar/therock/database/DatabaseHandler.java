@@ -37,8 +37,8 @@ import de.minestar.therock.sqlthreads.GetAreaChangesThread;
 import de.minestar.therock.sqlthreads.GetInventoryChangesThread;
 import de.minestar.therock.sqlthreads.GetSelectionBlockChangesThread;
 import de.minestar.therock.sqlthreads.GetSingleBlockChangesThread;
-import de.minestar.therock.sqlthreads.InsertThread;
 import de.minestar.therock.sqlthreads.UndoLastBlockChangesThread;
+import de.minestar.therock.sqlthreads.UpdateSQLThread;
 
 public class DatabaseHandler extends AbstractMySQLHandler {
 
@@ -100,18 +100,18 @@ public class DatabaseHandler extends AbstractMySQLHandler {
         return true;
     }
 
-    public boolean executeStatement(String query) {
-        Bukkit.getScheduler().runTaskLaterAsynchronously(TheRockCore.INSTANCE, new InsertThread(query), 1);
+    public boolean executeUpdateWithThread(PreparedStatement statement) {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(TheRockCore.INSTANCE, new UpdateSQLThread(statement), 1);
         return true;
     }
 
-    public boolean executeStatementWithoutThread(String query) {
+    public boolean executeUpdateWithoutThread(PreparedStatement statement) {
         try {
-            PreparedStatement statement = this.getConnection().prepareStatement(query);
-            return (statement.executeUpdate() > 0);
+            statement.executeUpdate();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
-            ConsoleUtils.printException(e, TheRockCore.NAME, "Can't execute query: " + query);
+            ConsoleUtils.printException(e, TheRockCore.NAME, "Can't execute query: " + statement);
             return false;
         }
     }

@@ -18,60 +18,30 @@
 
 package de.minestar.therock.manager;
 
-import java.util.ArrayList;
-
 import de.minestar.therock.TheRockCore;
-import de.minestar.therock.data.KeyHelper;
-import de.minestar.therock.data.SQLQueue;
-import de.minestar.therock.data.Value;
-import de.minestar.therock.data.ValueList;
+import de.minestar.therock.data.queues.AbstractSQLUpdateQueue;
+import de.minestar.therock.data.queues.BlockChangeQueue;
+import de.minestar.therock.data.queues.InventoryChangeQueue;
+import de.minestar.therock.data.sqlElements.AbstractSQLElement;
 
 public class WorldConsumer {
-    private SQLQueue blockQueue, inventoryQueue;
+    private AbstractSQLUpdateQueue inventoryChangeQueue, blockChangeQueue;
 
     public WorldConsumer(String worldName) {
-        // create Keys
-        ArrayList<ValueList> keyList = KeyHelper.getBlockAndTimeKey();
-
-        // BlockQueue
-        ValueList values = new ValueList();
-        values.addValue(new Value("timestamp", "BIGINT"));
-        values.addValue(new Value("reason", "VARCHAR(255)"));
-        values.addValue(new Value("eventType", "INTEGER"));
-        values.addValue(new Value("blockX", "INTEGER"));
-        values.addValue(new Value("blockY", "INTEGER"));
-        values.addValue(new Value("blockZ", "INTEGER"));
-        values.addValue(new Value("fromID", "INTEGER"));
-        values.addValue(new Value("fromData", "INTEGER"));
-        values.addValue(new Value("toID", "INTEGER"));
-        values.addValue(new Value("toData", "INTEGER"));
-        values.addValue(new Value("extraData", "TEXT"));
-        this.blockQueue = new SQLQueue(worldName, "block", values, keyList, TheRockCore.mainManager.getBuffer_blockChange());
-
-        // InventoryQueue
-        values = new ValueList();
-        values.addValue(new Value("timestamp", "BIGINT"));
-        values.addValue(new Value("reason", "VARCHAR(255)"));
-        values.addValue(new Value("eventType", "INTEGER"));
-        values.addValue(new Value("blockX", "INTEGER"));
-        values.addValue(new Value("blockY", "INTEGER"));
-        values.addValue(new Value("blockZ", "INTEGER"));
-        values.addValue(new Value("TypeID", "INTEGER"));
-        values.addValue(new Value("Data", "INTEGER"));
-        values.addValue(new Value("Amount", "INTEGER"));
-        this.inventoryQueue = new SQLQueue(worldName, "inventory", values, keyList, TheRockCore.mainManager.getBuffer_inventory());
+        this.blockChangeQueue = new BlockChangeQueue(worldName, TheRockCore.mainManager.getBuffer_blockChange());
+        this.inventoryChangeQueue = new InventoryChangeQueue(worldName, TheRockCore.mainManager.getBuffer_inventory());
     }
 
-    public void appendBlockEvent(StringBuilder stringBuilder) {
-        this.blockQueue.addToQueue(stringBuilder);
+    public void appendBlockEvent(AbstractSQLElement element) {
+        this.blockChangeQueue.add(element);
     }
 
-    public void appendInventoryEvent(StringBuilder stringBuilder) {
-        this.inventoryQueue.addToQueue(stringBuilder);
+    public void appendInventoryEvent(AbstractSQLElement element) {
+        this.inventoryChangeQueue.add(element);
     }
 
     public void flushWithoutThread() {
-        this.blockQueue.flushWithoutThread();
-        this.inventoryQueue.flushWithoutThread();
+        this.blockChangeQueue.flush(false);
+        this.inventoryChangeQueue.flush(false);
     }
 }

@@ -25,6 +25,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import de.minestar.therock.TheRockCore;
+import de.minestar.therock.data.sqlElements.MessageElement;
 import de.minestar.therock.manager.MainConsumer;
 import de.minestar.therock.manager.MainManager;
 
@@ -46,22 +47,8 @@ public class ChatAndCommandListener implements Listener {
         if (event.isCancelled() || !this.mainManager.logChat())
             return;
 
-        // create data
-        this.queueBuilder.append("(");
-        this.queueBuilder.append(System.currentTimeMillis());
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append("'" + event.getPlayer().getName() + "'");
-        this.queueBuilder.append(", ");
-        String message = event.getMessage();
-        message = message.replace("\\", "\\\\").replace("'", "\\'");
-        this.queueBuilder.append("'" + message + "'");
-        this.queueBuilder.append(")");
-
         // add to queue
-        this.mainConsumer.appendChatEvent(this.queueBuilder);
-
-        // reset data
-        this.queueBuilder.setLength(0);
+        this.mainConsumer.appendChatEvent(new MessageElement(event.getPlayer().getName(), event.getMessage()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -70,19 +57,8 @@ public class ChatAndCommandListener implements Listener {
         if (event.isCancelled() || !this.mainManager.logCommands())
             return;
 
-        // create data
-        this.queueBuilder.append("(");
-        this.queueBuilder.append(System.currentTimeMillis());
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append("'" + event.getPlayer().getName() + "'");
-        this.queueBuilder.append(", ");
-        String message = event.getMessage();
-        message = message.replace("\\", "\\\\").replace("'", "\\'");
-        this.queueBuilder.append("'" + message + "'");
-        this.queueBuilder.append(")");
-
         // add to queue
-        this.mainConsumer.appendCommandEvent(this.queueBuilder);
+        this.mainConsumer.appendCommandEvent(new MessageElement(event.getPlayer().getName(), event.getMessage()));
 
         // reset data
         this.queueBuilder.setLength(0);

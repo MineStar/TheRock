@@ -43,6 +43,7 @@ import com.bukkit.gemo.utils.InventoryUtils;
 
 import de.minestar.therock.TheRockCore;
 import de.minestar.therock.data.InventoryEventTypes;
+import de.minestar.therock.data.sqlElements.InventoryChangeElement;
 import de.minestar.therock.manager.MainConsumer;
 import de.minestar.therock.manager.MainManager;
 
@@ -318,46 +319,7 @@ public class InventoryListener implements Listener {
         }
     }
 
-    private void addInventoryChange(String reason, int eventType, String worldName, int blockX, int blockY, int blockZ, int ID, short Data, int Amount) {
-        // "("
-        this.queueBuilder.append("(");
-        // "TIMESTAMP"
-        this.queueBuilder.append(System.currentTimeMillis());
-        // "REASON"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append("'" + reason + "'");
-        // "EVENTTYPE"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append(eventType);
-        // "POSITION: X"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append(blockX);
-        // "POSITION: Y"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append(blockY);
-        // "POSITION: Z"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append(blockZ);
-        // "ID"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append(ID);
-        // "SUBDATA"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append(Data);
-        // "AMOUNT"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append(Amount);
-        // ")"
-        this.queueBuilder.append(")");
-
-        // /////////////////////////////////
-        // add to queue
-        // /////////////////////////////////
-        this.mainConsumer.appendInventoryEvent(worldName, this.queueBuilder);
-
-        // /////////////////////////////////
-        // reset data
-        // /////////////////////////////////
-        this.queueBuilder.setLength(0);
+    private void addInventoryChange(String reason, int eventType, String worldName, int blockX, int blockY, int blockZ, int ID, short data, int amount) {
+        this.mainConsumer.appendInventoryEvent(worldName, new InventoryChangeElement(reason, eventType, worldName, blockX, blockY, blockZ, ID, data, amount));
     }
 }

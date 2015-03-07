@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 MineStar.de 
+ * Copyright (C) 2015 MineStar.de 
  * 
  * This file is part of TheRock.
  * 
@@ -16,11 +16,28 @@
  * along with TheRock.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.therock.data;
+package de.minestar.therock.data.sqlElements;
 
-public class KeyValue extends Value {
+public class MessageElement implements AbstractSQLElement {
+    private final long timestamp;
+    private final String playerName;
+    private final String message;
 
-    public KeyValue(String name) {
-        super(name, name);
+    public MessageElement(String playerName, String message) {
+        this.timestamp = System.currentTimeMillis();
+        this.playerName = playerName;
+        this.message = message;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

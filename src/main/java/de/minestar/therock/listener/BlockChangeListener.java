@@ -42,6 +42,7 @@ import org.bukkit.event.player.PlayerBucketFillEvent;
 
 import de.minestar.therock.TheRockCore;
 import de.minestar.therock.data.BlockEventTypes;
+import de.minestar.therock.data.sqlElements.BlockChangeElement;
 import de.minestar.therock.manager.MainConsumer;
 import de.minestar.therock.manager.MainManager;
 
@@ -49,7 +50,7 @@ public class BlockChangeListener implements Listener {
 
     private MainManager mainManager;
     private MainConsumer mainConsumer;
-    private StringBuilder queueBuilder;
+    // private StringBuilder queueBuilder;
 
     private static final Set<Integer> nonFluidProofBlocks = new HashSet<Integer>(Arrays.asList(6, 26, 27, 28, 31, 32, 37, 38, 39, 40, 50, 51, 55, 59, 66, 69, 70, 72, 75, 76, 78, 83, 93, 94, 104, 105, 106, 115, 127, 131, 132));
     private static final Set<Integer> signBlocks = new HashSet<Integer>(Arrays.asList(Material.SIGN_POST.getId(), Material.WALL_SIGN.getId()));
@@ -59,7 +60,7 @@ public class BlockChangeListener implements Listener {
     public BlockChangeListener() {
         this.mainManager = TheRockCore.mainManager;
         this.mainConsumer = TheRockCore.mainConsumer;
-        this.queueBuilder = new StringBuilder();
+        // this.queueBuilder = new StringBuilder();
     }
 
     private void handleSignBreak(String reason, Block block, BlockEventTypes eventType) {
@@ -326,53 +327,6 @@ public class BlockChangeListener implements Listener {
     }
 
     private void addBlockChange(String reason, int eventType, String worldName, int blockX, int blockY, int blockZ, int fromID, byte fromData, int toID, byte toData, String extraData) {
-        // "("
-        this.queueBuilder.append("(");
-        // "TIMESTAMP"
-        this.queueBuilder.append(System.currentTimeMillis());
-        // "REASON"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append("'" + reason.replace(" ", "_") + "'");
-        // "EVENTTYPE"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append(eventType);
-        // "POSITION: X"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append(blockX);
-        // "POSITION: Y"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append(blockY);
-        // "POSITION: Z"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append(blockZ);
-        // "FROM ID"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append(fromID);
-        // "FROM SUBDATA"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append(fromData);
-        // "TO ID"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append(toID);
-        // "TO SUBDATA"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append(toData);
-        // "EXTRADATA"
-        this.queueBuilder.append(", ");
-        this.queueBuilder.append("'");
-        this.queueBuilder.append(extraData);
-        this.queueBuilder.append("'");
-        // ")"
-        this.queueBuilder.append(")");
-
-        // /////////////////////////////////
-        // add to queue
-        // /////////////////////////////////
-        this.mainConsumer.appendBlockEvent(worldName, this.queueBuilder);
-
-        // /////////////////////////////////
-        // reset data
-        // /////////////////////////////////
-        this.queueBuilder.setLength(0);
+        this.mainConsumer.appendBlockEvent(worldName, new BlockChangeElement(reason, eventType, worldName, blockX, blockY, blockZ, fromID, fromData, toID, toData, extraData));
     }
 }
