@@ -83,9 +83,9 @@ public class BlockChangeListener implements Listener {
         // create data
         // /////////////////////////////////
         if (!signBlocks.contains(event.getBlock().getTypeId())) {
-            this.addBlockChange(event.getPlayer().getUniqueId().toString().replaceAll("-", ""), BlockEventTypes.PLAYER_BREAK.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlock().getTypeId(), event.getBlock().getData(), Material.AIR.getId(), (byte) Material.AIR.getId());
+            this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_BREAK.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlock().getTypeId(), event.getBlock().getData(), Material.AIR.getId(), (byte) Material.AIR.getId());
         } else {
-            this.handleSignBreak(event.getPlayer().getUniqueId().toString().replaceAll("-", ""), event.getBlock(), BlockEventTypes.PLAYER_BREAK);
+            this.handleSignBreak(event.getPlayer().getName(), event.getBlock(), BlockEventTypes.PLAYER_BREAK);
         }
     }
 
@@ -101,7 +101,7 @@ public class BlockChangeListener implements Listener {
         // create data : all, except signs
         // /////////////////////////////////
         if (event.getBlock().getTypeId() != Material.WALL_SIGN.getId() && event.getBlock().getTypeId() != Material.SIGN_POST.getId()) {
-            this.addBlockChange(event.getPlayer().getUniqueId().toString().replaceAll("-", ""), BlockEventTypes.PLAYER_PLACE.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlockReplacedState().getTypeId(), event.getBlockReplacedState().getRawData(), event.getBlockPlaced().getTypeId(), event.getBlockPlaced().getData());
+            this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_PLACE.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlockReplacedState().getTypeId(), event.getBlockReplacedState().getRawData(), event.getBlockPlaced().getTypeId(), event.getBlockPlaced().getData());
         }
     }
 
@@ -219,7 +219,7 @@ public class BlockChangeListener implements Listener {
         // create data
         // /////////////////////////////////
         Block block = event.getBlockClicked().getRelative(event.getBlockFace());
-        this.addBlockChange(event.getPlayer().getUniqueId().toString().replaceAll("-", ""), BlockEventTypes.PLAYER_PLACE.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getState().getTypeId(), block.getState().getRawData(), (event.getBucket() == Material.WATER_BUCKET ? 9 : 11), (byte) 0);
+        this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_PLACE.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getState().getTypeId(), block.getState().getRawData(), (event.getBucket() == Material.WATER_BUCKET ? 9 : 11), (byte) 0);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -232,7 +232,7 @@ public class BlockChangeListener implements Listener {
         // create data
         // /////////////////////////////////
         Block block = event.getBlockClicked().getRelative(event.getBlockFace());
-        this.addBlockChange(event.getPlayer().getUniqueId().toString().replaceAll("-", ""), BlockEventTypes.PLAYER_BREAK.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getState().getTypeId(), block.getState().getRawData(), Material.AIR.getId(), (byte) 0);
+        this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_BREAK.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getState().getTypeId(), block.getState().getRawData(), Material.AIR.getId(), (byte) 0);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -246,7 +246,7 @@ public class BlockChangeListener implements Listener {
         // /////////////////////////////////
         Block block = event.getBlock();
         String signData = event.getLine(0) + "`" + event.getLine(1) + "`" + event.getLine(2) + "`" + event.getLine(3);
-        this.addBlockChange(event.getPlayer().getUniqueId().toString().replaceAll("-", ""), BlockEventTypes.PLAYER_PLACE.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), 0, (byte) 0, block.getTypeId(), block.getData(), signData);
+        this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_PLACE.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), 0, (byte) 0, block.getTypeId(), block.getData(), signData);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
