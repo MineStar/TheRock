@@ -96,7 +96,6 @@ public class BlockChangeQueue extends AbstractSQLUpdateQueue {
             TheRockCore.databaseHandler.executeUpdateWithoutThread(statement);
         } catch (SQLException e) {
             e.printStackTrace();
-
         }
     }
 

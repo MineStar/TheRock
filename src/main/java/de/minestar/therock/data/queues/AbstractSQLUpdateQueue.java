@@ -51,15 +51,17 @@ public abstract class AbstractSQLUpdateQueue {
     }
 
     public final void flush(boolean useThread) {
-        PreparedStatement statement = this.buildPreparedStatement();
-        if (statement != null) {
-            if (useThread) {
-                TheRockCore.databaseHandler.executeUpdateWithThread(statement);
-            } else {
-                TheRockCore.databaseHandler.executeUpdateWithoutThread(statement);
+        if (this.list.size() > 0) {
+            PreparedStatement statement = this.buildPreparedStatement();
+            if (statement != null) {
+                if (useThread) {
+                    TheRockCore.databaseHandler.executeUpdateWithThread(statement);
+                } else {
+                    TheRockCore.databaseHandler.executeUpdateWithoutThread(statement);
+                }
             }
+            this.list.clear();
         }
-        this.list.clear();
     }
 
     protected abstract PreparedStatement buildPreparedStatement();
