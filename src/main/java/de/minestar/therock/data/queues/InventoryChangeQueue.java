@@ -20,14 +20,13 @@ package de.minestar.therock.data.queues;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import de.minestar.therock.TheRockCore;
-import de.minestar.therock.data.KeyHelper;
-import de.minestar.therock.data.Value;
-import de.minestar.therock.data.ValueList;
 import de.minestar.therock.data.sqlElements.AbstractSQLElement;
 import de.minestar.therock.data.sqlElements.InventoryChangeElement;
+import de.minestar.therock.sql.vars.SQLTable;
+import de.minestar.therock.sql.vars.SQLVar;
+import de.minestar.therock.sql.vars.SQLVarType;
 
 public class InventoryChangeQueue extends AbstractSQLUpdateQueue {
     private final String worldName;
@@ -39,62 +38,22 @@ public class InventoryChangeQueue extends AbstractSQLUpdateQueue {
 
     @Override
     protected void createTable() {
-        StringBuilder queryBuilder = new StringBuilder();
+        SQLTable table = new SQLTable(this.worldName + "_inventory", true);
+        table.addVar(new SQLVar("timestamp", SQLVarType.INT_BIG).setNotNull(true).setIsKey(true));
+        table.addVar(new SQLVar("reason", SQLVarType.VAR_CHAR_255).setNotNull(false));
+        table.addVar(new SQLVar("eventType", SQLVarType.INT).setNotNull(true));
+        table.addVar(new SQLVar("blockX", SQLVarType.INT).setNotNull(true).setIsKey(true));
+        table.addVar(new SQLVar("blockY", SQLVarType.INT).setNotNull(true).setIsKey(true));
+        table.addVar(new SQLVar("blockZ", SQLVarType.INT).setNotNull(true).setIsKey(true));
+        table.addVar(new SQLVar("TypeID", SQLVarType.INT).setNotNull(true));
+        table.addVar(new SQLVar("Data", SQLVarType.INT).setNotNull(true));
+        table.addVar(new SQLVar("Amount", SQLVarType.INT).setNotNull(true));
 
-        queryBuilder.append("CREATE TABLE IF NOT EXISTS `");
-        queryBuilder.append(this.worldName + "_inventory");
-        queryBuilder.append("` (`ID` INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,");
-
-        // APPEND VALUES
-        ValueList values = new ValueList();
-        values.addValue(new Value("timestamp", "BIGINT"));
-        values.addValue(new Value("reason", "VARCHAR(255)"));
-        values.addValue(new Value("eventType", "INTEGER"));
-        values.addValue(new Value("blockX", "INTEGER"));
-        values.addValue(new Value("blockY", "INTEGER"));
-        values.addValue(new Value("blockZ", "INTEGER"));
-        values.addValue(new Value("TypeID", "INTEGER"));
-        values.addValue(new Value("Data", "INTEGER"));
-        values.addValue(new Value("Amount", "INTEGER"));
-
-        int i = 0;
-        for (Value value : values.getValues()) {
-            queryBuilder.append(value.getName());
-            queryBuilder.append(value.getSqlTypeDefinition());
-            queryBuilder.append(" NOT NULL");
-            ++i;
-            if (i != values.getSize()) {
-                queryBuilder.append(", ");
-            }
-        }
-
-        // APPEND KEYS
-        ArrayList<ValueList> keyList = KeyHelper.getBlockAndTimeKey();
-        for (ValueList list : keyList) {
-            if (list.getSize() > 0) {
-                queryBuilder.append(", KEY ");
-
-                // append keyname
-                queryBuilder.append(list.getName());
-                queryBuilder.append(" (");
-                i = 0;
-                for (Value key : list.getValues()) {
-                    queryBuilder.append(key.getName());
-                    ++i;
-                    if (i != list.getSize()) {
-                        queryBuilder.append(", ");
-                    }
-                }
-                queryBuilder.append(")");
-            }
-        }
-        queryBuilder.append(") ENGINE=MYISAM DEFAULT CHARSET=utf8;");
         try {
-            PreparedStatement statement = TheRockCore.databaseHandler.getConnection().prepareStatement(queryBuilder.toString());
+            PreparedStatement statement = TheRockCore.databaseHandler.getConnection().prepareStatement(table.getSQLQuery());
             TheRockCore.databaseHandler.executeUpdateWithoutThread(statement);
         } catch (SQLException e) {
             e.printStackTrace();
-
         }
     }
 
