@@ -18,6 +18,9 @@
 
 package de.minestar.therock.sql.vars;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 public enum SQLVarType {
 
     INT_TINY("TINYINT"), INT_SMALL("SMALLINT"), INT_MEDIUM("MEDIUMINT"), INT("INTEGER"), INT_BIG("BIGINT"),
@@ -38,5 +41,49 @@ public enum SQLVarType {
 
     public String getSqlDefinition() {
         return sqlDefinition;
+    }
+
+    public void set(PreparedStatement statement, int index, Object var) {
+        try {
+            switch (this) {
+                case INT_TINY :
+                case INT_SMALL :
+                case INT_MEDIUM :
+                case INT :
+                case INT_BIG : {
+                    statement.setInt(index, (int) var);
+                    return;
+                }
+                case BLOB_TINY :
+                case BLOB_MEDIUM :
+                case BLOB :
+                case BLOB_LONG : {
+                    statement.setBytes(index, (byte[]) var);
+                    return;
+                }
+                case TEXT_TINY :
+                case TEXT_MEDIUM :
+                case TEXT :
+                case TEXT_LONG :
+                case VAR_CHAR_16 :
+                case VAR_CHAR_32 :
+                case VAR_CHAR_64 :
+                case VAR_CHAR_128 :
+                case VAR_CHAR_255 : {
+                    statement.setString(index, var.toString());
+                    return;
+                }
+                case FLOAT : {
+                    statement.setFloat(index, (float) var);
+                    return;
+                }
+                case DOUBLE : {
+                    statement.setDouble(index, (double) var);
+                    return;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

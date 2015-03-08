@@ -50,7 +50,6 @@ public class InventoryChangeQueue extends AbstractSQLUpdateQueue {
         this.table.addVar(new SQLVar("TypeID", SQLVarType.INT).setNotNull(true));
         this.table.addVar(new SQLVar("Data", SQLVarType.INT).setNotNull(true));
         this.table.addVar(new SQLVar("Amount", SQLVarType.INT).setNotNull(true));
-
         try {
             PreparedStatement statement = TheRockCore.databaseHandler.getConnection().prepareStatement(this.table.getSQLQuery());
             TheRockCore.databaseHandler.executeUpdateWithoutThread(statement);
@@ -67,15 +66,15 @@ public class InventoryChangeQueue extends AbstractSQLUpdateQueue {
             int offset = 0;
             for (AbstractSQLElement abstractElement : this.list) {
                 InventoryChangeElement element = (InventoryChangeElement) abstractElement;
-                statement.setLong(1 + (offset), element.getTimestamp());
-                statement.setString(2 + (offset), element.getReason());
-                statement.setInt(3 + (offset), element.getEventType());
-                statement.setInt(4 + (offset), element.getBlockX());
-                statement.setInt(5 + (offset), element.getBlockY());
-                statement.setInt(6 + (offset), element.getBlockZ());
-                statement.setInt(7 + (offset), element.getID());
-                statement.setInt(8 + (offset), element.getData());
-                statement.setInt(9 + (offset), element.getAmount());
+                this.table.getVar("timestamp").set(statement, 1 + (offset), element.getTimestamp());
+                this.table.getVar("reason").set(statement, 2 + (offset), element.getReason());
+                this.table.getVar("eventType").set(statement, 3 + (offset), element.getEventType());
+                this.table.getVar("blockX").set(statement, 4 + (offset), element.getBlockX());
+                this.table.getVar("blockY").set(statement, 5 + (offset), element.getBlockY());
+                this.table.getVar("blockZ").set(statement, 6 + (offset), element.getBlockZ());
+                this.table.getVar("TypeID").set(statement, 7 + (offset), element.getID());
+                this.table.getVar("Data").set(statement, 8 + (offset), element.getData());
+                this.table.getVar("Amount").set(statement, 9 + (offset), element.getAmount());
                 offset += this.table.getColumnAmount();
             }
         } catch (SQLException e) {

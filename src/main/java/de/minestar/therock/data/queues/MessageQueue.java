@@ -66,9 +66,9 @@ public class MessageQueue extends AbstractSQLUpdateQueue {
             int offset = 0;
             for (AbstractSQLElement abstractElement : this.list) {
                 MessageElement element = (MessageElement) abstractElement;
-                statement.setLong(1 + (offset), element.getTimestamp());
-                statement.setString(2 + (offset), element.getPlayerName());
-                statement.setString(3 + (offset), element.getMessage());
+                this.table.getVar("timestamp").set(statement, 1 + (offset), element.getTimestamp());
+                this.table.getVar("playerName").set(statement, 2 + (offset), element.getPlayerName());
+                this.table.getVar(2).set(statement, 3 + (offset), element.getMessage());
                 offset += this.table.getColumnAmount();
             }
         } catch (SQLException e) {

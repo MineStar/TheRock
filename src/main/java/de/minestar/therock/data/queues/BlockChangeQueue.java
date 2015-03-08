@@ -69,17 +69,17 @@ public class BlockChangeQueue extends AbstractSQLUpdateQueue {
             int offset = 0;
             for (AbstractSQLElement abstractElement : this.list) {
                 BlockChangeElement element = (BlockChangeElement) abstractElement;
-                statement.setLong(1 + (offset), element.getTimestamp());
-                statement.setString(2 + (offset), element.getReason());
-                statement.setInt(3 + (offset), element.getEventType());
-                statement.setInt(4 + (offset), element.getBlockX());
-                statement.setInt(5 + (offset), element.getBlockY());
-                statement.setInt(6 + (offset), element.getBlockZ());
-                statement.setInt(7 + (offset), element.getFromID());
-                statement.setInt(8 + (offset), element.getFromData());
-                statement.setInt(9 + (offset), element.getToID());
-                statement.setInt(10 + (offset), element.getToData());
-                statement.setString(11 + (offset), element.getExtraData());
+                this.table.getVar("timestamp").set(statement, 1 + (offset), element.getTimestamp());
+                this.table.getVar("reason").set(statement, 2 + (offset), element.getReason());
+                this.table.getVar("eventType").set(statement, 3 + (offset), element.getEventType());
+                this.table.getVar("blockX").set(statement, 4 + (offset), element.getBlockX());
+                this.table.getVar("blockY").set(statement, 5 + (offset), element.getBlockY());
+                this.table.getVar("blockZ").set(statement, 6 + (offset), element.getBlockZ());
+                this.table.getVar("fromID").set(statement, 7 + (offset), element.getFromID());
+                this.table.getVar("fromData").set(statement, 8 + (offset), element.getFromData());
+                this.table.getVar("toID").set(statement, 9 + (offset), element.getToID());
+                this.table.getVar("toData").set(statement, 10 + (offset), element.getToData());
+                this.table.getVar("extraData").set(statement, 11 + (offset), element.getExtraData());
                 offset += this.table.getColumnAmount();
             }
         } catch (SQLException e) {

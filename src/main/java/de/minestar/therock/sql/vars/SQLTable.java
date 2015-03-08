@@ -18,31 +18,48 @@
 
 package de.minestar.therock.sql.vars;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public class SQLTable {
 
     private final String tableName;
-    private final List<SQLVar> vars;
+    private final HashMap<String, SQLVar> vars;
     private boolean useAutoID = false;
     private SQLVar primaryKey = null;
 
     public SQLTable(String tableName, boolean useAutoID) {
         this.tableName = tableName.replaceAll(" ", "_");
-        this.vars = new ArrayList<SQLVar>();
+        this.vars = new HashMap<String, SQLVar>();
         this.useAutoID = useAutoID;
         if (this.useAutoID) {
             this.addVar(new SQLVar("ID", SQLVarType.INT).setAutoIncrement(true).setPrimaryKey(true).setNotNull(true));
         }
     }
 
+    public SQLVar getVar(String name) {
+        return this.vars.get(name.replaceAll(" ", "_"));
+    }
+
+    public SQLVar getVar(int index) {
+        if (this.useAutoID) {
+            index++;
+        }
+        int i = 0;
+        for (SQLVar var : this.vars.values()) {
+            if (i == index) {
+                return var;
+            }
+            i++;
+        }
+        return null;
+    }
+
     public boolean hasVar(SQLVar var) {
-        return this.vars.contains(var);
+        return this.vars.containsKey(var.getName());
     }
 
     public boolean removeVar(SQLVar var) {
-        return this.vars.remove(var);
+        return (this.vars.remove(var.getName()) != null);
     }
 
     public boolean addVar(SQLVar... vars) {
@@ -62,7 +79,7 @@ public class SQLTable {
             System.out.println("PRIMARY KEY is already set (" + this.primaryKey.getName() + ")!");
             return false;
         }
-        this.vars.add(var);
+        this.vars.put(var.getName(), var);
         if (var.isPrimaryKey()) {
             this.primaryKey = var;
         }
@@ -181,7 +198,7 @@ public class SQLTable {
             }
 
             // append keys
-            for (SQLVar var : this.vars) {
+            for (SQLVar var : this.vars.values()) {
                 // only keys
                 if (!var.isKey()) {
                     continue;

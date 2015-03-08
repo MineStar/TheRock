@@ -18,6 +18,8 @@
 
 package de.minestar.therock.sql.vars;
 
+import java.sql.PreparedStatement;
+
 public class SQLVar {
     private final String name;
     private final SQLVarType varType;
@@ -70,6 +72,10 @@ public class SQLVar {
     public SQLVar setAutoIncrement(boolean autoIncrement) {
         this.autoIncrement = autoIncrement;
         return this;
+    }
+
+    public void set(PreparedStatement statement, int index, Object var) {
+        this.varType.set(statement, index, var);
     }
 
     @Override
