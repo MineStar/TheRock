@@ -137,7 +137,7 @@ public class SQLTable {
             queryBuilder.append(")");
 
             // append engine & charset
-            queryBuilder.append(" ENGINE=MYISAM DEFAULT CHARSET=utf8;");
+            queryBuilder.append(" ENGINE=MYISAM DEFAULT CHARSET=utf8; ");
 
             return queryBuilder.toString();
         } catch (Exception e) {

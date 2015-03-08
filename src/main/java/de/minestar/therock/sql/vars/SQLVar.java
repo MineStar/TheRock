@@ -24,7 +24,7 @@ public class SQLVar {
     private boolean autoIncrement = false, primaryKey = false, isKey = false, notNull = false;
 
     public SQLVar(String name, SQLVarType varType) {
-        this.name = name;
+        this.name = name.replaceAll(" ", "_");
         this.varType = varType;
     }
 
