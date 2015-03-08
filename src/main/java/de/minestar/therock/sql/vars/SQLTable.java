@@ -28,7 +28,7 @@ public class SQLTable {
     private SQLVar primaryKey = null;
 
     public SQLTable(String tableName, boolean useAutoID) {
-        this.tableName = tableName;
+        this.tableName = tableName.replaceAll(" ", "_");
         this.vars = new ArrayList<SQLVar>();
         if (useAutoID) {
             this.addVar(new SQLVar("ID", SQLVarType.INT).setAutoIncrement(true).setPrimaryKey(true).setNotNull(true));
