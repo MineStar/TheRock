@@ -30,6 +30,7 @@ import de.minestar.therock.sql.vars.SQLVarType;
 
 public class MessageQueue extends AbstractSQLUpdateQueue {
 
+    private SQLTable table;
     private final String tableName;
 
     public MessageQueue(String tableName, int maxQueueSize) {
@@ -39,17 +40,17 @@ public class MessageQueue extends AbstractSQLUpdateQueue {
 
     @Override
     protected void createTable() {
-        SQLTable table = new SQLTable(this.tableName, true);
-        table.addVar(new SQLVar("timestamp", SQLVarType.INT_BIG).setNotNull(true).setIsKey(true));
-        table.addVar(new SQLVar("playerName", SQLVarType.VAR_CHAR_255).setNotNull(true).setIsKey(true));
+        this.table = new SQLTable(this.tableName, true);
+        this.table.addVar(new SQLVar("timestamp", SQLVarType.INT_BIG).setNotNull(true).setIsKey(true));
+        this.table.addVar(new SQLVar("playerName", SQLVarType.VAR_CHAR_255).setNotNull(true).setIsKey(true));
         if (this.tableName.equalsIgnoreCase("general_chat")) {
-            table.addVar(new SQLVar("message", SQLVarType.TEXT).setNotNull(true));
+            this.table.addVar(new SQLVar("message", SQLVarType.TEXT).setNotNull(true));
         } else {
-            table.addVar(new SQLVar("command", SQLVarType.TEXT).setNotNull(true));
+            this.table.addVar(new SQLVar("command", SQLVarType.TEXT).setNotNull(true));
         }
 
         try {
-            PreparedStatement statement = TheRockCore.databaseHandler.getConnection().prepareStatement(table.getSQLQuery());
+            PreparedStatement statement = TheRockCore.databaseHandler.getConnection().prepareStatement(this.table.getSQLQuery());
             TheRockCore.databaseHandler.executeUpdateWithoutThread(statement);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -58,32 +59,17 @@ public class MessageQueue extends AbstractSQLUpdateQueue {
 
     @Override
     protected PreparedStatement buildPreparedStatement() {
-        StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("INSERT INTO ");
-        queryBuilder.append(this.tableName);
-        if (this.tableName.equalsIgnoreCase("general_chat")) {
-            queryBuilder.append(" ( timestamp, playerName, message) VALUES");
-        } else {
-            queryBuilder.append(" ( timestamp, playerName, command) VALUES");
-        }
-
-        for (int index = 0; index < this.list.size(); index++) {
-            queryBuilder.append(" ( ?, ?, ? )");
-            if (index < this.list.size() - 1) {
-                queryBuilder.append(", ");
-            }
-        }
 
         PreparedStatement statement = null;
         try {
-            statement = TheRockCore.databaseHandler.getConnection().prepareStatement(queryBuilder.toString());
-            int currentIndex = 0;
+            statement = TheRockCore.databaseHandler.getConnection().prepareStatement(this.table.getInsertQuery(this.list.size()));
+            int offset = 0;
             for (AbstractSQLElement abstractElement : this.list) {
                 MessageElement element = (MessageElement) abstractElement;
-                statement.setLong(1 + (currentIndex * 3), element.getTimestamp());
-                statement.setString(2 + (currentIndex * 3), element.getPlayerName());
-                statement.setString(3 + (currentIndex * 3), element.getMessage());
-                currentIndex++;
+                statement.setLong(1 + (offset), element.getTimestamp());
+                statement.setString(2 + (offset), element.getPlayerName());
+                statement.setString(3 + (offset), element.getMessage());
+                offset += this.table.getColumnAmount();
             }
         } catch (SQLException e) {
             e.printStackTrace();

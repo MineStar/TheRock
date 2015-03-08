@@ -25,12 +25,14 @@ public class SQLTable {
 
     private final String tableName;
     private final List<SQLVar> vars;
+    private boolean useAutoID = false;
     private SQLVar primaryKey = null;
 
     public SQLTable(String tableName, boolean useAutoID) {
         this.tableName = tableName.replaceAll(" ", "_");
         this.vars = new ArrayList<SQLVar>();
-        if (useAutoID) {
+        this.useAutoID = useAutoID;
+        if (this.useAutoID) {
             this.addVar(new SQLVar("ID", SQLVarType.INT).setAutoIncrement(true).setPrimaryKey(true).setNotNull(true));
         }
     }
@@ -65,6 +67,69 @@ public class SQLTable {
             this.primaryKey = var;
         }
         return true;
+    }
+
+    public String getInsertQuery(int amount) {
+        if (this.vars.size() < 1) {
+            return null;
+        }
+
+        try {
+            StringBuilder queryBuilder = new StringBuilder();
+
+            queryBuilder.append("INSERT INTO ");
+            queryBuilder.append("`");
+            queryBuilder.append(this.tableName);
+            queryBuilder.append("` ");
+
+            queryBuilder.append("(");
+
+            // create insert
+            String singleInsert = "(";
+            for (int index = 0; index < amount; index++) {
+                SQLVar var = this.vars.get(index);
+
+                if (var.isAutoIncrement()) {
+                    continue;
+                }
+
+                // append columnnames
+                queryBuilder.append("`");
+                queryBuilder.append(var.getName());
+                queryBuilder.append("`");
+
+                singleInsert += "?";
+                if (index < this.vars.size() - 1) {
+                    singleInsert += ", ";
+                    queryBuilder.append(", ");
+                }
+            }
+            singleInsert += ")";
+
+            queryBuilder.append(") VALUES ");
+
+            // append inserts
+            for (int index = 0; index < amount; index++) {
+                queryBuilder.append(singleInsert);
+                if (index < amount - 1) {
+                    queryBuilder.append(", ");
+                }
+            }
+            queryBuilder.append("; ");
+
+            return queryBuilder.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public int getColumnAmount() {
+        if (this.useAutoID) {
+            return this.vars.size() - 1;
+        } else {
+            return this.vars.size();
+        }
     }
 
     public String getSQLQuery() {

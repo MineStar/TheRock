@@ -29,6 +29,7 @@ import de.minestar.therock.sql.vars.SQLVar;
 import de.minestar.therock.sql.vars.SQLVarType;
 
 public class InventoryChangeQueue extends AbstractSQLUpdateQueue {
+    private SQLTable table;
     private final String worldName;
 
     public InventoryChangeQueue(String worldName, int maxQueueSize) {
@@ -38,19 +39,20 @@ public class InventoryChangeQueue extends AbstractSQLUpdateQueue {
 
     @Override
     protected void createTable() {
-        SQLTable table = new SQLTable(this.worldName + "_inventory", true);
-        table.addVar(new SQLVar("timestamp", SQLVarType.INT_BIG).setNotNull(true).setIsKey(true));
-        table.addVar(new SQLVar("reason", SQLVarType.VAR_CHAR_255).setNotNull(false));
-        table.addVar(new SQLVar("eventType", SQLVarType.INT).setNotNull(true));
-        table.addVar(new SQLVar("blockX", SQLVarType.INT).setNotNull(true).setIsKey(true));
-        table.addVar(new SQLVar("blockY", SQLVarType.INT).setNotNull(true).setIsKey(true));
-        table.addVar(new SQLVar("blockZ", SQLVarType.INT).setNotNull(true).setIsKey(true));
-        table.addVar(new SQLVar("TypeID", SQLVarType.INT).setNotNull(true));
-        table.addVar(new SQLVar("Data", SQLVarType.INT).setNotNull(true));
-        table.addVar(new SQLVar("Amount", SQLVarType.INT).setNotNull(true));
+        // create table
+        this.table = new SQLTable(this.worldName + "_inventory", true);
+        this.table.addVar(new SQLVar("timestamp", SQLVarType.INT_BIG).setNotNull(true).setIsKey(true));
+        this.table.addVar(new SQLVar("reason", SQLVarType.VAR_CHAR_255).setNotNull(false));
+        this.table.addVar(new SQLVar("eventType", SQLVarType.INT).setNotNull(true));
+        this.table.addVar(new SQLVar("blockX", SQLVarType.INT).setNotNull(true).setIsKey(true));
+        this.table.addVar(new SQLVar("blockY", SQLVarType.INT).setNotNull(true).setIsKey(true));
+        this.table.addVar(new SQLVar("blockZ", SQLVarType.INT).setNotNull(true).setIsKey(true));
+        this.table.addVar(new SQLVar("TypeID", SQLVarType.INT).setNotNull(true));
+        this.table.addVar(new SQLVar("Data", SQLVarType.INT).setNotNull(true));
+        this.table.addVar(new SQLVar("Amount", SQLVarType.INT).setNotNull(true));
 
         try {
-            PreparedStatement statement = TheRockCore.databaseHandler.getConnection().prepareStatement(table.getSQLQuery());
+            PreparedStatement statement = TheRockCore.databaseHandler.getConnection().prepareStatement(this.table.getSQLQuery());
             TheRockCore.databaseHandler.executeUpdateWithoutThread(statement);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -59,34 +61,22 @@ public class InventoryChangeQueue extends AbstractSQLUpdateQueue {
 
     @Override
     protected PreparedStatement buildPreparedStatement() {
-        StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("INSERT INTO ");
-        queryBuilder.append(this.worldName + "_inventory");
-        queryBuilder.append(" ( timestamp, reason, eventType, blockX, blockY, blockZ, TypeID, Data, Amount ) VALUES");
-
-        for (int index = 0; index < this.list.size(); index++) {
-            queryBuilder.append(" ( ?, ?, ?, ?, ?, ?, ?, ?, ? )");
-            if (index < this.list.size() - 1) {
-                queryBuilder.append(", ");
-            }
-        }
-
         PreparedStatement statement = null;
         try {
-            statement = TheRockCore.databaseHandler.getConnection().prepareStatement(queryBuilder.toString());
-            int currentIndex = 0;
+            statement = TheRockCore.databaseHandler.getConnection().prepareStatement(this.table.getInsertQuery(this.list.size()));
+            int offset = 0;
             for (AbstractSQLElement abstractElement : this.list) {
                 InventoryChangeElement element = (InventoryChangeElement) abstractElement;
-                statement.setLong(1 + (currentIndex * 9), element.getTimestamp());
-                statement.setString(2 + (currentIndex * 9), element.getReason());
-                statement.setInt(3 + (currentIndex * 9), element.getEventType());
-                statement.setInt(4 + (currentIndex * 9), element.getBlockX());
-                statement.setInt(5 + (currentIndex * 9), element.getBlockY());
-                statement.setInt(6 + (currentIndex * 9), element.getBlockZ());
-                statement.setInt(7 + (currentIndex * 9), element.getID());
-                statement.setInt(8 + (currentIndex * 9), element.getData());
-                statement.setInt(9 + (currentIndex * 9), element.getAmount());
-                currentIndex++;
+                statement.setLong(1 + (offset), element.getTimestamp());
+                statement.setString(2 + (offset), element.getReason());
+                statement.setInt(3 + (offset), element.getEventType());
+                statement.setInt(4 + (offset), element.getBlockX());
+                statement.setInt(5 + (offset), element.getBlockY());
+                statement.setInt(6 + (offset), element.getBlockZ());
+                statement.setInt(7 + (offset), element.getID());
+                statement.setInt(8 + (offset), element.getData());
+                statement.setInt(9 + (offset), element.getAmount());
+                offset += this.table.getColumnAmount();
             }
         } catch (SQLException e) {
             e.printStackTrace();
