@@ -104,7 +104,7 @@ public class SQLTable {
             // create insert
             String singleInsert = "(";
             for (int index = 0; index < amount; index++) {
-                SQLVar var = this.vars.get(index);
+                SQLVar var = this.getVar(index);
 
                 if (var.isAutoIncrement()) {
                     continue;
@@ -167,7 +167,7 @@ public class SQLTable {
 
             // append vars
             for (int index = 0; index < this.vars.size(); index++) {
-                SQLVar var = this.vars.get(index);
+                SQLVar var = this.getVar(index);
                 // append name
                 queryBuilder.append("`");
                 queryBuilder.append(var.getName());
