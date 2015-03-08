@@ -59,7 +59,6 @@ public class MessageQueue extends AbstractSQLUpdateQueue {
 
     @Override
     protected PreparedStatement buildPreparedStatement() {
-
         PreparedStatement statement = null;
         try {
             statement = TheRockCore.databaseHandler.getConnection().prepareStatement(this.table.getInsertQuery(this.list.size()));

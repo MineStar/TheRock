@@ -25,7 +25,7 @@ public enum SQLVarType {
 
     INT_TINY("TINYINT"), INT_SMALL("SMALLINT"), INT_MEDIUM("MEDIUMINT"), INT("INTEGER"), INT_BIG("BIGINT"),
 
-    FLOAT("FLOAT"), DOUBLE("REAL"),
+    FLOAT("FLOAT"), DOUBLE("REAL"), LONG("INTEGER"),
 
     TEXT_TINY("TINYTEXT"), TEXT_MEDIUM("MEDIUMTEXT"), TEXT("TEXT"), TEXT_LONG("LONGTEXT"),
 
@@ -43,45 +43,57 @@ public enum SQLVarType {
         return sqlDefinition;
     }
 
-    public void set(PreparedStatement statement, int index, Object var) {
+    public void set(PreparedStatement statement, int index, int var) {
         try {
-            switch (this) {
-                case INT_TINY :
-                case INT_SMALL :
-                case INT_MEDIUM :
-                case INT :
-                case INT_BIG : {
-                    statement.setInt(index, (int) var);
-                    return;
-                }
-                case BLOB_TINY :
-                case BLOB_MEDIUM :
-                case BLOB :
-                case BLOB_LONG : {
-                    statement.setBytes(index, (byte[]) var);
-                    return;
-                }
-                case TEXT_TINY :
-                case TEXT_MEDIUM :
-                case TEXT :
-                case TEXT_LONG :
-                case VAR_CHAR_16 :
-                case VAR_CHAR_32 :
-                case VAR_CHAR_64 :
-                case VAR_CHAR_128 :
-                case VAR_CHAR_255 : {
-                    statement.setString(index, var.toString());
-                    return;
-                }
-                case FLOAT : {
-                    statement.setFloat(index, (float) var);
-                    return;
-                }
-                case DOUBLE : {
-                    statement.setDouble(index, (double) var);
-                    return;
-                }
-            }
+            statement.setInt(index, var);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void set(PreparedStatement statement, int index, long var) {
+        try {
+            statement.setLong(index, var);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void set(PreparedStatement statement, int index, String var) {
+        try {
+            statement.setString(index, var);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void set(PreparedStatement statement, int index, byte var) {
+        try {
+            statement.setByte(index, var);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void set(PreparedStatement statement, int index, float var) {
+        try {
+            statement.setFloat(index, var);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void set(PreparedStatement statement, int index, double var) {
+        try {
+            statement.setDouble(index, var);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void set(PreparedStatement statement, int index, byte[] var) {
+        try {
+            statement.setBytes(index, var);
         } catch (SQLException e) {
             e.printStackTrace();
         }

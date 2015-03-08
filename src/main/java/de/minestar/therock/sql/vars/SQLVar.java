@@ -74,7 +74,31 @@ public class SQLVar {
         return this;
     }
 
-    public void set(PreparedStatement statement, int index, Object var) {
+    public void set(PreparedStatement statement, int index, int var) {
+        this.varType.set(statement, index, var);
+    }
+
+    public void set(PreparedStatement statement, int index, long var) {
+        this.varType.set(statement, index, var);
+    }
+
+    public void set(PreparedStatement statement, int index, String var) {
+        this.varType.set(statement, index, var);
+    }
+
+    public void set(PreparedStatement statement, int index, byte var) {
+        this.varType.set(statement, index, var);
+    }
+
+    public void set(PreparedStatement statement, int index, float var) {
+        this.varType.set(statement, index, var);
+    }
+
+    public void set(PreparedStatement statement, int index, double var) {
+        this.varType.set(statement, index, var);
+    }
+
+    public void set(PreparedStatement statement, int index, byte[] var) {
         this.varType.set(statement, index, var);
     }
 

@@ -18,18 +18,22 @@
 
 package de.minestar.therock.sql.vars;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class SQLTable {
 
     private final String tableName;
-    private final HashMap<String, SQLVar> vars;
+    private final HashMap<String, SQLVar> varMap;
+    private final List<SQLVar> varList;
     private boolean useAutoID = false;
     private SQLVar primaryKey = null;
 
     public SQLTable(String tableName, boolean useAutoID) {
         this.tableName = tableName.replaceAll(" ", "_");
-        this.vars = new HashMap<String, SQLVar>();
+        this.varMap = new HashMap<String, SQLVar>();
+        this.varList = new ArrayList<SQLVar>();
         this.useAutoID = useAutoID;
         if (this.useAutoID) {
             this.addVar(new SQLVar("ID", SQLVarType.INT).setAutoIncrement(true).setPrimaryKey(true).setNotNull(true));
@@ -37,29 +41,23 @@ public class SQLTable {
     }
 
     public SQLVar getVar(String name) {
-        return this.vars.get(name.replaceAll(" ", "_"));
+        return this.varMap.get(name.replaceAll(" ", "_"));
     }
 
     public SQLVar getVar(int index) {
         if (this.useAutoID) {
             index++;
         }
-        int i = 0;
-        for (SQLVar var : this.vars.values()) {
-            if (i == index) {
-                return var;
-            }
-            i++;
-        }
-        return null;
+        return this.varList.get(index);
     }
 
     public boolean hasVar(SQLVar var) {
-        return this.vars.containsKey(var.getName());
+        return this.varMap.containsKey(var.getName());
     }
 
     public boolean removeVar(SQLVar var) {
-        return (this.vars.remove(var.getName()) != null);
+        this.varList.remove(var);
+        return (this.varMap.remove(var.getName()) != null);
     }
 
     public boolean addVar(SQLVar... vars) {
@@ -79,7 +77,8 @@ public class SQLTable {
             System.out.println("PRIMARY KEY is already set (" + this.primaryKey.getName() + ")!");
             return false;
         }
-        this.vars.put(var.getName(), var);
+        this.varList.add(var);
+        this.varMap.put(var.getName(), var);
         if (var.isPrimaryKey()) {
             this.primaryKey = var;
         }
@@ -87,7 +86,7 @@ public class SQLTable {
     }
 
     public String getInsertQuery(int amount) {
-        if (this.vars.size() < 1) {
+        if (this.varMap.size() < 1) {
             return null;
         }
 
@@ -103,9 +102,12 @@ public class SQLTable {
 
             // create insert
             String singleInsert = "(";
-            for (int index = 0; index < amount; index++) {
-                SQLVar var = this.getVar(index);
+            int index = -1;
+            for (SQLVar var : this.varList) {
+                // increment index
+                index++;
 
+                // ignore autoIncrement
                 if (var.isAutoIncrement()) {
                     continue;
                 }
@@ -116,7 +118,7 @@ public class SQLTable {
                 queryBuilder.append("`");
 
                 singleInsert += "?";
-                if (index < this.vars.size() - 1) {
+                if (index < this.varList.size() - 1) {
                     singleInsert += ", ";
                     queryBuilder.append(", ");
                 }
@@ -126,7 +128,7 @@ public class SQLTable {
             queryBuilder.append(") VALUES ");
 
             // append inserts
-            for (int index = 0; index < amount; index++) {
+            for (index = 0; index < amount; index++) {
                 queryBuilder.append(singleInsert);
                 if (index < amount - 1) {
                     queryBuilder.append(", ");
@@ -143,14 +145,14 @@ public class SQLTable {
 
     public int getColumnAmount() {
         if (this.useAutoID) {
-            return this.vars.size() - 1;
+            return this.varMap.size() - 1;
         } else {
-            return this.vars.size();
+            return this.varMap.size();
         }
     }
 
     public String getSQLQuery() {
-        if (this.vars.size() < 1) {
+        if (this.varMap.size() < 1) {
             return null;
         }
 
@@ -166,8 +168,8 @@ public class SQLTable {
             queryBuilder.append(" (");
 
             // append vars
-            for (int index = 0; index < this.vars.size(); index++) {
-                SQLVar var = this.getVar(index);
+            int index = 0;
+            for (SQLVar var : this.varList) {
                 // append name
                 queryBuilder.append("`");
                 queryBuilder.append(var.getName());
@@ -192,13 +194,14 @@ public class SQLTable {
                 }
 
                 // append ","
-                if (index < this.vars.size() - 1) {
+                if (index < this.varList.size() - 1) {
                     queryBuilder.append(", ");
                 }
+                index++;
             }
 
             // append keys
-            for (SQLVar var : this.vars.values()) {
+            for (SQLVar var : this.varList) {
                 // only keys
                 if (!var.isKey()) {
                     continue;
