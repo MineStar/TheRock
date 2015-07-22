@@ -320,6 +320,8 @@ public class InventoryListener implements Listener {
     }
 
     private void addInventoryChange(String reason, int eventType, String worldName, int blockX, int blockY, int blockZ, int ID, short data, int amount) {
-        this.mainConsumer.appendInventoryEvent(worldName, new InventoryChangeElement(reason, eventType, worldName, blockX, blockY, blockZ, ID, data, amount));
+        if (reason != null) {
+            this.mainConsumer.appendInventoryEvent(worldName, new InventoryChangeElement(reason, eventType, worldName, blockX, blockY, blockZ, ID, data, amount));
+        }
     }
 }

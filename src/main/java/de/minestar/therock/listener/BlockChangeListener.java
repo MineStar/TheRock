@@ -327,6 +327,8 @@ public class BlockChangeListener implements Listener {
     }
 
     private void addBlockChange(String reason, int eventType, String worldName, int blockX, int blockY, int blockZ, int fromID, byte fromData, int toID, byte toData, String extraData) {
-        this.mainConsumer.appendBlockEvent(worldName, new BlockChangeElement(reason, eventType, worldName, blockX, blockY, blockZ, fromID, fromData, toID, toData, extraData));
+        if (reason != null) {
+            this.mainConsumer.appendBlockEvent(worldName, new BlockChangeElement(reason, eventType, worldName, blockX, blockY, blockZ, fromID, fromData, toID, toData, extraData));
+        }
     }
 }
