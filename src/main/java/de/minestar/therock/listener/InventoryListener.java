@@ -51,15 +51,13 @@ public class InventoryListener implements Listener {
 
     private MainManager mainManager;
     private MainConsumer mainConsumer;
-    private StringBuilder queueBuilder;
 
     private HashMap<String, Location> openedInventories;
-    private static final Set<Integer> checkableBlocks = new HashSet<Integer>(Arrays.asList(Material.CHEST.getId(), Material.DISPENSER.getId(), Material.FURNACE.getId(), Material.BURNING_FURNACE.getId(), Material.BREWING_STAND.getId()));
+    private static final Set<Integer> checkableBlocks = new HashSet<Integer>(Arrays.asList(Material.CHEST.getId(), Material.DISPENSER.getId(), Material.FURNACE.getId(), Material.BURNING_FURNACE.getId(), Material.BREWING_STAND.getId(), Material.TRAPPED_CHEST.getId()));
 
     public InventoryListener() {
         this.mainManager = TheRockCore.mainManager;
         this.mainConsumer = TheRockCore.mainConsumer;
-        this.queueBuilder = new StringBuilder();
         this.openedInventories = new HashMap<String, Location>();
     }
 

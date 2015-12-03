@@ -67,7 +67,7 @@ public class ToolListener implements Listener {
 
         // check the inventory type
         InventoryType type = event.getInventory().getType();
-        if (type != InventoryType.CHEST && type != InventoryType.DISPENSER && type != InventoryType.FURNACE && type != InventoryType.BREWING && type != InventoryType.ENDER_CHEST) {
+        if (type != InventoryType.CHEST && type != InventoryType.DROPPER && type != InventoryType.DISPENSER && type != InventoryType.FURNACE && type != InventoryType.BREWING && type != InventoryType.ENDER_CHEST) {
             return;
         }
 

@@ -53,7 +53,7 @@ public class MainManager {
     // tool settings
     private int toolLookupID = Material.WATCH.getId();
     private int toolSelectionID = Material.STICK.getId();
-    private int toolInventoryID = Material.BLAZE_ROD.getId();
+    private int toolInventoryID = Material.STONE_HOE.getId();
     private int toolFastRollbackID = Material.SOIL.getId();
 
     public WorldSettings getWorld(Player player) {
@@ -124,6 +124,12 @@ public class MainManager {
             }
             if (Material.getMaterial(toolSelectionID) == null) {
                 toolSelectionID = Material.STICK.getId();
+            }
+            if (Material.getMaterial(toolInventoryID) == null) {
+                toolInventoryID = Material.STONE_HOE.getId();
+            }
+            if (Material.getMaterial(toolFastRollbackID) == null) {
+                toolFastRollbackID = Material.SOIL.getId();
             }
 
             // register Tools
