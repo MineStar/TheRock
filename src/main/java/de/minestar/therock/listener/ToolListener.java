@@ -67,7 +67,7 @@ public class ToolListener implements Listener {
 
         // check the inventory type
         InventoryType type = event.getInventory().getType();
-        if (type != InventoryType.CHEST && type != InventoryType.DROPPER && type != InventoryType.DISPENSER && type != InventoryType.FURNACE && type != InventoryType.BREWING && type != InventoryType.ENDER_CHEST) {
+        if (type != InventoryType.CHEST && type != InventoryType.DROPPER && type != InventoryType.DISPENSER && type != InventoryType.FURNACE && type != InventoryType.BREWING) {
             return;
         }
 
@@ -85,8 +85,8 @@ public class ToolListener implements Listener {
         // get the player
         Player player = (Player) event.getWhoClicked();
 
-        boolean cursorNull = (inCursor == null || inCursor.getTypeId() == Material.AIR.getId());
-        boolean slotNull = (inSlot == null || inSlot.getTypeId() == Material.AIR.getId());
+        boolean cursorNull = (inCursor == null || inCursor.getType() == Material.AIR);
+        boolean slotNull = (inSlot == null || inSlot.getType() == Material.AIR);
 
         // Cursor = null && Slot == null => nothing happens
         if (cursorNull && slotNull) {
@@ -146,7 +146,8 @@ public class ToolListener implements Listener {
         if (this.isTool(ID)) {
             Tool tool = this.getTool(ID);
             if (tool.hasPermission(event.getPlayer())) {
-                event.getItemDrop().setItemStack(new ItemStack(Material.SAND, 1));
+                //event.getItemDrop().setItemStack(new ItemStack(Material.SAND, 1));
+                event.getItemDrop().remove();
             }
         }
     }

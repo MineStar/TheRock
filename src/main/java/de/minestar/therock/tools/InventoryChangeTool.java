@@ -41,7 +41,7 @@ public class InventoryChangeTool extends Tool {
                 TheRockCore.databaseHandler.getInventoryChanges(player, block, true);
 
                 // for double chests : get both changes
-                if (block.getTypeId() == Material.CHEST.getId()) {
+                if (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST) {
                     Chest dChest = BlockUtils.isDoubleChest(block);
                     if (dChest != null) {
                         TheRockCore.databaseHandler.getInventoryChanges(player, dChest.getBlock(), false);

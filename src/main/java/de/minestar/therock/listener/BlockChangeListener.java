@@ -101,7 +101,7 @@ public class BlockChangeListener implements Listener {
         // /////////////////////////////////
         // create data : all, except signs
         // /////////////////////////////////
-        if (event.getBlock().getTypeId() != Material.WALL_SIGN.getId() && event.getBlock().getTypeId() != Material.SIGN_POST.getId()) {
+        if (event.getBlock().getType() != Material.WALL_SIGN && event.getBlock().getType() != Material.SIGN_POST) {
             this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_PLACE.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlockReplacedState().getTypeId(), event.getBlockReplacedState().getRawData(), event.getBlockPlaced().getTypeId(), event.getBlockPlaced().getData());
         }
     }
