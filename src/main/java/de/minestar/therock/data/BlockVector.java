@@ -2,6 +2,7 @@ package de.minestar.therock.data;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 
 public class BlockVector implements Comparable<BlockVector> {
@@ -10,6 +11,7 @@ public class BlockVector implements Comparable<BlockVector> {
     private int hashCode = Integer.MIN_VALUE;
     private Location location = null;
     private int TypeID;
+    private Material Type;
     private byte subData;
     private String extraData = null;
 
@@ -93,6 +95,14 @@ public class BlockVector implements Comparable<BlockVector> {
         return TypeID;
     }
 
+    public Material getType() {
+        return Type;
+    }
+    
+    public void setType(Material type) {
+        Type = type;
+    }
+    
     public void setTypeID(int typeID) {
         TypeID = typeID;
     }

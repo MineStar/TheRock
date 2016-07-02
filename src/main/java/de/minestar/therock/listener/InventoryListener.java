@@ -53,7 +53,7 @@ public class InventoryListener implements Listener {
     private MainConsumer mainConsumer;
 
     private HashMap<String, Location> openedInventories;
-    private static final Set<Integer> checkableBlocks = new HashSet<Integer>(Arrays.asList(Material.CHEST.getId(), Material.DISPENSER.getId(), Material.DROPPER.getId(), Material.FURNACE.getId(), Material.BURNING_FURNACE.getId(), Material.BREWING_STAND.getId(), Material.TRAPPED_CHEST.getId()));
+    private static final Set<Material> checkableBlocks = new HashSet<Material>(Arrays.asList(Material.CHEST, Material.DISPENSER, Material.DROPPER, Material.FURNACE, Material.BURNING_FURNACE, Material.BREWING_STAND, Material.TRAPPED_CHEST));
 
     public InventoryListener() {
         this.mainManager = TheRockCore.mainManager;
@@ -62,7 +62,7 @@ public class InventoryListener implements Listener {
     }
 
     public boolean isContainerBlock(Block block) {
-        return checkableBlocks.contains(block.getTypeId());
+        return checkableBlocks.contains(block.getType());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -78,7 +78,7 @@ public class InventoryListener implements Listener {
             return;
 
         // is the block an interactable block?
-        if (!checkableBlocks.contains(event.getClickedBlock().getTypeId()))
+        if (!checkableBlocks.contains(event.getClickedBlock().getType()))
             return;
 
         // add the player to the list

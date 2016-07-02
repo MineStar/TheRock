@@ -59,6 +59,7 @@ public class RollbackCommand extends AbstractCommand {
             while (results.next()) {
                 newVector = new BlockVector(cache.getWorld().getName(), results.getInt("blockX"), results.getInt("blockY"), results.getInt("blockZ"));
                 newVector.setTypeID(results.getInt("fromID"));
+                newVector.setType(Material.getMaterial(results.getInt("fromID")));
                 newVector.setSubData((byte) results.getInt("fromData"));
                 newVector.setExtraData(results.getString("extraData"));
                 blockLists[newVector.getY()].add(newVector);
@@ -118,9 +119,10 @@ public class RollbackCommand extends AbstractCommand {
             } else if (block.getType() == Material.BREWING_STAND) {
                 ((BrewingStand) block.getState()).getInventory().clear();
             }
+            //TODO: rewrite this Shit
             block.setTypeIdAndData(vector.getTypeID(), vector.getSubData(), true);
 
-            if (vector.getTypeID() == Material.WALL_SIGN.getId() || vector.getTypeID() == Material.SIGN_POST.getId()) {
+            if (vector.getType() == Material.WALL_SIGN || vector.getType() == Material.SIGN_POST) {
                 block = vector.getLocation().getBlock();
                 Sign sign = (Sign) block.getState();
                 String split[] = vector.getExtraData().split("`");

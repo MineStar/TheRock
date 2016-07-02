@@ -30,8 +30,8 @@ import de.minestar.therock.TheRockCore;
 
 public class InventoryChangeTool extends Tool {
 
-    public InventoryChangeTool(String toolName, int toolID, String permission) {
-        super(toolName, toolID, permission);
+    public InventoryChangeTool(String toolName, Material toolType, String permission) {
+        super(toolName, toolType, permission);
     }
 
     @Override

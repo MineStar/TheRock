@@ -18,6 +18,7 @@
 
 package de.minestar.therock.tools;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -27,8 +28,8 @@ import de.minestar.therock.TheRockCore;
 
 public class BlockChangeInfoTool extends Tool {
 
-    public BlockChangeInfoTool(String toolName, int toolID, String permission) {
-        super(toolName, toolID, permission);
+    public BlockChangeInfoTool(String toolName, Material toolType, String permission) {
+        super(toolName, toolType, permission);
     }
 
     @Override

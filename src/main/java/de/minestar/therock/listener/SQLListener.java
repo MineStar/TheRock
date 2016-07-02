@@ -206,7 +206,7 @@ public class SQLListener implements Listener {
 
                 switch (BlockEventTypes.byID(results.getInt("eventType"))) {
                     case PLAYER_PLACE : {
-                        message += ChatColor.GRAY + results.getString("reason") + " placed " + Material.getMaterial(results.getInt("toID")) + ":" + results.getInt("toData");
+                        message += ChatColor.GRAY + results.getString("reason") + " placed " + Material.getMaterial(results.getInt("toID")).name() + ":" + results.getInt("toData");
                         // handle signs
                         if (results.getInt("toID") == Material.WALL_SIGN.getId() || results.getInt("toID") == Material.SIGN_POST.getId()) {
                             message += ChatColor.GREEN + " [ ";
@@ -227,23 +227,23 @@ public class SQLListener implements Listener {
                         break;
                     }
                     case PLAYER_BREAK : {
-                        message += ChatColor.GRAY + results.getString("reason") + " destroyed " + Material.getMaterial(results.getInt("fromID")) + ":" + results.getInt("fromData");
+                        message += ChatColor.GRAY + results.getString("reason") + " destroyed " + Material.getMaterial(results.getInt("fromID")).name() + ":" + results.getInt("fromData");
                         break;
                     }
                     case PHYSICS_CREATE : {
-                        message += ChatColor.GRAY + results.getString("reason") + " created " + Material.getMaterial(results.getInt("toID")) + ":" + results.getInt("toData");
+                        message += ChatColor.GRAY + results.getString("reason") + " created " + Material.getMaterial(results.getInt("toID")).name() + ":" + results.getInt("toData");
                         break;
                     }
                     case PHYSICS_DESTROY : {
-                        message += ChatColor.GRAY + results.getString("reason") + " destroyed " + Material.getMaterial(results.getInt("fromID")) + ":" + results.getInt("fromData");
+                        message += ChatColor.GRAY + results.getString("reason") + " destroyed " + Material.getMaterial(results.getInt("fromID")).name() + ":" + results.getInt("fromData");
                         break;
                     }
                     case PISTON_REPLACE : {
-                        message += ChatColor.GRAY + results.getString("reason") + " replaced " + Material.getMaterial(results.getInt("fromID")) + ":" + results.getInt("fromData") + " with " + Material.getMaterial(results.getInt("toID")) + ":" + results.getInt("toData");
+                        message += ChatColor.GRAY + results.getString("reason") + " replaced " + Material.getMaterial(results.getInt("fromID")).name() + ":" + results.getInt("fromData") + " with " + Material.getMaterial(results.getInt("toID")).name() + ":" + results.getInt("toData");
                         break;
                     }
                     default : {
-                        message += "UNKNOWN ACTION by " + results.getString("reason") + " - " + "OLD: " + Material.getMaterial(results.getInt("fromID")) + ":" + results.getInt("fromData") + " || NEW: " + Material.getMaterial(results.getInt("toID")) + ":" + results.getInt("toData");
+                        message += "UNKNOWN ACTION by " + results.getString("reason") + " - " + "OLD: " + Material.getMaterial(results.getInt("fromID")).name() + ":" + results.getInt("fromData") + " || NEW: " + Material.getMaterial(results.getInt("toID")).name() + ":" + results.getInt("toData");
                         break;
                     }
 
@@ -276,7 +276,7 @@ public class SQLListener implements Listener {
             while (results.next()) {
                 lastID = results.getInt("fromID");
                 lastData = results.getByte("fromData");
-
+//TODO: rewrite this shit ... 
                 event.getBlock().setTypeIdAndData(lastID, lastData, true);
                 PlayerUtils.sendMessage(player, ChatColor.GOLD, "DONE!");
                 // add cache-element for possible later use
