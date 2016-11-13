@@ -20,6 +20,7 @@ package de.minestar.therock.tools;
 
 import java.util.HashMap;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -32,8 +33,8 @@ public class SelectionTool extends Tool {
 
     private HashMap<String, Selection> selections = new HashMap<String, Selection>();
 
-    public SelectionTool(String toolName, int toolID, String permission) {
-        super(toolName, toolID, permission);
+    public SelectionTool(String toolName, Material toolType, String permission) {
+        super(toolName, toolType, permission);
     }
 
     public Selection getSelection(Player player) {

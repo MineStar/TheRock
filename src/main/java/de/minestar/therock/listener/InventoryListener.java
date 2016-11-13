@@ -53,7 +53,7 @@ public class InventoryListener implements Listener {
     private MainConsumer mainConsumer;
 
     private HashMap<String, Location> openedInventories;
-    private static final Set<Integer> checkableBlocks = new HashSet<Integer>(Arrays.asList(Material.CHEST.getId(), Material.DISPENSER.getId(), Material.FURNACE.getId(), Material.BURNING_FURNACE.getId(), Material.BREWING_STAND.getId(), Material.TRAPPED_CHEST.getId()));
+    private static final Set<Material> checkableBlocks = new HashSet<Material>(Arrays.asList(Material.CHEST, Material.DISPENSER, Material.DROPPER, Material.FURNACE, Material.BURNING_FURNACE, Material.BREWING_STAND, Material.TRAPPED_CHEST));
 
     public InventoryListener() {
         this.mainManager = TheRockCore.mainManager;
@@ -62,7 +62,7 @@ public class InventoryListener implements Listener {
     }
 
     public boolean isContainerBlock(Block block) {
-        return checkableBlocks.contains(block.getTypeId());
+        return checkableBlocks.contains(block.getType());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -78,7 +78,7 @@ public class InventoryListener implements Listener {
             return;
 
         // is the block an interactable block?
-        if (!checkableBlocks.contains(event.getClickedBlock().getTypeId()))
+        if (!checkableBlocks.contains(event.getClickedBlock().getType()))
             return;
 
         // add the player to the list
@@ -115,7 +115,7 @@ public class InventoryListener implements Listener {
 
         // check the inventory type
         InventoryType type = event.getInventory().getType();
-        if (type != InventoryType.CHEST && type != InventoryType.DISPENSER && type != InventoryType.FURNACE && type != InventoryType.BREWING) {
+        if (type != InventoryType.CHEST && type != InventoryType.DISPENSER && type != InventoryType.DROPPER && type != InventoryType.FURNACE && type != InventoryType.BREWING) {
             return;
         }
 
@@ -135,8 +135,8 @@ public class InventoryListener implements Listener {
             boolean isShiftClick = event.isShiftClick();
             boolean isLeftClick = event.isLeftClick();
             boolean isRightClick = event.isRightClick();
-            boolean cursorNull = (inCursor == null || inCursor.getTypeId() == Material.AIR.getId());
-            boolean slotNull = (inSlot == null || inSlot.getTypeId() == Material.AIR.getId());
+            boolean cursorNull = (inCursor == null || inCursor.getType() == Material.AIR);
+            boolean slotNull = (inSlot == null || inSlot.getType() == Material.AIR);
 
             // Cursor = null && Slot == null => nothing happens
             if (cursorNull && slotNull) {
@@ -193,7 +193,7 @@ public class InventoryListener implements Listener {
             // Slot != null && Cursor != null => we take first, and then place
             if (!slotNull && !cursorNull) {
                 Block block = loc.getBlock();
-                boolean itemsEqual = inSlot.getTypeId() == inCursor.getTypeId() && inSlot.getDurability() == inCursor.getDurability();
+                boolean itemsEqual = inSlot.getType() == inCursor.getType() && inSlot.getDurability() == inCursor.getDurability();
                 if (!itemsEqual) {
                     // items are not equal => take out and place
 
@@ -248,7 +248,7 @@ public class InventoryListener implements Listener {
 
             // get some vars
             boolean isShiftClick = event.isShiftClick();
-            boolean slotNull = (inSlot == null || inSlot.getTypeId() == Material.AIR.getId());
+            boolean slotNull = (inSlot == null || inSlot.getType() == Material.AIR);
 
             // no shift-click => return
             if (!isShiftClick) {
@@ -261,7 +261,7 @@ public class InventoryListener implements Listener {
             }
             // get the current containerblock
             Block block = loc.getBlock();
-            if (block.getTypeId() == Material.CHEST.getId()) {
+            if (block.getType() == Material.CHEST) {
                 // handle chest
                 Chest chest = (Chest) block.getState();
                 int freeSpace = InventoryUtils.countFreeSpace(chest.getInventory(), inSlot);
@@ -282,7 +282,7 @@ public class InventoryListener implements Listener {
                 // /////////////////////////////////
                 this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), amount);
                 return;
-            } else if (block.getTypeId() == Material.DISPENSER.getId()) {
+            } else if (block.getType() == Material.DISPENSER) {
                 // handle dispenser
                 Dispenser dispenser = (Dispenser) block.getState();
                 int freeSpace = InventoryUtils.countFreeSpace(dispenser.getInventory(), inSlot);
@@ -303,12 +303,12 @@ public class InventoryListener implements Listener {
                 // /////////////////////////////////
                 this.addInventoryChange(player.getName(), InventoryEventTypes.PLAYER_PLACED.getID(), player.getWorld().getName(), block.getX(), block.getY(), block.getZ(), inSlot.getTypeId(), inSlot.getDurability(), amount);
                 return;
-            } else if (block.getTypeId() == Material.FURNACE.getId() || block.getTypeId() == Material.BURNING_FURNACE.getId()) {
+            } else if (block.getType() == Material.FURNACE || block.getType() == Material.BURNING_FURNACE) {
                 // TODO: handle furnaces
                 // we have to wait for 1.3 for this... shiftclicking will
                 // currently end in a gamecrash
                 return;
-            } else if (block.getTypeId() == Material.BREWING_STAND.getId()) {
+            } else if (block.getType() == Material.BREWING_STAND) {
                 // TODO: handle brewing stands
                 // we have to wait for 1.3 for this... shiftclicking will
                 // currently end in a gamecrash

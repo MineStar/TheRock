@@ -59,6 +59,7 @@ public class RollbackCommand extends AbstractCommand {
             while (results.next()) {
                 newVector = new BlockVector(cache.getWorld().getName(), results.getInt("blockX"), results.getInt("blockY"), results.getInt("blockZ"));
                 newVector.setTypeID(results.getInt("fromID"));
+                newVector.setType(Material.getMaterial(results.getInt("fromID")));
                 newVector.setSubData((byte) results.getInt("fromData"));
                 newVector.setExtraData(results.getString("extraData"));
                 blockLists[newVector.getY()].add(newVector);
@@ -109,18 +110,19 @@ public class RollbackCommand extends AbstractCommand {
         Block block;
         for (BlockVector vector : list) {
             block = vector.getLocation().getBlock();
-            if (block.getTypeId() == Material.CHEST.getId()) {
+            if (block.getType() == Material.CHEST) {
                 ((Chest) block.getState()).getBlockInventory().clear();
-            } else if (block.getTypeId() == Material.DISPENSER.getId()) {
+            } else if (block.getType() == Material.DISPENSER) {
                 ((Dispenser) block.getState()).getInventory().clear();
-            } else if (block.getTypeId() == Material.FURNACE.getId() || block.getTypeId() == Material.BURNING_FURNACE.getId()) {
+            } else if (block.getType() == Material.FURNACE || block.getType() == Material.BURNING_FURNACE) {
                 ((Furnace) block.getState()).getInventory().clear();
-            } else if (block.getTypeId() == Material.BREWING_STAND.getId()) {
+            } else if (block.getType() == Material.BREWING_STAND) {
                 ((BrewingStand) block.getState()).getInventory().clear();
             }
+            //TODO: rewrite this Shit
             block.setTypeIdAndData(vector.getTypeID(), vector.getSubData(), true);
 
-            if (vector.getTypeID() == Material.WALL_SIGN.getId() || vector.getTypeID() == Material.SIGN_POST.getId()) {
+            if (vector.getType() == Material.WALL_SIGN || vector.getType() == Material.SIGN_POST) {
                 block = vector.getLocation().getBlock();
                 Sign sign = (Sign) block.getState();
                 String split[] = vector.getExtraData().split("`");

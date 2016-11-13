@@ -23,7 +23,7 @@ public class SelectionCommand extends AbstractExtendedCommand {
 
     public void execute(String[] args, Player player) {
         // Validate selection
-        Selection selection = ((SelectionTool) TheRockCore.toolListener.getTool(this.mainManager.getToolSelectionID())).getSelection(player);
+        Selection selection = ((SelectionTool) TheRockCore.toolListener.getTool(this.mainManager.getToolSelection())).getSelection(player);
         if (!selection.isValid()) {
             PlayerUtils.sendError(player, TheRockCore.NAME, "Your selection is not valid.");
             PlayerUtils.sendInfo(player, "NOTE: You must select two points in the same world.");

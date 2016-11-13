@@ -18,6 +18,7 @@
 
 package de.minestar.therock.tools;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -29,12 +30,12 @@ import de.minestar.therock.TheRockCore;
 public abstract class Tool {
 
     private final String toolName;
-    private final int toolID;
+    private final Material toolType;
     private final String permission;
 
-    public Tool(String toolName, int toolID, String permission) {
+    public Tool(String toolName, Material toolType, String permission) {
         this.toolName = toolName;
-        this.toolID = toolID;
+        this.toolType = toolType;
         this.permission = permission;
     }
 
@@ -42,8 +43,8 @@ public abstract class Tool {
         return toolName;
     }
 
-    public int getToolID() {
-        return toolID;
+    public Material getToolType() {
+        return toolType;
     }
 
     public String getPermission() {

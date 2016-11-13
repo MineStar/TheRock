@@ -30,8 +30,8 @@ import de.minestar.therock.TheRockCore;
 
 public class InventoryChangeTool extends Tool {
 
-    public InventoryChangeTool(String toolName, int toolID, String permission) {
-        super(toolName, toolID, permission);
+    public InventoryChangeTool(String toolName, Material toolType, String permission) {
+        super(toolName, toolType, permission);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class InventoryChangeTool extends Tool {
                 TheRockCore.databaseHandler.getInventoryChanges(player, block, true);
 
                 // for double chests : get both changes
-                if (block.getTypeId() == Material.CHEST.getId()) {
+                if (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST) {
                     Chest dChest = BlockUtils.isDoubleChest(block);
                     if (dChest != null) {
                         TheRockCore.databaseHandler.getInventoryChanges(player, dChest.getBlock(), false);

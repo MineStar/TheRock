@@ -51,10 +51,10 @@ public class MainManager {
     private int buffer_blockChange = 100, buffer_chat = 50, buffer_commands = 50, buffer_inventory = 100;
 
     // tool settings
-    private int toolLookupID = Material.WATCH.getId();
-    private int toolSelectionID = Material.STICK.getId();
-    private int toolInventoryID = Material.STONE_HOE.getId();
-    private int toolFastRollbackID = Material.SOIL.getId();
+    private Material toolLookup = Material.WATCH;
+    private Material toolSelection = Material.STICK;
+    private Material toolInventory = Material.STONE_HOE;
+    private Material toolFastRollback = Material.SOIL;
 
     public WorldSettings getWorld(Player player) {
         return this.getWorld(player.getWorld().getName());
@@ -113,30 +113,30 @@ public class MainManager {
             buffer_commands = ymlFile.getInt("config.buffer.commands", buffer_commands);
             buffer_inventory = ymlFile.getInt("config.buffer.inventory", buffer_inventory);
             // TOOLS
-            toolLookupID = ymlFile.getInt("config.tool.lookup", toolLookupID);
-            toolSelectionID = ymlFile.getInt("config.tool.selection", toolSelectionID);
-            toolInventoryID = ymlFile.getInt("config.tool.inventory", toolInventoryID);
-            toolFastRollbackID = ymlFile.getInt("config.tool.fastrollback", toolFastRollbackID);
+            toolLookup = Material.valueOf(ymlFile.getString("config.tool.lookup", toolLookup.name()).toUpperCase());
+            toolSelection = Material.valueOf(ymlFile.getString("config.tool.selection", toolSelection.name()).toUpperCase());
+            toolInventory = Material.valueOf(ymlFile.getString("config.tool.inventory", toolInventory.name()).toUpperCase());
+            toolFastRollback = Material.valueOf(ymlFile.getString("config.tool.fastrollback", toolFastRollback.name()).toUpperCase());
 
             // TOOL-IDs must be valid
-            if (Material.getMaterial(toolLookupID) == null) {
-                toolLookupID = Material.WATCH.getId();
+            if (toolLookup == null) {
+                toolLookup = Material.WATCH;
             }
-            if (Material.getMaterial(toolSelectionID) == null) {
-                toolSelectionID = Material.STICK.getId();
+            if (toolSelection == null) {
+                toolSelection = Material.STICK;
             }
-            if (Material.getMaterial(toolInventoryID) == null) {
-                toolInventoryID = Material.STONE_HOE.getId();
+            if (toolInventory == null) {
+                toolInventory = Material.STONE_HOE;
             }
-            if (Material.getMaterial(toolFastRollbackID) == null) {
-                toolFastRollbackID = Material.SOIL.getId();
+            if (toolFastRollback == null) {
+                toolFastRollback = Material.SOIL;
             }
-
+            
             // register Tools
-            TheRockCore.toolListener.addTool(new BlockChangeInfoTool("Lookup", toolLookupID, "therock.tools.lookup"));
-            TheRockCore.toolListener.addTool(new InventoryChangeTool("Inventory-LookUp", toolInventoryID, "therock.tools.inventory"));
-            TheRockCore.toolListener.addTool(new SelectionTool("Selection", toolSelectionID, "therock.tools.selection"));
-            TheRockCore.toolListener.addTool(new UndoLastChangeTool("Undo", toolFastRollbackID, "therock.tools.fastrollback"));
+            TheRockCore.toolListener.addTool(new BlockChangeInfoTool("Lookup", toolLookup, "therock.tools.lookup"));
+            TheRockCore.toolListener.addTool(new InventoryChangeTool("Inventory-LookUp", toolInventory, "therock.tools.inventory"));
+            TheRockCore.toolListener.addTool(new SelectionTool("Selection", toolSelection, "therock.tools.selection"));
+            TheRockCore.toolListener.addTool(new UndoLastChangeTool("Undo", toolFastRollback, "therock.tools.fastrollback"));
 
             ConsoleUtils.printInfo(TheRockCore.NAME, "Amount of logged worlds: " + this.worlds.size());
         } catch (Exception e) {
@@ -166,10 +166,10 @@ public class MainManager {
             ymlFile.set("config.buffer.commands", buffer_commands);
             ymlFile.set("config.buffer.inventory", buffer_inventory);
             // TOOLS
-            ymlFile.set("config.tool.lookup", toolLookupID);
-            ymlFile.set("config.tool.selection", toolSelectionID);
-            ymlFile.set("config.tool.inventory", toolInventoryID);
-            ymlFile.set("config.tool.fastrollback", toolFastRollbackID);
+            ymlFile.set("config.tool.lookup", toolLookup.name());
+            ymlFile.set("config.tool.selection", toolSelection.name());
+            ymlFile.set("config.tool.inventory", toolInventory.name());
+            ymlFile.set("config.tool.fastrollback", toolFastRollback.name());
 
             ymlFile.save(file);
         } catch (IOException e) {
@@ -217,15 +217,15 @@ public class MainManager {
         return buffer_inventory;
     }
 
-    public int getToolLookupID() {
-        return toolLookupID;
+    public Material getToolLookup() {
+        return toolLookup;
     }
 
-    public int getToolSelectionID() {
-        return toolSelectionID;
+    public Material getToolSelection() {
+        return toolSelection;
     }
 
-    public int getToolInventoryID() {
-        return toolInventoryID;
+    public Material getToolInventory() {
+        return toolInventory;
     }
 }

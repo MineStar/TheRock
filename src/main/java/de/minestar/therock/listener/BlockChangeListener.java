@@ -53,7 +53,7 @@ public class BlockChangeListener implements Listener {
     // private StringBuilder queueBuilder;
 
     private static final Set<Integer> nonFluidProofBlocks = new HashSet<Integer>(Arrays.asList(6, 26, 27, 28, 31, 32, 37, 38, 39, 40, 50, 51, 55, 59, 66, 69, 70, 72, 75, 76, 78, 83, 93, 94, 104, 105, 106, 115, 127, 131, 132));
-    private static final Set<Integer> signBlocks = new HashSet<Integer>(Arrays.asList(Material.SIGN_POST.getId(), Material.WALL_SIGN.getId()));
+    private static final Set<Material> signBlocks = new HashSet<Material>(Arrays.asList(Material.SIGN_POST, Material.WALL_SIGN));
 
     private final BlockFace[] faces = new BlockFace[]{BlockFace.DOWN, BlockFace.NORTH, BlockFace.WEST, BlockFace.EAST, BlockFace.SOUTH};
 
@@ -83,7 +83,7 @@ public class BlockChangeListener implements Listener {
         // /////////////////////////////////
         // create data
         // /////////////////////////////////
-        if (!signBlocks.contains(event.getBlock().getTypeId())) {
+        if (!signBlocks.contains(event.getBlock().getType())) {
             this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_BREAK.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlock().getTypeId(), event.getBlock().getData(), Material.AIR.getId(), (byte) Material.AIR.getId());
         } else {
             this.handleSignBreak(event.getPlayer().getName(), event.getBlock(), BlockEventTypes.PLAYER_BREAK);
@@ -101,7 +101,7 @@ public class BlockChangeListener implements Listener {
         // /////////////////////////////////
         // create data : all, except signs
         // /////////////////////////////////
-        if (event.getBlock().getTypeId() != Material.WALL_SIGN.getId() && event.getBlock().getTypeId() != Material.SIGN_POST.getId()) {
+        if (event.getBlock().getType() != Material.WALL_SIGN && event.getBlock().getType() != Material.SIGN_POST) {
             this.addBlockChange(event.getPlayer().getName(), BlockEventTypes.PLAYER_PLACE.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlockReplacedState().getTypeId(), event.getBlockReplacedState().getRawData(), event.getBlockPlaced().getTypeId(), event.getBlockPlaced().getData());
         }
     }
@@ -118,10 +118,10 @@ public class BlockChangeListener implements Listener {
             // /////////////////////////////////
             // create data
             // /////////////////////////////////
-            if (!signBlocks.contains(block.getTypeId())) {
-                this.addBlockChange(event.getEntityType().getName(), BlockEventTypes.PHYSICS_DESTROY.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getTypeId(), block.getData(), Material.AIR.getId(), (byte) Material.AIR.getId());
+            if (!signBlocks.contains(block.getType())) {
+                this.addBlockChange(event.getEntityType().name(), BlockEventTypes.PHYSICS_DESTROY.getID(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), block.getTypeId(), block.getData(), Material.AIR.getId(), (byte) Material.AIR.getId());
             } else {
-                this.handleSignBreak(event.getEntityType().getName(), block, BlockEventTypes.PHYSICS_DESTROY);
+                this.handleSignBreak(event.getEntityType().name(), block, BlockEventTypes.PHYSICS_DESTROY);
             }
         }
     }
@@ -137,10 +137,10 @@ public class BlockChangeListener implements Listener {
         // /////////////////////////////////
         // create data
         // /////////////////////////////////
-        if (!signBlocks.contains(event.getBlock().getTypeId())) {
-            this.addBlockChange(event.getEntityType().getName(), BlockEventTypes.PHYSICS_DESTROY.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlock().getTypeId(), event.getBlock().getData(), event.getTo().getId(), (byte) 0);
+        if (!signBlocks.contains(event.getBlock().getType())) {
+            this.addBlockChange(event.getEntityType().name(), BlockEventTypes.PHYSICS_DESTROY.getID(), event.getBlock().getWorld().getName(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), event.getBlock().getTypeId(), event.getBlock().getData(), event.getTo().getId(), (byte) 0);
         } else {
-            this.handleSignBreak(event.getEntityType().getName(), event.getBlock(), BlockEventTypes.PHYSICS_DESTROY);
+            this.handleSignBreak(event.getEntityType().name(), event.getBlock(), BlockEventTypes.PHYSICS_DESTROY);
         }
     }
 
@@ -152,32 +152,32 @@ public class BlockChangeListener implements Listener {
         if (event.isCancelled() || !this.mainManager.isWorldWatched(event.getBlock().getWorld().getName()))
             return;
 
-        final int typeFrom = event.getBlock().getTypeId();
         final Block toBlock = event.getToBlock();
-        final int replacedID = toBlock.getState().getTypeId();
+        final Material fromType = event.getBlock().getType();
+        final Material toType = toBlock.getState().getType();
         final byte replacedData = toBlock.getState().getRawData();
         final int newID = event.getBlock().getTypeId();
         final byte newData = (byte) (event.getBlock().getData() + 1);
 
-        final boolean canFlow = (replacedID == Material.AIR.getId() || nonFluidProofBlocks.contains(replacedID));
-
+        final boolean canFlow = (toType == Material.AIR || nonFluidProofBlocks.contains(toType.getId()));
+        
         if (!canFlow) {
             return;
         }
 
-        if (this.mainManager.getWorld(event.getBlock()).logLavaFlow() && (typeFrom == 10 || typeFrom == 11)) {
+        if (this.mainManager.getWorld(event.getBlock()).logLavaFlow() && (fromType == Material.LAVA || fromType == Material.STATIONARY_LAVA)) {
             // /////////////////////////////////
             // create data : lavaflow & blockcreation
             // /////////////////////////////////
-            if (replacedID != Material.AIR.getId()) {
+            if (toType != Material.AIR) {
                 // DONE!
-                this.addBlockChange("Lavaflow", BlockEventTypes.PHYSICS_DESTROY.getID(), toBlock.getWorld().getName(), toBlock.getX(), toBlock.getY(), toBlock.getZ(), replacedID, replacedData, newID, newData);
+                this.addBlockChange("Lavaflow", BlockEventTypes.PHYSICS_DESTROY.getID(), toBlock.getWorld().getName(), toBlock.getX(), toBlock.getY(), toBlock.getZ(), toType.getId(), replacedData, newID, newData);
             }
 
             for (BlockFace blockFace : faces) {
                 // TODO: fix here
                 final Block lower = toBlock.getRelative(blockFace);
-                if (lower.getTypeId() == 8 || lower.getTypeId() == 9) {
+                if (lower.getType() == Material.WATER || lower.getType() == Material.STATIONARY_WATER) {
                     if (lower.getData() <= 2) {
                         this.addBlockChange("Lavaflow", BlockEventTypes.PHYSICS_CREATE.getID(), toBlock.getWorld().getName(), lower.getX(), lower.getY(), lower.getZ(), lower.getTypeId(), lower.getData(), Material.STONE.getId(), (byte) 0);
                     } else {
@@ -185,19 +185,19 @@ public class BlockChangeListener implements Listener {
                     }
                 }
             }
-        } else if (this.mainManager.getWorld(event.getBlock()).logWaterFlow() && (typeFrom == 8 || typeFrom == 9)) {
+        } else if (this.mainManager.getWorld(event.getBlock()).logWaterFlow() && (fromType == Material.WATER || fromType == Material.STATIONARY_WATER)) {
             // /////////////////////////////////
             // create data : waterflow & blockcreation
             // /////////////////////////////////
-            if (replacedID != Material.AIR.getId()) {
+            if (toType != Material.AIR) {
                 // DONE!
-                this.addBlockChange("Waterflow", BlockEventTypes.PHYSICS_DESTROY.getID(), toBlock.getWorld().getName(), toBlock.getX(), toBlock.getY(), toBlock.getZ(), replacedID, replacedData, 8, newData);
+                this.addBlockChange("Waterflow", BlockEventTypes.PHYSICS_DESTROY.getID(), toBlock.getWorld().getName(), toBlock.getX(), toBlock.getY(), toBlock.getZ(), toType.getId(), replacedData, 8, newData);
             }
 
             for (BlockFace blockFace : faces) {
                 // TODO: fix here
                 final Block relative = toBlock.getRelative(blockFace);
-                if (relative.getTypeId() == 10 || relative.getTypeId() == 11) {
+                if (relative.getType() == Material.LAVA || relative.getType() == Material.STATIONARY_LAVA) {
                     if (relative.getData() == 0) {
                         this.addBlockChange("Waterflow", BlockEventTypes.PHYSICS_CREATE.getID(), toBlock.getWorld().getName(), relative.getX(), relative.getY(), relative.getZ(), relative.getTypeId(), relative.getData(), Material.OBSIDIAN.getId(), (byte) 0);
                     } else {

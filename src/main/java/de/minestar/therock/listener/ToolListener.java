@@ -39,22 +39,22 @@ import de.minestar.therock.tools.Tool;
 
 public class ToolListener implements Listener {
 
-    private HashMap<Integer, Tool> toolList = new HashMap<Integer, Tool>();
+    private HashMap<Material, Tool> toolList = new HashMap<Material, Tool>();
 
     public void addTool(Tool tool) {
-        this.toolList.put(tool.getToolID(), tool);
+        this.toolList.put(tool.getToolType(), tool);
     }
 
-    public boolean isTool(int ID) {
-        return (this.toolList.get(ID) != null);
+    public boolean isTool(Material tYPE) {
+        return (this.toolList.get(tYPE) != null);
     }
 
-    public Tool getTool(int ID) {
-        return this.toolList.get(ID);
+    public Tool getTool(Material material) {
+        return this.toolList.get(material);
     }
 
     private boolean onBlockInteract(final Player player, final Block block, final BlockFace blockFace, final boolean isLeftClick) {
-        Tool tool = this.getTool(player.getItemInHand().getTypeId());
+        Tool tool = this.getTool(player.getInventory().getItemInMainHand().getType());
         if (tool != null) {
             tool.onBlockInteract(player, block, blockFace, isLeftClick);
             return true;
@@ -67,7 +67,7 @@ public class ToolListener implements Listener {
 
         // check the inventory type
         InventoryType type = event.getInventory().getType();
-        if (type != InventoryType.CHEST && type != InventoryType.DROPPER && type != InventoryType.DISPENSER && type != InventoryType.FURNACE && type != InventoryType.BREWING && type != InventoryType.ENDER_CHEST) {
+        if (type != InventoryType.CHEST && type != InventoryType.DROPPER && type != InventoryType.DISPENSER && type != InventoryType.FURNACE && type != InventoryType.BREWING) {
             return;
         }
 
@@ -85,8 +85,8 @@ public class ToolListener implements Listener {
         // get the player
         Player player = (Player) event.getWhoClicked();
 
-        boolean cursorNull = (inCursor == null || inCursor.getTypeId() == Material.AIR.getId());
-        boolean slotNull = (inSlot == null || inSlot.getTypeId() == Material.AIR.getId());
+        boolean cursorNull = (inCursor == null || inCursor.getType() == Material.AIR);
+        boolean slotNull = (inSlot == null || inSlot.getType() == Material.AIR);
 
         // Cursor = null && Slot == null => nothing happens
         if (cursorNull && slotNull) {
@@ -95,9 +95,9 @@ public class ToolListener implements Listener {
 
         if (!slotNull) {
             // do we have a tool?
-            int ID = inSlot.getTypeId();
-            if (this.isTool(ID)) {
-                Tool tool = this.getTool(ID);
+            Material TYPE = inSlot.getType();
+            if (this.isTool(TYPE)) {
+                Tool tool = this.getTool(TYPE);
                 if (tool.hasPermission(player)) {
                     inSlot.setAmount(0);
                     event.setCancelled(true);
@@ -108,9 +108,9 @@ public class ToolListener implements Listener {
 
         if (!cursorNull) {
             // do we have a tool?
-            int ID = inCursor.getTypeId();
-            if (this.isTool(ID)) {
-                Tool tool = this.getTool(ID);
+            Material TYPE = inCursor.getType();
+            if (this.isTool(TYPE)) {
+                Tool tool = this.getTool(TYPE);
                 if (tool.hasPermission(player)) {
                     inSlot.setAmount(0);
                     event.setCancelled(true);
@@ -142,11 +142,12 @@ public class ToolListener implements Listener {
             return;
 
         // do we have a tool?
-        int ID = event.getItemDrop().getItemStack().getTypeId();
-        if (this.isTool(ID)) {
-            Tool tool = this.getTool(ID);
+        Material TYPE = event.getItemDrop().getItemStack().getType();
+        if (this.isTool(TYPE)) {
+            Tool tool = this.getTool(TYPE);
             if (tool.hasPermission(event.getPlayer())) {
-                event.getItemDrop().setItemStack(new ItemStack(Material.SAND, 1));
+                //event.getItemDrop().setItemStack(new ItemStack(Material.SAND, 1));
+                event.getItemDrop().remove();
             }
         }
     }
@@ -157,7 +158,7 @@ public class ToolListener implements Listener {
         for (Tool tool : this.toolList.values()) {
             if (tool.hasPermission(event.getEntity())) {
                 for (int i = event.getDrops().size() - 1; i >= 0; i--) {
-                    if (event.getDrops().get(i).getTypeId() == tool.getToolID()) {
+                    if (event.getDrops().get(i).getType() == tool.getToolType()) {
                         event.getDrops().remove(i);
                     }
                 }
